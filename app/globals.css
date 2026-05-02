@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body {
+  background: #FBFAF7;
+  color: #0B0B0F;
+  font-feature-settings: "ss01", "ss02", "cv11";
+}
+
+::selection { background: #FF5C2A; color: white; }
+
+.h-display {
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  font-weight: 600;
+}
+
+.h-section {
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  font-weight: 600;
+}
+
+.prose-lite p { color: #1A1A20; line-height: 1.65; }
+.prose-lite a { color: #0066FF; text-decoration: underline; text-underline-offset: 3px; }
+.prose-lite a:hover { color: #FF5C2A; }

@@ -1,0 +1,15 @@
+node_modules
+.next
+.env
+.env.local
+.env.*.local
+out
+.vercel
+.DS_Store
+*.log
+data/snapshots
+data/audits
+data/prospects
+data/sends
+.tsbuildinfo
+next-env.d.ts
