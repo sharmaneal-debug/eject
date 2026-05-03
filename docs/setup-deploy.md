@@ -32,13 +32,13 @@ Click **Deploy**. ~90 seconds. Live at `https://eject.vercel.app` (or whatever V
 
 ### 4. (Once you have it) Custom domain
 
-When `eject.co` is registered:
+When `ejectfrom.com` is registered:
 
-1. Vercel project → **Settings** → **Domains** → **Add** → `eject.co`.
+1. Vercel project → **Settings** → **Domains** → **Add** → `ejectfrom.com`.
 2. Vercel gives you 2 DNS records (A + CNAME, or just nameserver delegation if your registrar supports it).
 3. Add the records at your registrar (Namecheap, Cloudflare Registrar, etc.).
 4. Wait 5–30 min for DNS propagation. Vercel auto-issues SSL.
-5. Update `NEXT_PUBLIC_SITE_URL=https://eject.co` in Vercel env vars and redeploy.
+5. Update `NEXT_PUBLIC_SITE_URL=https://ejectfrom.com` in Vercel env vars and redeploy.
 
 ### 5. Auto-deploy on push
 

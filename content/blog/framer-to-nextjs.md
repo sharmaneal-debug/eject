@@ -6,7 +6,7 @@ date: "2026-05-03"
 author: "Eject Team"
 tags: ["framer", "nextjs", "migration", "cloudflare-pages", "vendor-lock-in", "seo"]
 ogImage: "/og/framer-to-nextjs.png"
-canonical: "https://eject.co/blog/framer-to-nextjs"
+canonical: "https://ejectfrom.com/blog/framer-to-nextjs"
 ---
 
 # Framer to Next.js: The Honest Migration Guide (2026)
@@ -179,7 +179,7 @@ Save this as `migration-plan.md` in a fresh folder. It does not need to be prett
 
 Framer doesn't expose a nice export API. Two paths:
 
-**Path A. Automated (recommended).** Drop your live URL into [eject.co](https://eject.co), it pulls the published HTML for every route, extracts your CMS items by crawling your collection list pages, and packages it as a downloadable codebase. The Express tier ($49) does this and gives you a Next.js starter ready to deploy.
+**Path A. Automated (recommended).** Drop your live URL into [ejectfrom.com](https://ejectfrom.com), it pulls the published HTML for every route, extracts your CMS items by crawling your collection list pages, and packages it as a downloadable codebase. The Express tier ($49) does this and gives you a Next.js starter ready to deploy.
 
 **Path B. Manual.** Open your live site, view-source each page, save the HTML, save the assets, copy CMS items by hand. Tedious but possible. About 6–10 hours for a 20-page site.
 
@@ -487,11 +487,11 @@ You chat with ChatGPT or Claude. Every Eject migration ships with a "Site Editor
 
 | Tier | Price | What you get |
 |------|-------|--------------|
-| **Scan your URL** | **Free** | Drop your Framer URL into [eject.co](https://eject.co). We crawl your site and show you a preview of your migrated codebase before you pay anything. |
+| **Scan your URL** | **Free** | Drop your Framer URL into [ejectfrom.com](https://ejectfrom.com). We crawl your site and show you a preview of your migrated codebase before you pay anything. |
 | **Express** | **$49 one-time** | Automated rebuild. Framer site → Next.js + Tailwind + Motion codebase, packaged as a GitHub repo. You deploy to Cloudflare Pages (we include the guide). Includes the chat editor instructions kit. |
 | **Concierge** | **$299 one-time** | A human walks the migration end-to-end. 7 calendar days. We rebuild, deploy, set up redirects, verify SEO parity, and onboard your team to the chat editor. You review and approve. Includes 30 days of post-launch support. |
 
-**[Scan your URL on the homepage →](https://eject.co)**
+**[Scan your URL on the homepage →](https://ejectfrom.com)**
 
 Or if you're not sure yet: [run the calculator](#cost-calculator). The number tends to make the decision for you.
 

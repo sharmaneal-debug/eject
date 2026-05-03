@@ -6,7 +6,7 @@ date: "2026-05-03"
 author: "Eject Team"
 tags: ["wix", "nextjs", "migration", "cloudflare-pages", "vendor-lock-in", "seo"]
 ogImage: "/og/wix-to-nextjs.png"
-canonical: "https://eject.co/blog/wix-to-nextjs"
+canonical: "https://ejectfrom.com/blog/wix-to-nextjs"
 ---
 
 # Wix to Next.js: Yes, It's Possible (2026)
@@ -17,7 +17,7 @@ You poked around the Wix help center. You found the "export" pages. You read the
 
 You're here now. Good. We're going to take this seriously, because nobody else is.
 
-Two truths up top. The first is that Wix is the worst lock-in in the modern website business. There is no code export. No CMS export. No "give me a zip of my site." Your content lives on their servers and only on their servers, by design. The second truth is that this doesn't actually matter. We can still get you out. It just takes more work than [Framer](https://eject.co/blog/framer-to-nextjs) or [Webflow](https://eject.co/blog/webflow-to-nextjs), and it requires you to think about the migration as a rebuild with content recovery, not a one-click export.
+Two truths up top. The first is that Wix is the worst lock-in in the modern website business. There is no code export. No CMS export. No "give me a zip of my site." Your content lives on their servers and only on their servers, by design. The second truth is that this doesn't actually matter. We can still get you out. It just takes more work than [Framer](https://ejectfrom.com/blog/framer-to-nextjs) or [Webflow](https://ejectfrom.com/blog/webflow-to-nextjs), and it requires you to think about the migration as a rebuild with content recovery, not a one-click export.
 
 This post is the long version of that rescue mission. You'll get:
 
@@ -103,8 +103,8 @@ To verify, go look. Wix has [a help center article](https://support.wix.com/en/a
 
 Compare that to:
 
-- **[Webflow](https://eject.co/blog/webflow-to-nextjs)**: has a paid HTML/CSS export and a CMS API. Imperfect, but you can leave with your content.
-- **[Framer](https://eject.co/blog/framer-to-nextjs)**: ships an official static export to ZIP. One button. Done.
+- **[Webflow](https://ejectfrom.com/blog/webflow-to-nextjs)**: has a paid HTML/CSS export and a CMS API. Imperfect, but you can leave with your content.
+- **[Framer](https://ejectfrom.com/blog/framer-to-nextjs)**: ships an official static export to ZIP. One button. Done.
 - **Squarespace**: limited export but supports the WordPress XML format for blog posts.
 - **Shopify**: full export of products, orders, customers as CSV or via API.
 
@@ -155,7 +155,7 @@ Wix's blog has an RSS feed at `https://yoursite.com/blog-feed.xml` (sometimes `/
 curl -o blog-feed.xml https://yoursite.com/blog-feed.xml
 ```
 
-Open it in any text editor. Each `<item>` is a post with title, body HTML, publish date, and slug. We have a [free RSS-to-markdown script](https://eject.co/tools/wix-rss-export) that converts the feed into a directory of Markdown files ready to drop into a Next.js content folder.
+Open it in any text editor. Each `<item>` is a post with title, body HTML, publish date, and slug. We have a [free RSS-to-markdown script](https://ejectfrom.com/tools/wix-rss-export) that converts the feed into a directory of Markdown files ready to drop into a Next.js content folder.
 
 ### 3. Images
 
@@ -202,7 +202,7 @@ That is the complete extraction list. Note what is *not* on the list: a `package
 
 ## The 14-day rebuild playbook {#playbook}
 
-Wix migrations take longer than [Framer](https://eject.co/blog/framer-to-nextjs) or [Webflow](https://eject.co/blog/webflow-to-nextjs) because of the manual content extraction in the previous section. Plan for two real weeks instead of the one weekend a Framer rebuild can take. If you only have evenings, stretch it to three weeks. That's fine.
+Wix migrations take longer than [Framer](https://ejectfrom.com/blog/framer-to-nextjs) or [Webflow](https://ejectfrom.com/blog/webflow-to-nextjs) because of the manual content extraction in the previous section. Plan for two real weeks instead of the one weekend a Framer rebuild can take. If you only have evenings, stretch it to three weeks. That's fine.
 
 ### Day 1. Audit and inventory
 
@@ -469,7 +469,7 @@ No. Wix has zero code export. Their [own help center](https://support.wix.com/en
 
 ### Why is Wix migration harder than Webflow or Framer?
 
-Because Wix gives you nothing. [Framer](https://eject.co/blog/framer-to-nextjs) ships an official static export. [Webflow](https://eject.co/blog/webflow-to-nextjs) has a CMS API. Wix has neither. Every other platform we cover gives you at least a partial path out. Wix is the only one where the migration starts with scraping your own public website. That's why our timeline is 14 days instead of 7, and why we lean toward recommending the Concierge tier for Wix specifically.
+Because Wix gives you nothing. [Framer](https://ejectfrom.com/blog/framer-to-nextjs) ships an official static export. [Webflow](https://ejectfrom.com/blog/webflow-to-nextjs) has a CMS API. Wix has neither. Every other platform we cover gives you at least a partial path out. Wix is the only one where the migration starts with scraping your own public website. That's why our timeline is 14 days instead of 7, and why we lean toward recommending the Concierge tier for Wix specifically.
 
 ### Will my SEO survive the migration?
 
@@ -511,11 +511,11 @@ The migration itself: **$49** (Express, you do the work with our toolkit) or **$
 | **Concierge** | **$299 one-time** | We do everything. Manual content extraction, design rebuild, redirects, cutover. 7-day delivery. You review and approve. Includes 30 days of post-launch support and the chat editor onboarded for your team. |
 | **Custom** | **Talk to us** | Heavy e-commerce, multi-language, member areas, or sites with 500+ pages. We scope and quote. |
 
-**[Start your migration →](https://eject.co/start)**
+**[Start your migration →](https://ejectfrom.com/start)**
 
 Or if you're not sure yet: [run the calculator](#cost-calculator). The number tends to make the decision for you.
 
-If you're on a different platform, we have honest playbooks for those too: [Webflow → Next.js](https://eject.co/blog/webflow-to-nextjs) and [Framer → Next.js](https://eject.co/blog/framer-to-nextjs). The Wix one is the longest because Wix made it the longest. Not our choice.
+If you're on a different platform, we have honest playbooks for those too: [Webflow → Next.js](https://ejectfrom.com/blog/webflow-to-nextjs) and [Framer → Next.js](https://ejectfrom.com/blog/framer-to-nextjs). The Wix one is the longest because Wix made it the longest. Not our choice.
 
 ---
 

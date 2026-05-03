@@ -9,9 +9,9 @@ Ordered top to bottom. Each phase has a "what" and a "why now." Strikethrough as
 These four block everything downstream.
 
 - [ ] **Sign up for Vercel** with your GitHub account (2 min). Import `sharmaneal-debug/eject`. Paste env vars from `.env.local`. Deploy. → `eject.vercel.app`. Walk-through: `docs/setup-deploy.md`.
-- [ ] **Reuse your Laniakea Resend account** (5 min — no new account, no new bill). Add `eject.co` as a second verified domain alongside VedasAI. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@eject.co` → `neal@laniakea.design` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
+- [ ] **Reuse your Laniakea Resend account** (5 min — no new account, no new bill). Add `ejectfrom.com` as a second verified domain alongside VedasAI. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@ejectfrom.com` → `neal@laniakea.design` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
 - [ ] **Roll the live Stripe key** (`sk_live_…`) you posted in chat earlier (3 min). Stripe dashboard → API keys → Roll. Old key keeps working for 1 hour. Replace nowhere — we're using test keys for everything. The leaked key is the security issue, not the test ones.
-- [ ] **Buy `eject.co`** (~$30, 5 min). Cloudflare Registrar is the cheapest renewal-fair option ($9.99 first year, $9.77/yr after). Or Porkbun ($12.71/yr). Skip GoDaddy.
+- [ ] **Buy `ejectfrom.com`** (~$30, 5 min). Cloudflare Registrar is the cheapest renewal-fair option ($9.99 first year, $9.77/yr after). Or Porkbun ($12.71/yr). Skip GoDaddy.
 
 **Why now:** the site can't take a real customer until Stripe + Resend + a real domain are wired. Everything else is downstream of these.
 
@@ -91,7 +91,7 @@ The 15-keyword roadmap from `docs/research/competitor-and-demand-research.md` is
 
 ### Crawl + indexing
 
-- [ ] **Submit sitemap to Google Search Console** (10 min). Add `eject.co` as a property. Paste sitemap URL.
+- [ ] **Submit sitemap to Google Search Console** (10 min). Add `ejectfrom.com` as a property. Paste sitemap URL.
 - [ ] **Submit to Bing Webmaster Tools** (5 min). Same.
 - [ ] **Robots.txt + ai.txt** (10 min). Allow Google + Bing + ChatGPT crawler. Block scrapers we don't want indexing the cost calculator results.
 
@@ -106,7 +106,7 @@ You have everything to run outbound. The playbooks are written. Time to execute.
 - [ ] **Cold email infrastructure** (3 hr setup). Use the playbook in `docs/playbooks/cold-email.md`. Stack:
   - **List building**: Apollo (you have it) for company + person enrichment, plus PublicWWW queries to find Webflow/Framer subdomains
   - **Sender**: Resend or a dedicated cold-email tool like Smartlead ($30/mo) for warmup + deliverability
-  - **Send**: Gmail aliases or a separate domain (`outreach@eject.co`)
+  - **Send**: Gmail aliases or a separate domain (`outreach@ejectfrom.com`)
   - **Tracking**: open rates + reply rates in your tool
 - [ ] **First 50 cold emails** (2 hr). Pick the highest-signal prospects from your audit script. Hand-write the first 10 to test the angle. Automate the next 40.
 - [ ] **Reddit / Forum engagement** (1 hr/day for a week). The 7 prepared replies are in `docs/playbooks/community-engagement.md`. Spread across days. Lead with help; the soft pitch is one line at the end.
@@ -117,7 +117,7 @@ You have everything to run outbound. The playbooks are written. Time to execute.
 
 - [ ] **Run a real test migration** (3 hr). Pick one of your own sites or a friend's site. Run `pnpm crawl` then `pnpm rebuild`. Verify the output works. **Document everything that breaks** — that becomes your week-3 product roadmap.
 - [ ] **Build the "preview link" delivery** (3 hr). After payment, the rebuilder runs and outputs a Next.js project. We need to actually deploy it as a preview to Cloudflare Pages or Vercel and email the customer the URL. This is the heart of Express — has to be smooth.
-- [ ] **Customer support inbox** (15 min). `hi@eject.co` forwards to your real email until volume justifies a Helpscout / Plain account.
+- [ ] **Customer support inbox** (15 min). `hi@ejectfrom.com` forwards to your real email until volume justifies a Helpscout / Plain account.
 
 ---
 

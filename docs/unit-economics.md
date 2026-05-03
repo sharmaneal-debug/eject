@@ -11,7 +11,7 @@ Last updated: 2026-05-03. Numbers are for **test/sandbox usage today**. Re-run w
 
 If Concierge takes ≥3 hours of your time at $100/hr opportunity cost, you're working for ~$30/hr net. Tooling has to drive Concierge to <90 min for it to be worth running personally vs. a contractor.
 
-The fixed cost to keep Eject alive is **~$2.50/mo** (just the `eject.co` domain amortized). Everything else is free tier.
+The fixed cost to keep Eject alive is **~$2.50/mo** (just the `ejectfrom.com` domain amortized). Everything else is free tier.
 
 ---
 
@@ -120,7 +120,7 @@ Tooling target: keep Concierge **under 2 hours per customer**. The Express pipel
 
 | Item | Monthly | Annual |
 |---|---|---|
-| Domain `eject.co` | $2.50 | $30 |
+| Domain `ejectfrom.com` | $2.50 | $30 |
 | Cloudflare Pages | $0 | $0 |
 | Resend (free tier) | $0 | $0 |
 | Stripe account | $0 | $0 |

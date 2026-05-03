@@ -6,7 +6,7 @@ date: "2026-05-03"
 author: "Eject Team"
 tags: ["chatgpt", "claude", "ai-editor", "no-code", "vibe-coding", "seo"]
 ogImage: "/og/edit-website-with-chatgpt.png"
-canonical: "https://eject.co/blog/edit-website-with-chatgpt"
+canonical: "https://ejectfrom.com/blog/edit-website-with-chatgpt"
 ---
 
 # Edit Your Website with ChatGPT (No Coding Required)
@@ -451,7 +451,7 @@ Three ways in:
 | **Start a migration** | **$49–$1,499 one-time** | Pick a tier (DIY, Done-with-You, or Done-for-You). We move your site from Webflow / Wix / Squarespace / Framer to a Next.js codebase. After that, your hosting is $0/month and your editing is via chat. |
 | **Talk to a human** | **Free 20-min call** | If you've read this far and still aren't sure, book a call. We'll look at your site live, tell you honestly whether migration makes sense, and recommend the right tier (or recommend you stay where you are if that's the right answer). |
 
-**[Scan your site →](https://eject.co/scan)** • **[Start a migration →](https://eject.co/start)** • **[Book a call →](https://eject.co/call)**
+**[Scan your site →](https://ejectfrom.com/scan)** • **[Start a migration →](https://ejectfrom.com/start)** • **[Book a call →](https://ejectfrom.com/call)**
 
 The internet has spent ten years convincing you that editing a website is hard. As of 2026, it isn't. Open ChatGPT. Type what you want changed. Done.
 

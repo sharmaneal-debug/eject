@@ -6,7 +6,7 @@ date: "2026-05-03"
 author: "Eject Team"
 tags: ["webflow", "pricing", "cost-analysis", "vendor-lock-in", "seo"]
 ogImage: "/og/webflow-is-too-expensive.png"
-canonical: "https://eject.co/blog/webflow-is-too-expensive"
+canonical: "https://ejectfrom.com/blog/webflow-is-too-expensive"
 ---
 
 # Webflow Is Too Expensive. Here's the Real Math (2026)
@@ -311,9 +311,9 @@ Eject Express ($49 one-time) for the auto-rebuild. Then host on Cloudflare Pages
 |---|---|---|
 | **Express** | **$49 one-time** | Automated rebuild. We export your Webflow site, regenerate it as a Next.js codebase on Cloudflare Pages, hand you the GitHub repo. You take it from there. |
 | **Concierge** | **$299 one-time** | Human-led migration. We do the export, the rebuild, the cutover, the redirects, and we onboard your team to the chat editor. 3–5 business days, hands-off. |
-| **Agency** | **Custom** | For agencies migrating 5+ client sites. Volume pricing, white-label option, dedicated channel. [Contact us.](https://eject.co/agency) |
+| **Agency** | **Custom** | For agencies migrating 5+ client sites. Volume pricing, white-label option, dedicated channel. [Contact us.](https://ejectfrom.com/agency) |
 
-**[Start your migration →](https://eject.co/start)**
+**[Start your migration →](https://ejectfrom.com/start)**
 
 Or, if you're still on the fence: **[run the calculator.](#cost-calculator)** The number tends to make the decision for you.
 

@@ -106,7 +106,7 @@ export function CheckoutForm({ tier, prefilledUrl }: { tier: Tier; prefilledUrl?
  <p className="font-medium text-ink mb-1">Heads up. Stripe isn&apos;t hooked up yet.</p>
  <p>
  We received your details and would charge ${preview.price} for {preview.name} once payments are live.
- For now, email <a className="text-accent hover:text-signal" href="mailto:hi@eject.co">hi@eject.co</a> and
+ For now, email <a className="text-accent hover:text-signal" href="mailto:hi@ejectfrom.com">hi@ejectfrom.com</a> and
  we&apos;ll invoice you manually.
  </p>
  </div>

@@ -2,17 +2,17 @@
 
 You already have a Resend account on your Laniakea workspace (currently used by VedasAI). We're reusing it. **Don't create a new account.**
 
-A single Resend account can hold many verified domains. Eject piggybacks on the Laniakea Resend by adding `eject.co` as a second sending domain. The 3,000-emails/month free tier is shared across the whole account, but Eject will use ~50–500 emails/month for the foreseeable future, well under whatever VedasAI uses.
+A single Resend account can hold many verified domains. Eject piggybacks on the Laniakea Resend by adding `ejectfrom.com` as a second sending domain. The 3,000-emails/month free tier is shared across the whole account, but Eject will use ~50–500 emails/month for the foreseeable future, well under whatever VedasAI uses.
 
 **Heads up on inbound:** Resend only *sends* email. Customer replies don't go to your Resend account. We handle inbound separately via Cloudflare Email Routing (step 3 below) — that's what actually puts replies in your `neal@laniakea.design` inbox.
 
-## 1. Add `eject.co` as a verified sending domain
+## 1. Add `ejectfrom.com` as a verified sending domain
 
-Once `eject.co` is registered:
+Once `ejectfrom.com` is registered:
 
 1. Go to [resend.com](https://resend.com) → log into your **Laniakea Resend account**.
-2. **Domains** → **Add Domain** → `eject.co`.
-3. Resend gives you 3 DNS records (SPF, DKIM, DMARC). Add them at your registrar (or in Cloudflare DNS if `eject.co` is on Cloudflare).
+2. **Domains** → **Add Domain** → `ejectfrom.com`.
+3. Resend gives you 3 DNS records (SPF, DKIM, DMARC). Add them at your registrar (or in Cloudflare DNS if `ejectfrom.com` is on Cloudflare).
 4. Wait 5–30 min for verification. The Domains list shows ✓ when ready.
 
 VedasAI's existing domain stays untouched — separate domains on the same account don't interfere.
@@ -25,23 +25,23 @@ Use the same Resend API key you already use for VedasAI, or create a new key tag
 2. In Vercel: project → **Settings** → **Environment Variables** → add:
    ```
    RESEND_API_KEY=re_…
-   RESEND_FROM=Eject <hi@eject.co>
+   RESEND_FROM=Eject <hi@ejectfrom.com>
    ```
-   Leave `RESEND_FROM` blank until `eject.co` shows ✓ in Resend Domains. Until then, mail sends from `onboarding@resend.dev` with `Reply-To: hi@eject.co`.
+   Leave `RESEND_FROM` blank until `ejectfrom.com` shows ✓ in Resend Domains. Until then, mail sends from `onboarding@resend.dev` with `Reply-To: hi@ejectfrom.com`.
 
-## 3. Forward `hi@eject.co` → `neal@laniakea.design` (free)
+## 3. Forward `hi@ejectfrom.com` → `neal@laniakea.design` (free)
 
 Resend doesn't receive email. We use Cloudflare Email Routing (free) to forward incoming mail to your Laniakea inbox.
 
-If `eject.co` is registered through Cloudflare Registrar, this is built in. If through another registrar, point the nameservers at Cloudflare first.
+If `ejectfrom.com` is registered through Cloudflare Registrar, this is built in. If through another registrar, point the nameservers at Cloudflare first.
 
-1. Cloudflare dashboard → pick `eject.co` → **Email** → **Email Routing**.
+1. Cloudflare dashboard → pick `ejectfrom.com` → **Email** → **Email Routing**.
 2. Click **Get started**. Cloudflare auto-adds the MX + TXT records.
-3. **Routes** → **Create address** → `hi@eject.co` → **Send to** → `neal@laniakea.design` → save.
-4. Add a wildcard rule: `*@eject.co` → `neal@laniakea.design`. Catches typos like `info@`, `support@`.
+3. **Routes** → **Create address** → `hi@ejectfrom.com` → **Send to** → `neal@laniakea.design` → save.
+4. Add a wildcard rule: `*@ejectfrom.com` → `neal@laniakea.design`. Catches typos like `info@`, `support@`.
 5. Verify your destination email by clicking the link Cloudflare sends to `neal@laniakea.design`.
 
-That's it. Customer hits "reply" on a kickoff email → goes to `hi@eject.co` → Cloudflare forwards instantly → lands in your Laniakea inbox. No new mailbox to monitor.
+That's it. Customer hits "reply" on a kickoff email → goes to `hi@ejectfrom.com` → Cloudflare forwards instantly → lands in your Laniakea inbox. No new mailbox to monitor.
 
 ## 4. Why this clean separation
 
@@ -49,7 +49,7 @@ After this is set up:
 
 | Concern | Where it lives |
 |---|---|
-| Eject sends emails | Laniakea Resend account, `eject.co` domain |
+| Eject sends emails | Laniakea Resend account, `ejectfrom.com` domain |
 | VedasAI sends emails | Laniakea Resend account, VedasAI's domain |
 | Eject inbound (replies) | Cloudflare Email Routing → `neal@laniakea.design` |
 | Eject monthly bill | $0 (free tier) |

@@ -20,7 +20,7 @@ export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: str
  return { ok: false, error: "resend not configured" };
  }
  // Default to Resend's verified onboarding sender if you haven't verified your
- // own domain yet. Once eject.co is verified in Resend, set RESEND_FROM in env.
+ // own domain yet. Once ejectfrom.com is verified in Resend, set RESEND_FROM in env.
  const from = process.env.RESEND_FROM || "Eject <onboarding@resend.dev>";
 
  try {
@@ -69,7 +69,7 @@ Reply to this email with anything you want us to know about your site. We read e
 
 Thanks,
 The Eject team
-hi@eject.co
+hi@ejectfrom.com
 ${siteConfig.url}
 `;
  const html = `<!doctype html>
@@ -87,7 +87,7 @@ ${siteConfig.url}
  <p style="color: #5A5A66; font-size: 14px; margin-top: 32px;">
     Thanks,<br/>
     The Eject team<br/>
-    <a href="mailto:hi@eject.co" style="color: #0066FF;">hi@eject.co</a> · <a href="${siteConfig.url}" style="color: #0066FF;">eject.co</a>
+    <a href="mailto:hi@ejectfrom.com" style="color: #0066FF;">hi@ejectfrom.com</a> · <a href="${siteConfig.url}" style="color: #0066FF;">ejectfrom.com</a>
  </p>
 </body></html>`;
 
@@ -113,7 +113,7 @@ Reply with anything you want us to know. The more context, the better.
 
 Thanks,
 The Eject team
-hi@eject.co
+hi@ejectfrom.com
 ${siteConfig.url}
 `;
  const html = `<!doctype html>
@@ -132,7 +132,7 @@ ${siteConfig.url}
  <p style="color: #5A5A66; font-size: 14px; margin-top: 32px;">
     Thanks,<br/>
     The Eject team<br/>
-    <a href="mailto:hi@eject.co" style="color: #0066FF;">hi@eject.co</a> · <a href="${siteConfig.url}" style="color: #0066FF;">eject.co</a>
+    <a href="mailto:hi@ejectfrom.com" style="color: #0066FF;">hi@ejectfrom.com</a> · <a href="${siteConfig.url}" style="color: #0066FF;">ejectfrom.com</a>
  </p>
 </body></html>`;
 

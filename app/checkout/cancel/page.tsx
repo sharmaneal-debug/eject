@@ -15,7 +15,7 @@ export default function Page() {
  </h1>
  <p className="text-ink-soft text-lg leading-relaxed mb-8">
  You backed out before paying. That&apos;s fine. If you have questions, hit us up at{" "}
- <a href="mailto:hi@eject.co" className="text-accent hover:text-signal">hi@eject.co</a>.
+ <a href="mailto:hi@ejectfrom.com" className="text-accent hover:text-signal">hi@ejectfrom.com</a>.
  </p>
  <div className="flex gap-3">
  <Link

@@ -1,12 +1,12 @@
 export const siteConfig = {
  name: "Eject",
- domain: "eject.co",
- url: "https://eject.co",
+ domain: "ejectfrom.com",
+ url: "https://ejectfrom.com",
  tagline: "Stop paying $300 a year for your website.",
  shortTagline: "Your website. Free hosting. No monthly bill.",
  description:
  "Eject takes your Webflow, Framer, Wix, or Squarespace site and gives you back a free version you own forever. One you can edit just by chatting with AI.",
- email: "hi@eject.co",
+ email: "hi@ejectfrom.com",
  twitter: "@useeject",
 
  // Two tiers. Both are "done for you". The difference is who.

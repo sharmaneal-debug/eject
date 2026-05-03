@@ -67,7 +67,7 @@ export default async function Page({
 
         <p className="text-sm text-ink-muted">
           Questions in the meantime? Email{" "}
-          <a href="mailto:hi@eject.co" className="text-accent hover:text-signal">hi@eject.co</a>.
+          <a href="mailto:hi@ejectfrom.com" className="text-accent hover:text-signal">hi@ejectfrom.com</a>.
         </p>
 
         <Link href="/" className="mt-10 inline-flex text-sm text-ink-muted hover:text-ink">

@@ -70,7 +70,7 @@ async function fetchWithTimeout(url: string, ms: number, init?: RequestInit) {
  signal: ctrl.signal,
  redirect: "follow",
  headers: {
- "User-Agent": "Mozilla/5.0 (compatible; EjectScan/0.1; +https://eject.co/scan)",
+ "User-Agent": "Mozilla/5.0 (compatible; EjectScan/0.1; +https://ejectfrom.com/scan)",
  Accept: "text/html,application/xhtml+xml,application/xml,*/*",
 ...(init?.headers ?? {}),
  },
