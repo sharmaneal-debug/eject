@@ -32,7 +32,9 @@ export function ScanResults({ data }: { data: ScanData }) {
   })();
 
   // Eject 3-year cost when going through Express tier (cheapest path).
-  const ejectExpress3yr = siteConfig.pricing.express.price + 15 * 3;
+  // Domain renewal is paid to your registrar either way — same on both
+  // sides — so we don't count it. Hosting + AI editor are genuinely $0.
+  const ejectExpress3yr = siteConfig.pricing.express.price;
 
   return (
     <section
@@ -86,7 +88,7 @@ export function ScanResults({ data }: { data: ScanData }) {
                     ${ejectExpress3yr.toLocaleString()}
                   </p>
                   <p className="text-xs text-ink-muted mt-1 font-mono">
-                    $49 once + ~$15/yr for your domain. That&apos;s it.
+                    $49 once. Hosting and edits are free, forever.
                   </p>
                 </div>
               </div>

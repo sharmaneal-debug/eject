@@ -3,9 +3,9 @@ import { CostCalculator } from "@/components/cost-calculator";
 import { Section, Eyebrow } from "@/components/section";
 
 export const metadata: Metadata = {
-  title: "Cost calculator — Webflow vs Eject",
+  title: "Cost calculator — see what you'd save",
   description:
-    "Plug in your Webflow / Framer / Wix / Squarespace plan. See the real 36-month cost vs migrating to a self-hosted Next.js site on Cloudflare Pages.",
+    "Plug in your Webflow / Framer / Wix / Squarespace plan. See what you'd save by moving to a website you own — one-time payment, free hosting, free AI editing.",
 };
 
 export default function Page() {
@@ -14,26 +14,27 @@ export default function Page() {
       <Section className="pb-0">
         <Eyebrow>Cost calculator</Eyebrow>
         <h1 className="h-display text-5xl md:text-7xl tracking-tightest max-w-4xl mb-5">
-          Three years on Webflow vs. <span className="text-signal">three years on Eject.</span>
+          Plug in your numbers.{" "}
+          <span className="text-signal">See what you&apos;d save.</span>
         </h1>
         <p className="text-ink-soft max-w-2xl text-lg">
-          Adjust the inputs to match your actual setup. The math updates as you type. Numbers reflect 2026 list pricing on each platform.
+          Most small businesses are paying $300–$1,200 a year for a website that&apos;s mostly text. With Eject you pay once. Then nothing.
         </p>
       </Section>
       <Section>
         <CostCalculator />
         <div className="mt-12 grid md:grid-cols-3 gap-5 text-sm text-ink-soft">
           <div className="rounded-xl border border-line bg-paper-warm p-6">
-            <p className="font-medium text-ink mb-1">What we count on Webflow</p>
-            <p>Site plan + Workspace seats above the first + bandwidth overages. We don&apos;t count CMS-cap upgrades or form-submission fees — those are extra.</p>
+            <p className="font-medium text-ink mb-1">What we count</p>
+            <p>Your platform plan + extra seats above the first. We don&apos;t double-count the domain — you pay that to your registrar either way.</p>
           </div>
           <div className="rounded-xl border border-line bg-paper-warm p-6">
-            <p className="font-medium text-ink mb-1">What we count on Eject</p>
-            <p>One-time migration fee + optional editor retainer + ~$12/yr domain. Hosting is $0 on Cloudflare Pages free tier.</p>
+            <p className="font-medium text-ink mb-1">Eject ongoing cost</p>
+            <p><span className="font-semibold text-signal">$0/year.</span> Cloudflare hosting is free. Editing your site with ChatGPT or Claude free tier is free. There&apos;s nothing to pay us after the one-time fee.</p>
           </div>
           <div className="rounded-xl border border-line bg-paper-warm p-6">
-            <p className="font-medium text-ink mb-1">Caveats we&apos;re honest about</p>
-            <p>If you&apos;re on Cloudflare&apos;s paid Pages tier (1M+ requests/day), add $5/mo. The math still wins by 90%+ vs Webflow.</p>
+            <p className="font-medium text-ink mb-1">When this isn&apos;t honest</p>
+            <p>If your site does 1M+ pageviews a month or has 200+ products, you&apos;d need Cloudflare&apos;s $5/mo Pro tier. That&apos;s rare for small business sites — most never hit it.</p>
           </div>
         </div>
       </Section>

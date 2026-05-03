@@ -2,11 +2,12 @@ import { Hero } from "@/components/hero";
 import { WhyOwn } from "@/components/why-own";
 import { FeatureGrid } from "@/components/feature-grid";
 import { ComparisonTable } from "@/components/comparison-table";
+import { CostCalculator } from "@/components/cost-calculator";
 import { AiKit } from "@/components/ai-kit";
 import { PricingTable } from "@/components/pricing-table";
 import { SocialProof } from "@/components/social-proof";
 import { Faq } from "@/components/faq";
-import { Section } from "@/components/section";
+import { Section, Eyebrow } from "@/components/section";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -17,6 +18,18 @@ export default function HomePage() {
       <AiKit />
       <FeatureGrid />
       <ComparisonTable />
+
+      <Section>
+        <Eyebrow>Cost calculator</Eyebrow>
+        <h2 className="h-section text-3xl md:text-5xl max-w-3xl mb-3">
+          Plug in your numbers. <span className="text-ink/40">See what you&apos;d save.</span>
+        </h2>
+        <p className="text-ink-soft max-w-2xl mb-10">
+          We default to mid-tier plans because most small businesses are paying more than they realize. Adjust to match yours.
+        </p>
+        <CostCalculator />
+      </Section>
+
       <PricingTable />
       <SocialProof />
       <Faq />

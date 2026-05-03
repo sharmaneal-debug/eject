@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { siteConfig } from "@/lib/site";
 
 type Platform = "webflow" | "framer" | "wix" | "squarespace";
 
@@ -33,36 +35,46 @@ const platformPlans: Record<Platform, { id: string; label: string; monthly: numb
   ],
 };
 
-const ejectMonthlyByTier = {
-  none: 0,
-  hobby: 79,
-  pro: 149,
+// Default to a real-world plan most small businesses are on (mid-tier).
+const DEFAULT_PLAN: Record<Platform, string> = {
+  webflow: "business",
+  framer: "pro",
+  wix: "core",
+  squarespace: "business",
 };
+
+type Tier = "express" | "concierge";
 
 export function CostCalculator() {
   const [platform, setPlatform] = useState<Platform>("webflow");
-  const [planId, setPlanId] = useState(platformPlans.webflow[1].id);
-  const [seats, setSeats] = useState(1);
-  const [bandwidthOverages, setBandwidthOverages] = useState(0);
-  const [editorTier, setEditorTier] = useState<keyof typeof ejectMonthlyByTier>("hobby");
-  const [migrationTier, setMigrationTier] = useState<"diy" | "dwy" | "dfy">("dwy");
+  const [planId, setPlanId] = useState(DEFAULT_PLAN.webflow);
+  const [seats, setSeats] = useState(2);
+  const [tier, setTier] = useState<Tier>("express");
 
   const plans = platformPlans[platform];
   const plan = plans.find((p) => p.id === planId) ?? plans[0];
 
-  const platformCost36 = useMemo(() => {
-    // Plan + seats (typical $19/seat avg) + bandwidth overages
-    const monthly = plan.monthly + Math.max(0, seats - 1) * 19 + bandwidthOverages;
-    return monthly * 36;
-  }, [plan, seats, bandwidthOverages]);
+  const platformAnnual = useMemo(() => {
+    // Plan + Workspace seats above the first (~$19/seat avg).
+    const monthly = plan.monthly + Math.max(0, seats - 1) * 19;
+    return monthly * 12;
+  }, [plan, seats]);
 
-  const ejectOneTime = migrationTier === "diy" ? 49 : migrationTier === "dwy" ? 299 : 1499;
-  const ejectMonthly = ejectMonthlyByTier[editorTier]; // Cloudflare Pages = $0
-  const domainPerYear = 12; // generous estimate
-  const ejectCost36 = ejectOneTime + ejectMonthly * 36 + domainPerYear * 3;
+  const platform3yr = platformAnnual * 3;
+  const platform5yr = platformAnnual * 5;
 
-  const savings = platformCost36 - ejectCost36;
-  const pctSavings = platformCost36 > 0 ? Math.round((savings / platformCost36) * 100) : 0;
+  // Eject = one-time fee. Ongoing hosting + AI editor = $0 (Cloudflare free,
+  // ChatGPT/Claude free tiers). Domain renewal is paid to your registrar
+  // either way — same on both sides — so we don't count it.
+  const ejectOneTime = tier === "express" ? siteConfig.pricing.express.price : siteConfig.pricing.concierge.price;
+  const ejectAnnualOngoing = 0;
+
+  const eject3yr = ejectOneTime + ejectAnnualOngoing * 3;
+  const eject5yr = ejectOneTime + ejectAnnualOngoing * 5;
+
+  const savings3yr = Math.max(0, platform3yr - eject3yr);
+  const savings5yr = Math.max(0, platform5yr - eject5yr);
+  const pctSavings3yr = platform3yr > 0 ? Math.round((savings3yr / platform3yr) * 100) : 0;
 
   return (
     <div className="rounded-2xl border border-line bg-white shadow-[0_1px_0_0_rgba(11,11,15,0.04),0_24px_60px_-24px_rgba(11,11,15,0.10)] overflow-hidden">
@@ -70,17 +82,18 @@ export function CostCalculator() {
         <div className="p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-line">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-ink-muted mb-6">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-signal" />
-            Real cost over 36 months
+            Plug in your situation
           </div>
 
           <Field label="Your current platform">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {(Object.keys(platformPlans) as Platform[]).map((p) => (
                 <button
+                  type="button"
                   key={p}
                   onClick={() => {
                     setPlatform(p);
-                    setPlanId(platformPlans[p][1].id);
+                    setPlanId(DEFAULT_PLAN[p]);
                   }}
                   className={cn(
                     "rounded-lg border px-3 py-2 text-sm font-medium transition capitalize",
@@ -95,7 +108,7 @@ export function CostCalculator() {
             </div>
           </Field>
 
-          <Field label="Plan">
+          <Field label="Your plan">
             <select
               value={planId}
               onChange={(e) => setPlanId(e.target.value)}
@@ -109,97 +122,77 @@ export function CostCalculator() {
             </select>
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="Workspace seats">
-              <NumberInput value={seats} onChange={setSeats} min={1} max={50} />
-              <p className="text-xs text-ink-muted mt-1">First seat included. ~$19/seat after.</p>
-            </Field>
-            <Field label="Bandwidth overage / mo">
-              <NumberInput value={bandwidthOverages} onChange={setBandwidthOverages} min={0} max={1000} step={5} prefix="$" />
-              <p className="text-xs text-ink-muted mt-1">Add what you typically pay above your plan.</p>
-            </Field>
-          </div>
+          <Field label="People who edit the site">
+            <NumberInput value={seats} onChange={setSeats} min={1} max={50} />
+            <p className="text-xs text-ink-muted mt-1.5">
+              First seat included. Most platforms charge ~$19 per extra seat.
+            </p>
+          </Field>
 
           <div className="mt-2 pt-6 border-t border-line">
-            <p className="text-sm font-medium mb-3">Eject migration tier</p>
-            <div className="grid grid-cols-3 gap-2">
-              {(["diy", "dwy", "dfy"] as const).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setMigrationTier(t)}
-                  className={cn(
-                    "rounded-lg border px-3 py-2 text-sm font-medium transition uppercase",
-                    migrationTier === t ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink"
-                  )}
-                >
-                  {t}
-                </button>
-              ))}
+            <p className="text-sm font-medium mb-3">How do you want to do this?</p>
+            <div className="grid grid-cols-2 gap-2">
+              <TierButton
+                active={tier === "express"}
+                onClick={() => setTier("express")}
+                name={`Express · $${siteConfig.pricing.express.price}`}
+                blurb="Auto-rebuild + AI kit. You deploy."
+              />
+              <TierButton
+                active={tier === "concierge"}
+                onClick={() => setTier("concierge")}
+                name={`Concierge · $${siteConfig.pricing.concierge.price}`}
+                blurb="A human does the whole thing."
+              />
             </div>
-            <p className="text-xs text-ink-muted mt-2">
-              DIY $49 · Done-with-You $299 · Done-for-You $1,499 (one-time)
-            </p>
-          </div>
-
-          <div className="mt-5">
-            <p className="text-sm font-medium mb-3">Editor retainer (optional)</p>
-            <div className="grid grid-cols-3 gap-2">
-              {(["none", "hobby", "pro"] as const).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setEditorTier(t)}
-                  className={cn(
-                    "rounded-lg border px-3 py-2 text-sm font-medium transition capitalize",
-                    editorTier === t ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink"
-                  )}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-ink-muted mt-2">
-              Hobby $79/mo · Pro $149/mo · Or run it yourself ($0).
-            </p>
           </div>
         </div>
 
         <div className="p-6 lg:p-8 bg-paper-warm">
           <div className="flex items-baseline justify-between mb-2">
-            <p className="text-xs font-mono uppercase tracking-widest text-ink-muted">36-month total</p>
-            <span className="text-xs font-mono text-ink-muted">{platform}</span>
+            <p className="text-xs font-mono uppercase tracking-widest text-ink-muted">3-year cost</p>
+            <span className="text-xs font-mono text-ink-muted capitalize">{platform}</span>
           </div>
 
           <div className="space-y-5">
-            <Row label={`Stay on ${platform}`} value={platformCost36} highlight="ink" />
-            <Row label="Move to Eject" value={ejectCost36} highlight="signal" />
+            <Row label={`Stay on ${platform}`} value={platform3yr} highlight="ink" />
+            <Row label="Move to Eject" value={eject3yr} highlight="signal" />
             <div className="h-px bg-line my-1" />
             <div>
               <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-1">You save</p>
               <p className="text-5xl h-display text-signal">
-                ${Math.max(0, savings).toLocaleString()}
+                ${savings3yr.toLocaleString()}
               </p>
               <p className="text-sm text-ink-soft mt-1">
-                {pctSavings > 0 ? `That's ${pctSavings}% less` : "Adjust your plan to see savings"} over 3 years.
+                {pctSavings3yr > 0 ? `That's ${pctSavings3yr}% less` : "Adjust your plan to see savings"} over 3 years.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-line bg-white p-4 mt-4">
+              <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-3">After 5 years</p>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <p className="text-ink-muted text-xs mb-0.5">{platform}</p>
+                  <p className="font-semibold tabular-nums">${platform5yr.toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="text-ink-muted text-xs mb-0.5">Eject</p>
+                  <p className="font-semibold tabular-nums text-signal">${eject5yr.toLocaleString()}</p>
+                </div>
+              </div>
+              <p className="text-xs text-ink-muted mt-3 leading-snug">
+                Once you pay Eject, ongoing cost is{" "}
+                <span className="font-semibold text-ink">$0</span>. Hosting on Cloudflare is free. Editing with ChatGPT or Claude free tier is free. Your domain renewal is paid to your registrar either way.
               </p>
             </div>
           </div>
 
-          <div className="mt-8 rounded-xl border border-line bg-white p-4 text-sm">
-            <p className="font-medium mb-1">What's included on Eject</p>
-            <ul className="text-ink-soft space-y-1.5 mt-2">
-              <li>· A Next.js 15 codebase you own forever (GitHub)</li>
-              <li>· Cloudflare Pages free hosting (the &quot;$5/yr&quot; story is your domain)</li>
-              <li>· Forms, redirects, sitemaps, SEO meta — all wired</li>
-              <li>· Optional chat-based editor (no code required)</li>
-            </ul>
-          </div>
-
-          <a
-            href="/migrate"
+          <Link
+            href={`/checkout?tier=${tier}`}
             className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-ink text-paper px-4 py-3 text-sm font-medium hover:bg-signal transition"
           >
-            Start a free 5-minute audit →
-          </a>
+            Start with {tier === "express" ? "Express" : "Concierge"} · ${ejectOneTime} →
+          </Link>
         </div>
       </div>
     </div>
@@ -221,40 +214,46 @@ function NumberInput({
   min,
   max,
   step = 1,
-  prefix,
 }: {
   value: number;
   onChange: (v: number) => void;
   min: number;
   max: number;
   step?: number;
-  prefix?: string;
 }) {
   return (
-    <div className="relative">
-      {prefix && (
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted text-sm pointer-events-none">{prefix}</span>
+    <input
+      type="number"
+      value={value}
+      min={min}
+      max={max}
+      step={step}
+      onChange={(e) => onChange(Math.max(min, Math.min(max, Number(e.target.value) || 0)))}
+      className="w-full rounded-lg border border-line bg-paper py-2.5 px-3 text-sm focus:border-ink focus:outline-none"
+    />
+  );
+}
+
+function TierButton({ active, onClick, name, blurb }: { active: boolean; onClick: () => void; name: string; blurb: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "rounded-lg border px-3 py-3 text-left transition",
+        active ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink"
       )}
-      <input
-        type="number"
-        value={value}
-        min={min}
-        max={max}
-        step={step}
-        onChange={(e) => onChange(Math.max(min, Math.min(max, Number(e.target.value) || 0)))}
-        className={cn(
-          "w-full rounded-lg border border-line bg-paper py-2.5 text-sm focus:border-ink focus:outline-none",
-          prefix ? "pl-7 pr-3" : "px-3"
-        )}
-      />
-    </div>
+    >
+      <p className="text-sm font-medium">{name}</p>
+      <p className={cn("text-xs mt-0.5", active ? "text-paper/70" : "text-ink-muted")}>{blurb}</p>
+    </button>
   );
 }
 
 function Row({ label, value, highlight }: { label: string; value: number; highlight: "ink" | "signal" }) {
   return (
     <div className="flex items-center justify-between">
-      <p className="text-sm text-ink-soft">{label}</p>
+      <p className="text-sm text-ink-soft capitalize">{label}</p>
       <p className={cn("text-2xl font-semibold tabular-nums", highlight === "signal" ? "text-signal" : "text-ink")}>
         ${value.toLocaleString()}
       </p>
