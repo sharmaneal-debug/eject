@@ -37,7 +37,6 @@ export function Footer() {
           <ul className="space-y-2 text-ink-muted">
             <li><Link className="hover:text-signal" href="/privacy">Privacy</Link></li>
             <li><Link className="hover:text-signal" href="/terms">Terms</Link></li>
-            <li><Link className="hover:text-signal" href="/refunds">Refunds</Link></li>
           </ul>
         </div>
       </div>

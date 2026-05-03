@@ -54,7 +54,7 @@ export function Hero() {
  </h1>
 
  <p className="mt-6 text-lg md:text-xl text-ink-soft max-w-2xl leading-relaxed">
- Paste your site URL below. We rebuild it as a folder of files you own, ready to deploy on any free host. No more being locked in. No more paying these platforms every month for something you already designed.
+ Paste your site URL below. We send you a step-by-step playbook + AI agent prompts that walk you (or any chatbot you use) through rebuilding your site as files you own, on free hosting you set up yourself. No more being locked in. No more paying these platforms every month for something you already designed.
  </p>
 
  <form

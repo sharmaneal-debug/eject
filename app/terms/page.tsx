@@ -61,8 +61,18 @@ export default function Page() {
 
           <h2 className="h-section text-2xl text-ink mt-10">4. Refunds</h2>
           <p>
-            Our refund policy is detailed at{" "}
-            <Link className="text-accent hover:text-signal" href="/refunds">/refunds</Link>. In short: full refund within 14 days if you&apos;re not satisfied with the migrated site, no questions asked.
+            <strong className="text-ink">14-day refund, no arguments.</strong> Within 14 days of receiving your migration (the moment we email you the kit, the preview link, or the final files, whichever comes first), if you&apos;re not satisfied with the result, email{" "}
+            <a className="text-accent hover:text-signal" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>{" "}
+            and we&apos;ll refund 100% of what you paid. No phone call, no survey, no justification required.
+          </p>
+          <p>
+            Refunds process within 5 business days. The funds appear back on your card within 3–10 business days after that, depending on your bank. If you initiated a chargeback through your bank instead of contacting us first, we can&apos;t also refund (the chargeback fee makes it a loss for us); email us first and we&apos;ll process the refund the same way.
+          </p>
+          <p>
+            If you&apos;re refunded, you stop using any files we sent and remove any preview deployment we built. We delete our snapshot of your old site within 30 days. Your domain stays yours; you&apos;ve always owned it.
+          </p>
+          <p>
+            Outside the 14-day window, we still fix bugs we shipped at no charge. Changes you made yourself after handoff are not covered.
           </p>
 
           <h2 className="h-section text-2xl text-ink mt-10">5. What you own</h2>
@@ -149,7 +159,6 @@ export default function Page() {
           <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">Companion documents</p>
           <ul className="text-sm space-y-1 text-accent">
             <li><Link className="hover:text-signal" href="/privacy">Privacy Policy</Link></li>
-            <li><Link className="hover:text-signal" href="/refunds">Refund Policy</Link></li>
           </ul>
         </div>
       </Section>

@@ -136,7 +136,6 @@ export default function Page() {
           <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">Companion documents</p>
           <ul className="text-sm space-y-1 text-accent">
             <li><Link className="hover:text-signal" href="/terms">Terms of Service</Link></li>
-            <li><Link className="hover:text-signal" href="/refunds">Refund Policy</Link></li>
           </ul>
         </div>
       </Section>

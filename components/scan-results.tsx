@@ -88,7 +88,7 @@ export function ScanResults({ data }: { data: ScanData }) {
  ${ejectExpress3yr.toLocaleString()}
  </p>
  <p className="text-xs text-ink-muted mt-1 font-mono">
- $49 once. Hosting and edits are free, forever.
+ $49 once. Run the playbook in an afternoon. No more bills.
  </p>
  </div>
  </div>
@@ -112,24 +112,24 @@ export function ScanResults({ data }: { data: ScanData }) {
  <div className="grid md:grid-cols-2 gap-px bg-line rounded-2xl overflow-hidden border border-line">
  <Path
  badge="Express · $49"
- title="Paste your URL. We rebuild it. You approve."
+ title="Get the playbook. Rebuild your site yourself, with AI doing the work."
  steps={[
  "Pay $49",
- "We rebuild your site automatically",
- "You get a preview link in your inbox",
- "You click around, tell us if anything's off",
- "We hand you the files + a 10-min deploy guide for free hosting",
+ "Get a step-by-step playbook + AI prompts customized to your site",
+ "Paste prompts into ChatGPT, Claude, or Cursor (free tiers all work)",
+ "AI rebuilds your site, page by page. ~1 afternoon, hands-on",
+ "Deploy on free hosting with the included 10-min guide",
  ]}
  />
  <Path
  badge="Concierge · $299"
- title="Don't want to deal with any of it? Just message us."
+ title="Don't want to run the playbook yourself? We do every step for you."
  steps={[
  "Pay $299",
- "Send us a quick message. That's the entire intake",
- "A human handles the whole rebuild",
- "We deploy it on free hosting for you and move your domain",
- "Live in 7 days, with one round of edits",
+ "We run the playbook on our infrastructure",
+ "We deploy on free hosting in your name and move your domain",
+ "You get a preview link to review",
+ "Live in 7 days, one round of revisions included",
  ]}
  dark
  />
