@@ -19,7 +19,7 @@ export type ScanData = {
  durationMs: number;
 };
 
-const SUPPORTED_PLATFORMS = ["webflow", "framer", "wix", "squarespace"];
+const SUPPORTED_PLATFORMS = ["webflow", "framer", "wix", "squarespace", "wordpress"];
 
 export function ScanResults({ data }: { data: ScanData }) {
  const supported = SUPPORTED_PLATFORMS.includes(data.platform);
@@ -179,7 +179,7 @@ export function ScanResults({ data }: { data: ScanData }) {
  Looks like your site is on {data.platformLabel}. We don&apos;t migrate that yet.
  </p>
  <p className="text-ink-soft mb-5">
- We currently move sites off Webflow, Framer, Wix, and Squarespace. If your site is on something else, drop us a line and we&apos;ll tell you whether it&apos;s a fit.
+ We currently move sites off Webflow, Framer, Wix, Squarespace, and WordPress. If your site is on something else, drop us a line and we&apos;ll tell you whether it&apos;s a fit.
  </p>
  <Link
  href={`mailto:${siteConfig.email}?subject=My site is on ${data.platformLabel}`}

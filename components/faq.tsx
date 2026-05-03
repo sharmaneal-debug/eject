@@ -26,8 +26,8 @@ const items = [
  a: "We rebuild it. Submissions go to your email, just like before. Free up to 3,000 a month. Far more than most businesses ever receive.",
  },
  {
- q: "Do you migrate Shopify or WordPress?",
- a: "Not yet. We focus on Webflow, Framer, Wix, and Squarespace. If you're on something else, drop us an email and we'll tell you whether it's a good fit.",
+ q: "Do you migrate Shopify?",
+ a: "Not yet. We migrate marketing sites on Webflow, Framer, Wix, Squarespace, and WordPress. Shopify storefronts are a different beast (live carts, payment flows, inventory) and need a real ecommerce migration, not a marketing-site rebuild. If you're on Shopify, email us and we'll tell you whether your case is a fit.",
  },
  {
  q: "What if I don't like it?",

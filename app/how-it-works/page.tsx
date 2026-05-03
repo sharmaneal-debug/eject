@@ -104,7 +104,7 @@ export default function Page() {
               <li>· Online stores with 200+ products and a real cart</li>
               <li>· Sites with member-only / login areas</li>
               <li>· Sites running in multiple languages</li>
-              <li>· Shopify or WordPress (Webflow / Framer / Wix / Squarespace only)</li>
+              <li>· Shopify (we do Webflow, Framer, Wix, Squarespace, WordPress)</li>
               <li>· Sites with custom subscription billing</li>
             </ul>
           </div>

@@ -5,7 +5,7 @@ export const siteConfig = {
  tagline: "Stop paying $300 a year for your website.",
  shortTagline: "Your website. Yours forever. No more monthly bills.",
  description:
- "Eject hands you a playbook + AI agent prompts to rebuild your Webflow, Framer, Wix, or Squarespace site as files you own. Set up free hosting yourself in an afternoon, then edit your site forever by chatting with any AI.",
+ "Eject hands you a playbook + AI agent prompts to rebuild your Webflow, Framer, Wix, Squarespace, or WordPress site as files you own. Set up free hosting yourself in an afternoon, then edit your site forever by chatting with any AI.",
  email: "hi@ejectfrom.com",
  twitter: "@useeject",
 
