@@ -9,7 +9,7 @@ Ordered top to bottom. Each phase has a "what" and a "why now." Strikethrough as
 These four block everything downstream.
 
 - [ ] **Sign up for Vercel** with your GitHub account (2 min). Import `sharmaneal-debug/eject`. Paste env vars from `.env.local`. Deploy. → `eject.vercel.app`. Walk-through: `docs/setup-deploy.md`.
-- [ ] **Reuse your personal Z-Cyber Resend account** (5 min — no new account, no new bill). Add `eject.co` as a second verified domain there. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@eject.co` → `neal@laniakea.design` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
+- [ ] **Reuse your Laniakea Resend account** (5 min — no new account, no new bill). Add `eject.co` as a second verified domain alongside VedasAI. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@eject.co` → `neal@laniakea.design` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
 - [ ] **Roll the live Stripe key** (`sk_live_…`) you posted in chat earlier (3 min). Stripe dashboard → API keys → Roll. Old key keeps working for 1 hour. Replace nowhere — we're using test keys for everything. The leaked key is the security issue, not the test ones.
 - [ ] **Buy `eject.co`** (~$30, 5 min). Cloudflare Registrar is the cheapest renewal-fair option ($9.99 first year, $9.77/yr after). Or Porkbun ($12.71/yr). Skip GoDaddy.
 
