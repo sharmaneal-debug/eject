@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { sendEmail, expressKickoffEmail, conciergeKickoffEmail } from "@/lib/email";
+import { logLead } from "@/lib/leads";
 
 export const runtime = "edge";
 
@@ -48,6 +49,22 @@ export async function POST(req: Request) {
   const tpl = tier === "concierge" ? conciergeKickoffEmail({ name, siteUrl }) : expressKickoffEmail({ name, siteUrl });
 
   const result = await sendEmail({ to: email, ...tpl, customerName: name });
+
+  // Log paid customer to the lead store.
+  await logLead({
+    event: "checkout_paid",
+    data: {
+      tier,
+      siteUrl,
+      email,
+      name,
+      stripeSessionId: session.id,
+      amountPaid: typeof session.amount_total === "number" ? session.amount_total / 100 : null,
+      currency: session.currency,
+      kickoffEmailSent: result.ok,
+      kickoffEmailError: result.error ?? null,
+    },
+  });
 
   return NextResponse.json({
     ok: true,

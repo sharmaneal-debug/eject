@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logLead } from "@/lib/leads";
 
 export const runtime = "edge";
 
@@ -165,6 +166,22 @@ export async function POST(req: Request) {
  // Eject cost over 3 years: $499 once + ~$15/yr domain.
  const ejectThreeYear = 499 + 15 * 3;
  const savings = Math.max(0, threeYear - ejectThreeYear);
+
+ // Log every scan to Google Sheets for funnel tracking. Fire-and-forget.
+ logLead({
+ event: "scan_completed",
+ data: {
+ url,
+ hostname: new URL(url).hostname,
+ platform,
+ pageCount,
+ monthlyCostEstimate: monthly,
+ annualCostEstimate: annual,
+ durationMs: Date.now() - t0,
+ userAgent: req.headers.get("user-agent") ?? "",
+ referer: req.headers.get("referer") ?? "",
+ },
+ });
 
  return NextResponse.json({
  ok: true,
