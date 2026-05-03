@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { logLead } from "@/lib/leads";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "edge";
+
+const SCAN_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const SCAN_MAX_PER_IP = 12; // ~12 scans per hour per IP
 
 type Platform = "webflow" | "framer" | "wix" | "squarespace" | "shopify" | "wordpress" | "other";
 
@@ -133,6 +137,19 @@ async function countPages(origin: string): Promise<number> {
 
 export async function POST(req: Request) {
  const t0 = Date.now();
+
+ // Rate limit per IP — prevents anyone from running up our Anthropic budget
+ // by scripting the scanner.
+ const ip = clientIp(req);
+ const rl = rateLimit({ key: `scan:${ip}`, windowMs: SCAN_WINDOW_MS, max: SCAN_MAX_PER_IP });
+ if (!rl.ok) {
+ const retryAfter = Math.max(1, Math.ceil((rl.resetAt - Date.now()) / 1000));
+ return NextResponse.json(
+ { ok: false, error: "you've hit the scan limit for this hour. try again in a bit." },
+ { status: 429, headers: { "Retry-After": String(retryAfter) } },
+ );
+ }
+
  try {
  const body = (await req.json()) as { url?: string };
  if (!body?.url) {

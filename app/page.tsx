@@ -8,11 +8,14 @@ import { PricingTable } from "@/components/pricing-table";
 import { SocialProof } from "@/components/social-proof";
 import { Faq } from "@/components/faq";
 import { Section, Eyebrow } from "@/components/section";
+import { JsonLd } from "@/components/json-ld";
+import { organizationSchema, websiteSchema, serviceSchema } from "@/lib/schema";
 import Link from "next/link";
 
 export default function HomePage() {
  return (
  <>
+ <JsonLd data={[organizationSchema(), websiteSchema(), serviceSchema()]} />
  <Hero />
  <WhyOwn />
  <AiKit />

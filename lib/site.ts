@@ -9,6 +9,14 @@ export const siteConfig = {
  email: "hi@ejectfrom.com",
  twitter: "@useeject",
 
+ // Legal entity that owns this service. Used in footer copyright, privacy
+ // policy, terms of service, refund policy, and Stripe billing descriptors.
+ legalEntity: {
+ name: "Laniakea LLC",
+ short: "Laniakea LLC",
+ contactEmail: "hi@ejectfrom.com",
+ },
+
  // Two tiers. Both are "done for you". The difference is who.
  // Express: paste URL → our system rebuilds → preview link → you approve → yours.
  // Concierge: message us → human handles everything → done in 7 days.
