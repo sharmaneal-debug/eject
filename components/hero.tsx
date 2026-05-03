@@ -54,8 +54,7 @@ export function Hero() {
  </h1>
 
  <p className="mt-6 text-lg md:text-xl text-ink-soft max-w-2xl leading-relaxed">
- Paste your Webflow, Framer, Wix, or Squarespace URL below. We rebuild your site as one you own.
- You get a preview link to approve. After that, it&apos;s yours forever. And you can change anything just by typing what you want into ChatGPT.
+ Paste your Webflow, Framer, Wix, or Squarespace URL below. We rebuild your site as one you own and send you a preview link to approve. Then it&apos;s yours forever, hooked up to any AI chatbot you already use. Drop in our ready-to-paste instructions, tell ChatGPT, Claude, Gemini, or Cursor what you want changed, and your site updates itself.
  </p>
 
  <form
