@@ -21,7 +21,7 @@ This is the long version of that search. We're going to walk through:
 - [What you'll lose by leaving](#what-you-actually-lose) and what to replace each piece with
 - [A day-by-day, 14-day migration playbook](#the-14-day-playbook) you can run yourself this weekend
 - [A decision tree](#diy-or-hire) for "should I do this myself or pay someone"
-- [The chat editor](#the-chat-editor) — the thing that makes Next.js viable for non-developers
+- [The chat editor](#the-chat-editor). The thing that makes Next.js viable for non-developers
 - [An interactive cost calculator](#cost-calculator)
 - [FAQ](#faq) (with proper schema markup, because your blog should pull its weight)
 
@@ -35,7 +35,7 @@ Here's the thing nobody on Webflow's pricing page wants to walk you through: the
 
 ### Webflow's [2025–2026 pricing structure](https://webflow.com/pricing), unpacked
 
-A small B2B marketing site with a blog needs, at minimum, a **CMS Site Plan** ($23/mo paid annually, or $29 month-to-month). That's the floor. Underneath are Basic ($14) and Starter (free), which don't include a CMS — so they're useless for anything with a blog.
+A small B2B marketing site with a blog needs, at minimum, a **CMS Site Plan** ($23/mo paid annually, or $29 month-to-month). That's the floor. Underneath are Basic ($14) and Starter (free), which don't include a CMS. So they're useless for anything with a blog.
 
 But here's where it gets fun. CMS plan ships with:
 
@@ -46,11 +46,11 @@ But here's where it gets fun. CMS plan ships with:
 
 Cross any of those, and you upgrade. Your options:
 
-| Plan         | Monthly (annual) | CMS items | Form submissions | Bandwidth |
+| Plan | Monthly (annual) | CMS items | Form submissions | Bandwidth |
 |--------------|------------------|-----------|------------------|-----------|
-| CMS          | $23              | 2,000     | 250/mo           | 200 GB    |
-| Business     | $39              | 10,000    | 2,500/mo         | 400 GB    |
-| Enterprise   | Custom (~$235+)  | 10,000+   | Custom           | Custom    |
+| CMS | $23 | 2,000 | 250/mo | 200 GB |
+| Business | $39 | 10,000 | 2,500/mo | 400 GB |
+| Enterprise | Custom (~$235+) | 10,000+ | Custom | Custom |
 
 Now layer on the **Workspace** (the team account that owns the projects). For 2+ editors you need a paid Workspace, starting at $19/user/month for the Core plan. A typical 3-person marketing team running their own site lands at **~$57/mo just for the seats**, before the site plan.
 
@@ -62,27 +62,27 @@ Let's say you have:
 - 600 form submissions a month from your demo + newsletter forms (you'll need Business)
 - 350 GB bandwidth (you're over CMS, fine on Business)
 - 3 marketers in the workspace
-- One designer who freelances quarterly (1 guest editor — included)
+- One designer who freelances quarterly (1 guest editor. Included)
 
-| Line item                     | Monthly | 36-month |
+| Line item | Monthly | 36-month |
 |-------------------------------|---------|----------|
-| Business Site Plan            | $39     | $1,404   |
-| Workspace Core (3 seats)      | $57     | $2,052   |
-| Estimated overage buffer*     | $15     | $540     |
-| **Total**                     | **$111**| **$3,996** |
+| Business Site Plan | $39 | $1,404 |
+| Workspace Core (3 seats) | $57 | $2,052 |
+| Estimated overage buffer* | $15 | $540 |
+| **Total** | **$111**| **$3,996** |
 
 *Form add-ons, bandwidth spikes during launch weeks, occasional CMS-item-cap upgrades when you import a partner directory.
 
 ### What the same site costs on Cloudflare Pages
 
-| Line item                     | Monthly | 36-month |
+| Line item | Monthly | 36-month |
 |-------------------------------|---------|----------|
-| Cloudflare Pages (hosting)    | $0      | $0       |
-| Cloudflare Workers (functions)| $0*     | $0*      |
-| Domain (you already pay this) | —       | —        |
-| Sanity / Payload CMS (free tier) | $0   | $0       |
-| Resend (forms, 3K/mo free)    | $0      | $0       |
-| **Total**                     | **$0**  | **$0**   |
+| Cloudflare Pages (hosting) | $0 | $0 |
+| Cloudflare Workers (functions)| $0* | $0* |
+| Domain (you already pay this) |. |. |
+| Sanity / Payload CMS (free tier) | $0 | $0 |
+| Resend (forms, 3K/mo free) | $0 | $0 |
+| **Total** | **$0** | **$0** |
 
 *Cloudflare's free tier on Pages is genuinely free: unlimited static requests, unlimited bandwidth, 500 builds/month, 100K Worker requests/day. For a site doing a few thousand visits a day, you will never see a bill. ([Cloudflare Pages pricing](https://www.cloudflare.com/plans/developer-platform/))
 
@@ -104,7 +104,7 @@ Here's what you're giving up, and what plugs the hole.
 
 **Replacement:** This is the legitimate hard problem. Three options:
 - **[Tailwind](https://tailwindcss.com/) + AI-assisted code editing** (our pick). The new generation of LLM-powered editors lets you describe a change in plain English and watch the JSX update. We built [Eject's chat editor](#the-chat-editor) specifically to fill this gap.
-- **[Builder.io](https://www.builder.io/)** — visual page builder that compiles to Next.js components. Adds a vendor.
+- **[Builder.io](https://www.builder.io/)**. Visual page builder that compiles to Next.js components. Adds a vendor.
 - **Just hand off Figma + a developer.** Honest answer for design-heavy sites.
 
 ### 2. The CMS
@@ -112,16 +112,16 @@ Here's what you're giving up, and what plugs the hole.
 **What Webflow does:** Reference fields, plain-text + rich-text fields, image management, a clean editor UI for marketers.
 
 **Replacement (pick one):**
-- **Markdown files in the repo** — best for engineering-led teams. Free, version-controlled, but marketers have to learn Git or you build them an admin.
-- **[Sanity](https://www.sanity.io/)** — free tier covers 3 users, 10K documents, 100GB bandwidth. The closest 1:1 to Webflow CMS. Strong choice for content-heavy teams.
-- **[Payload CMS](https://payloadcms.com/)** — self-hosted, open source, runs alongside your Next.js app. Free forever if you have a database (and Cloudflare D1 is free).
-- **[Notion](https://www.notion.so/) as a CMS** — via [Notion API](https://developers.notion.com/). Marketers love it. Cheap.
+- **Markdown files in the repo**. Best for engineering-led teams. Free, version-controlled, but marketers have to learn Git or you build them an admin.
+- **[Sanity](https://www.sanity.io/)**. Free tier covers 3 users, 10K documents, 100GB bandwidth. The closest 1:1 to Webflow CMS. Strong choice for content-heavy teams.
+- **[Payload CMS](https://payloadcms.com/)**. Self-hosted, open source, runs alongside your Next.js app. Free forever if you have a database (and Cloudflare D1 is free).
+- **[Notion](https://www.notion.so/) as a CMS**. Via [Notion API](https://developers.notion.com/). Marketers love it. Cheap.
 
 ### 3. Forms
 
 **What Webflow does:** Native form handling, captures submissions, emails you on submit, basic spam filtering.
 
-**Replacement:** [Resend](https://resend.com/) (3,000 free emails/mo) + a Cloudflare Worker route handler. About 40 lines of code, total. Add [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) for free spam filtering — it's the [hCaptcha](https://www.hcaptcha.com/) replacement that doesn't show your visitors a "select all the boats" puzzle.
+**Replacement:** [Resend](https://resend.com/) (3,000 free emails/mo) + a Cloudflare Worker route handler. About 40 lines of code, total. Add [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) for free spam filtering. It's the [hCaptcha](https://www.hcaptcha.com/) replacement that doesn't show your visitors a "select all the boats" puzzle.
 
 ### 4. Hosting
 
@@ -153,7 +153,7 @@ Here's what you're giving up, and what plugs the hole.
 
 **Replacement:** [`next-sitemap`](https://www.npmjs.com/package/next-sitemap). One npm install, one config file, runs at build time. Done.
 
-That's the whole inventory. Eight things. Each has a free or near-free replacement. The only one that requires real thought is the visual editor — which is exactly the problem the rest of this article is about solving.
+That's the whole inventory. Eight things. Each has a free or near-free replacement. The only one that requires real thought is the visual editor. Which is exactly the problem the rest of this article is about solving.
 
 ---
 
@@ -161,7 +161,7 @@ That's the whole inventory. Eight things. Each has a free or near-free replaceme
 
 Two weeks. Evenings and one weekend. You can do this.
 
-### Day 1 — Audit and inventory
+### Day 1. Audit and inventory
 
 Before you write a single line of code, take stock. Open your Webflow project and list:
 
@@ -175,22 +175,22 @@ Before you write a single line of code, take stock. Open your Webflow project an
 
 Save this as `migration-plan.md` in a fresh directory. Doesn't need to be pretty. Needs to be complete.
 
-### Day 2 — Export everything you can
+### Day 2. Export everything you can
 
-Webflow's CMS export is gated. Here's the [Webflow Help Center page confirming](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site) that you need a Site Plan to export the static HTML/CSS — but the more useful path is the **CMS API**.
+Webflow's CMS export is gated. Here's the [Webflow Help Center page confirming](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site) that you need a Site Plan to export the static HTML/CSS. But the more useful path is the **CMS API**.
 
 Get a [Webflow API token](https://help.webflow.com/hc/en-us/articles/33961203217171-API-access-token) (Site Settings → Apps & Integrations → Generate API Token). Then:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.webflow.com/v2/sites/YOUR_SITE_ID/collections"
+ "https://api.webflow.com/v2/sites/YOUR_SITE_ID/collections"
 ```
 
 That returns every collection schema. For each collection, hit `/collections/{id}/items` and dump to JSON. We've published a [free export script](https://eject.dev/tools/webflow-export) (Node, MIT license, no signup) that does the whole tree in one command and saves it as a directory of markdown files.
 
 ![placeholder: terminal showing the export script running, with "Exported 412 blog posts, 8 authors, 24 categories" output]
 
-### Day 3 — Pick your CMS layer
+### Day 3. Pick your CMS layer
 
 Decision tree:
 
@@ -201,7 +201,7 @@ Decision tree:
 
 Our default recommendation for B2B SaaS migrating from Webflow: **Sanity**. It's the closest workflow match to what your team already knows.
 
-### Day 4 — Scaffold Next.js + Tailwind
+### Day 4. Scaffold Next.js + Tailwind
 
 ```bash
 npx create-next-app@latest mysite --typescript --tailwind --app
@@ -223,23 +223,23 @@ npx sanity@latest init --bare
 
 Sanity Studio is now embedded in your Next.js app at `/studio`. Marketers will edit content there.
 
-### Day 5 — Rebuild the design system
+### Day 5. Rebuild the design system
 
 Don't try to perfectly recreate your Webflow site. You're going to copy the spirit, not the literal HTML. Open your live site in one window, your editor in the other.
 
-Start with global tokens — colors, fonts, spacing — in `tailwind.config.ts`. Then build atoms (Button, Input, Card) before pages.
+Start with global tokens. Colors, fonts, spacing. In `tailwind.config.ts`. Then build atoms (Button, Input, Card) before pages.
 
 ![placeholder: side-by-side of live Webflow site and a localhost Next.js rebuild with the same hero section]
 
 Tip: paste a screenshot of each section into [v0](https://v0.dev/), [Cursor](https://cursor.com/), or your AI editor of choice and ask for the Tailwind component. You'll get to 80% in minutes. Polish the last 20% by hand.
 
-### Day 6 — Rebuild Home + Pricing + About
+### Day 6. Rebuild Home + Pricing + About
 
-These are static pages. They live in `app/page.tsx`, `app/pricing/page.tsx`, `app/about/page.tsx`. Copy the structure. Keep the copy verbatim from Webflow (it ranks for things — don't break that).
+These are static pages. They live in `app/page.tsx`, `app/pricing/page.tsx`, `app/about/page.tsx`. Copy the structure. Keep the copy verbatim from Webflow (it ranks for things. Don't break that).
 
 End of Day 6 you should have your top 3 marketing pages running locally, indistinguishable from production at first glance.
 
-### Day 7 — Rebuild the blog
+### Day 7. Rebuild the blog
 
 Two routes: `app/blog/page.tsx` (the index) and `app/blog/[slug]/page.tsx` (individual posts).
 
@@ -251,15 +251,15 @@ const posts = await client.fetch(`*[_type == "post"] | order(publishedAt desc)`)
 
 If markdown, use [`gray-matter`](https://www.npmjs.com/package/gray-matter) + [`next-mdx-remote`](https://www.npmjs.com/package/next-mdx-remote).
 
-Get every post rendering. Don't worry about styling perfection yet — that's Day 8.
+Get every post rendering. Don't worry about styling perfection yet. That's Day 8.
 
-### Day 8 — Polish, typography, dark mode if you want it
+### Day 8. Polish, typography, dark mode if you want it
 
 Use [Tailwind Typography](https://tailwindcss.com/plus/?fp=tw-typography) (`@tailwindcss/typography`) for the article body. Free, gorgeous, one class (`prose`).
 
 ![placeholder: two-column comparison of the same blog post in Webflow and in the new Next.js site]
 
-### Day 9 — Forms
+### Day 9. Forms
 
 Build a `/api/contact/route.ts`:
 
@@ -269,49 +269,49 @@ import { Resend } from 'resend'
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: Request) {
-  const data = await req.json()
-  await resend.emails.send({
-    from: 'forms@yourdomain.com',
-    to: 'you@yourdomain.com',
-    subject: 'New contact form submission',
-    text: JSON.stringify(data, null, 2),
-  })
-  return Response.json({ ok: true })
+ const data = await req.json()
+ await resend.emails.send({
+ from: 'forms@yourdomain.com',
+ to: 'you@yourdomain.com',
+ subject: 'New contact form submission',
+ text: JSON.stringify(data, null, 2),
+ })
+ return Response.json({ ok: true })
 }
 ```
 
 Add [Turnstile](https://www.cloudflare.com/products/turnstile/) on the front-end. Total cost: $0/mo for up to 3,000 form sends.
 
-### Day 10 — SEO infrastructure
+### Day 10. SEO infrastructure
 
 - Install `next-sitemap`. Configure it. Run `next-sitemap` after build.
 - Add `app/robots.ts` returning a Robots config.
 - Add `generateMetadata` to every page that needs custom og:image, title, description.
-- Add structured data — at minimum, [`Organization`](https://schema.org/Organization) on the homepage and [`Article`](https://schema.org/Article) on blog posts.
+- Add structured data. At minimum, [`Organization`](https://schema.org/Organization) on the homepage and [`Article`](https://schema.org/Article) on blog posts.
 
 ![placeholder: Lighthouse score panel showing 100/100/100/100 for the new build]
 
-### Day 11 — Set up Cloudflare Pages
+### Day 11. Set up Cloudflare Pages
 
 Push your repo to GitHub. In the [Cloudflare dashboard](https://dash.cloudflare.com/), click **Pages → Connect to Git → select your repo**. Build command: `npm run build`. Output: `.next` (Pages handles the adapter automatically with the new [Workers + Next.js integration](https://developers.cloudflare.com/pages/framework-guides/nextjs/)).
 
 First deploy takes about 90 seconds. You now have a `*.pages.dev` URL. Test everything.
 
-### Day 12 — Redirects and 301s
+### Day 12. Redirects and 301s
 
-Pull your sitemap from Webflow. For every URL pattern that's changing — be honest, some will — write a 301 in `next.config.js`:
+Pull your sitemap from Webflow. For every URL pattern that's changing. Be honest, some will. Write a 301 in `next.config.js`:
 
 ```javascript
 async redirects() {
-  return [
-    { source: '/old-blog/:slug', destination: '/blog/:slug', permanent: true },
-  ]
+ return [
+ { source: '/old-blog/:slug', destination: '/blog/:slug', permanent: true },
+ ]
 }
 ```
 
 If your URL structure is staying identical (and you should try to make this true), you don't need any redirects. Either way, **keep every existing URL alive at the same path** if at all possible. Google noticed when you ranked for these. Don't make Google re-learn your site.
 
-### Day 13 — DNS cutover, zero downtime
+### Day 13. DNS cutover, zero downtime
 
 You've already verified the Cloudflare Pages preview at `*.pages.dev`. Now:
 
@@ -322,7 +322,7 @@ You've already verified the Cloudflare Pages preview at `*.pages.dev`. Now:
 
 ![placeholder: Screaming Frog showing 0 4xx errors and a green status bar]
 
-### Day 14 — Decommission Webflow + monitor
+### Day 14. Decommission Webflow + monitor
 
 24 hours after cutover, with no errors in [Sentry](https://sentry.io/) and traffic stable in [Plausible](https://plausible.io/) or GA4:
 
@@ -366,7 +366,7 @@ If none of those are you: keep reading.
 
 ---
 
-## The chat editor — the missing piece {#the-chat-editor}
+## The chat editor. The missing piece {#the-chat-editor}
 
 Here's the core objection to leaving Webflow: "but my marketing team can't edit code."
 
@@ -418,15 +418,15 @@ For most readers of this post, the number is between $3,200 and $9,800.
 
 ### Can I export my Webflow site?
 
-Partially. Webflow lets you export static HTML/CSS only on a Site Plan, and **the [CMS export is locked behind paid plans](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site)**. The cleanest path is the [CMS API](https://developers.webflow.com/) — it gives you full data access and is what we use in the [Eject export tool](https://eject.dev/tools/webflow-export).
+Partially. Webflow lets you export static HTML/CSS only on a Site Plan, and **the [CMS export is locked behind paid plans](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site)**. The cleanest path is the [CMS API](https://developers.webflow.com/). It gives you full data access and is what we use in the [Eject export tool](https://eject.dev/tools/webflow-export).
 
 ### What happens to my CMS content?
 
-It comes with you — every collection, every item, every reference field. Our exporter dumps it to JSON or markdown. From there, you import into Sanity, Payload, Notion, or just commit the markdown to your repo. Nothing is lost.
+It comes with you. Every collection, every item, every reference field. Our exporter dumps it to JSON or markdown. From there, you import into Sanity, Payload, Notion, or just commit the markdown to your repo. Nothing is lost.
 
 ### Will my SEO survive the migration?
 
-Yes — if you do it correctly. Three rules:
+Yes. If you do it correctly. Three rules:
 
 1. Keep every URL identical where possible (`/blog/post-slug` stays `/blog/post-slug`).
 2. 301 redirect anything that has to change.
@@ -436,11 +436,11 @@ Done right, you won't see a ranking drop. Many sites see a small lift from the s
 
 ### Is Cloudflare Pages really free?
 
-Yes. The [free plan](https://www.cloudflare.com/plans/developer-platform/) includes unlimited static requests, unlimited bandwidth, 500 builds/month, and 100K Worker invocations per day. For a typical small-to-medium B2B marketing site, you will not hit any of those caps. Cloudflare's business model is enterprise contracts and DNS — they give away the dev tier because it's cheap for them and a long funnel into paid Workers usage.
+Yes. The [free plan](https://www.cloudflare.com/plans/developer-platform/) includes unlimited static requests, unlimited bandwidth, 500 builds/month, and 100K Worker invocations per day. For a typical small-to-medium B2B marketing site, you will not hit any of those caps. Cloudflare's business model is enterprise contracts and DNS. They give away the dev tier because it's cheap for them and a long funnel into paid Workers usage.
 
 ### What if I want to switch back to Webflow?
 
-You can. Your Webflow project sits archived on the free Workspace plan. Spin up a new Site Plan, re-publish, point DNS back. About 30 minutes of work. No lock-in either direction — that's the point.
+You can. Your Webflow project sits archived on the free Workspace plan. Spin up a new Site Plan, re-publish, point DNS back. About 30 minutes of work. No lock-in either direction. That's the point.
 
 ### How long does the migration actually take?
 
@@ -452,7 +452,7 @@ The migration itself: $49 (DIY tool), $299 (with our help), or $1,499 (we do eve
 
 ### What about my forms?
 
-Forms become 40 lines of code in a Next.js [route handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) plus a [Resend](https://resend.com/) account (3,000 emails/mo free). Spam protection via [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) (free, no CAPTCHA puzzles). Submissions can be emailed to you, posted to Slack, or written to a database — your call.
+Forms become 40 lines of code in a Next.js [route handler](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) plus a [Resend](https://resend.com/) account (3,000 emails/mo free). Spam protection via [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) (free, no CAPTCHA puzzles). Submissions can be emailed to you, posted to Slack, or written to a database. Your call.
 
 ---
 
@@ -472,73 +472,73 @@ Or if you're not sure yet: [run the calculator](#cost-calculator). The number te
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Can I export my Webflow site?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Partially. Webflow lets you export static HTML and CSS only on a paid Site Plan, and the CMS export is locked behind paid plans. The cleanest path is the Webflow CMS API, which gives full data access. The Eject export tool uses this API to extract everything in one command."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What happens to my CMS content?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It comes with you — every collection, every item, every reference field. The Eject exporter dumps your CMS to JSON or markdown. From there, you import into Sanity, Payload, Notion, or commit the markdown to your repo. Nothing is lost."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will my SEO survive the migration?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, if done correctly. Keep every URL identical where possible, 301 redirect anything that has to change, and don't ship until your sitemap matches your Webflow sitemap. Most sites see a small ranking lift from the speed improvement on Cloudflare's edge network."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is Cloudflare Pages really free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Cloudflare Pages free plan includes unlimited static requests, unlimited bandwidth, 500 builds per month, and 100,000 Worker invocations per day. For a typical small-to-medium B2B marketing site, you will not hit any of those caps."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What if I want to switch back to Webflow?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You can. Your Webflow project sits archived on the free Workspace plan. Spin up a new Site Plan, re-publish, point DNS back. About 30 minutes of work. There is no lock-in in either direction."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How long does the migration take?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Solo, evenings plus a weekend: 10 to 14 days. With Eject Done-with-You support: 5 business days. Done-for-You: 3 business days, hands-off."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How much does the migration cost?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The migration is $49 (DIY tool), $299 (Done-with-You), or $1,499 (Done-for-You). After that, hosting is free on Cloudflare Pages, plus your CMS layer which is typically free on Sanity's starter tier. Compared to Webflow's $111 monthly average, payback is 4 to 14 months."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What about my forms?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Forms become 40 lines of code in a Next.js route handler plus a Resend account, free for 3,000 emails per month. Spam protection via Cloudflare Turnstile is also free and does not show CAPTCHA puzzles. Submissions can be emailed, posted to Slack, or written to a database."
-      }
-    }
-  ]
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+ {
+ "@type": "Question",
+ "name": "Can I export my Webflow site?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "Partially. Webflow lets you export static HTML and CSS only on a paid Site Plan, and the CMS export is locked behind paid plans. The cleanest path is the Webflow CMS API, which gives full data access. The Eject export tool uses this API to extract everything in one command."
+ }
+ },
+ {
+ "@type": "Question",
+ "name": "What happens to my CMS content?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "It comes with you. Every collection, every item, every reference field. The Eject exporter dumps your CMS to JSON or markdown. From there, you import into Sanity, Payload, Notion, or commit the markdown to your repo. Nothing is lost."
+ }
+ },
+ {
+ "@type": "Question",
+ "name": "Will my SEO survive the migration?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "Yes, if done correctly. Keep every URL identical where possible, 301 redirect anything that has to change, and don't ship until your sitemap matches your Webflow sitemap. Most sites see a small ranking lift from the speed improvement on Cloudflare's edge network."
+ }
+ },
+ {
+ "@type": "Question",
+ "name": "Is Cloudflare Pages really free?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "Yes. Cloudflare Pages free plan includes unlimited static requests, unlimited bandwidth, 500 builds per month, and 100,000 Worker invocations per day. For a typical small-to-medium B2B marketing site, you will not hit any of those caps."
+ }
+ },
+ {
+ "@type": "Question",
+ "name": "What if I want to switch back to Webflow?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "You can. Your Webflow project sits archived on the free Workspace plan. Spin up a new Site Plan, re-publish, point DNS back. About 30 minutes of work. There is no lock-in in either direction."
+ }
+ },
+ {
+ "@type": "Question",
+ "name": "How long does the migration take?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "Solo, evenings plus a weekend: 10 to 14 days. With Eject Done-with-You support: 5 business days. Done-for-You: 3 business days, hands-off."
+ }
+ },
+ {
+ "@type": "Question",
+ "name": "How much does the migration cost?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "The migration is $49 (DIY tool), $299 (Done-with-You), or $1,499 (Done-for-You). After that, hosting is free on Cloudflare Pages, plus your CMS layer which is typically free on Sanity's starter tier. Compared to Webflow's $111 monthly average, payback is 4 to 14 months."
+ }
+ },
+ {
+ "@type": "Question",
+ "name": "What about my forms?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "Forms become 40 lines of code in a Next.js route handler plus a Resend account, free for 3,000 emails per month. Spam protection via Cloudflare Turnstile is also free and does not show CAPTCHA puzzles. Submissions can be emailed, posted to Slack, or written to a database."
+ }
+ }
+ ]
 }
 </script>
