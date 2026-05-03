@@ -293,8 +293,6 @@ The AI gives you a working component. Paste it into `app/page.tsx`. Refresh the 
 
 Repeat for About, Services, Contact, FAQ. Each page is roughly 15 minutes of AI back-and-forth. By end of Day 6, your top 5 marketing pages are running locally and look like your live site.
 
-![placeholder: a side-by-side of a live Squarespace site and the Next.js rebuild on localhost, indistinguishable at a glance]
-
 ### Day 7. Wire up the blog
 
 The starter template already has `app/blog/page.tsx` (the index) and `app/blog/[slug]/page.tsx` (individual posts). They read from `content/blog/`. Drop your converted markdown in. The blog renders. About 10 minutes of work.

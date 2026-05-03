@@ -170,8 +170,6 @@ Before you write a single line of code, take stock. Open your Webflow project an
 - Every redirect rule
 - Every external integration (Mailchimp, Calendly embed, Intercom)
 
-![placeholder: screenshot of a Webflow Designer panel with the CMS Collections list expanded, showing field types]
-
 Save this as `migration-plan.md` in a fresh directory. Doesn't need to be pretty. Needs to be complete.
 
 ### Day 2. Export everything you can
@@ -186,8 +184,6 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 ```
 
 That returns every collection schema. For each collection, hit `/collections/{id}/items` and dump to JSON. We've published a [free export script](https://ejectfrom.com/tools/webflow-export) (Node, MIT license, no signup) that does the whole tree in one command and saves it as a directory of markdown files.
-
-![placeholder: terminal showing the export script running, with "Exported 412 blog posts, 8 authors, 24 categories" output]
 
 ### Day 3. Pick your CMS layer
 
@@ -211,8 +207,6 @@ npm run dev
 
 Open `http://localhost:3000`. You have a working Next.js 15 app. This took 90 seconds.
 
-![placeholder: Next.js default homepage in the browser at localhost:3000]
-
 If you picked Sanity:
 
 ```bash
@@ -227,8 +221,6 @@ Sanity Studio is now embedded in your Next.js app at `/studio`. Marketers will e
 Don't try to perfectly recreate your Webflow site. You're going to copy the spirit, not the literal HTML. Open your live site in one window, your editor in the other.
 
 Start with global tokens. Colors, fonts, spacing. In `tailwind.config.ts`. Then build atoms (Button, Input, Card) before pages.
-
-![placeholder: side-by-side of live Webflow site and a localhost Next.js rebuild with the same hero section]
 
 Tip: paste a screenshot of each section into [v0](https://v0.dev/), [Cursor](https://cursor.com/), or your AI editor of choice and ask for the Tailwind component. You'll get to 80% in minutes. Polish the last 20% by hand.
 
@@ -255,8 +247,6 @@ Get every post rendering. Don't worry about styling perfection yet. That's Day 8
 ### Day 8. Polish, typography, dark mode if you want it
 
 Use [Tailwind Typography](https://tailwindcss.com/plus/?fp=tw-typography) (`@tailwindcss/typography`) for the article body. Free, gorgeous, one class (`prose`).
-
-![placeholder: two-column comparison of the same blog post in Webflow and in the new Next.js site]
 
 ### Day 9. Forms
 
@@ -288,8 +278,6 @@ Add [Turnstile](https://www.cloudflare.com/products/turnstile/) on the front-end
 - Add `generateMetadata` to every page that needs custom og:image, title, description.
 - Add structured data. At minimum, [`Organization`](https://schema.org/Organization) on the homepage and [`Article`](https://schema.org/Article) on blog posts.
 
-![placeholder: Lighthouse score panel showing 100/100/100/100 for the new build]
-
 ### Day 11. Set up Cloudflare Pages
 
 Push your repo to GitHub. In the [Cloudflare dashboard](https://dash.cloudflare.com/), click **Pages → Connect to Git → select your repo**. Build command: `npm run build`. Output: `.next` (Pages handles the adapter automatically with the new [Workers + Next.js integration](https://developers.cloudflare.com/pages/framework-guides/nextjs/)).
@@ -318,8 +306,6 @@ You've already verified the Cloudflare Pages preview at `*.pages.dev`. Now:
 2. **Don't unpublish Webflow yet.** Keep it live for 24 hours as a fallback.
 3. Check the live domain. Hit every important page. Submit forms. Verify Google Analytics is firing.
 4. Run a [Screaming Frog](https://www.screamingfrog.co.uk/seo-spider/) crawl against the new domain. Compare to a pre-cutover crawl of the Webflow site. Fix any 404s.
-
-![placeholder: Screaming Frog showing 0 4xx errors and a green status bar]
 
 ### Day 14. Decommission Webflow + monitor
 
@@ -384,8 +370,6 @@ The editor:
 5. On approval, merges to main and the change goes live
 
 If something breaks: **one click rolls back** to the previous deploy. Cloudflare Pages keeps every deploy forever; rollback is instant.
-
-![placeholder: chat editor UI with a marketer typing "swap the hero headline" and a preview iframe rendering the change]
 
 This is the part that didn't exist two years ago. It's why "Webflow vs. Next.js" used to be a real tradeoff, and now isn't. You get the developer-grade output and the marketer-grade workflow. You stop paying $111/month for the privilege of running a Squarespace competitor on training wheels.
 

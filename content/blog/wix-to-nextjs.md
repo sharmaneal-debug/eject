@@ -144,8 +144,6 @@ Open every page in Chrome. Right-click → **View Page Source** → save the HTM
 
 You will get HTML that's about 80 percent useful. Wix wraps everything in deeply nested div soup, but the actual copy is in there.
 
-![placeholder: Screaming Frog crawler showing a table of all URLs from a Wix site with status codes, titles, and word counts]
-
 ### 2. Blog posts
 
 Wix's blog has an RSS feed at `https://yoursite.com/blog-feed.xml` (sometimes `/feed`, depending on template). That feed includes the full body of each post in HTML. Save it. That is your single most valuable artifact in the entire migration, because it's the closest thing Wix offers to a content export and most people don't know it exists.
@@ -165,8 +163,6 @@ Wix serves images from their `static.wixstatic.com` CDN with cryptic IDs. To get
 3. Download with `curl` or your browser.
 
 Or. Easier. Use the wget mirror command above, which pulls images automatically into a `static.wixstatic.com/` folder mirroring the original paths.
-
-![placeholder: terminal output of wget mirroring a Wix site, showing it downloading 312 images and 24 HTML pages]
 
 ### 4. Forms and form submissions
 
@@ -215,8 +211,6 @@ Before any code, walk the site and write down what you have:
 
 Save it as `migration-plan.md`. Doesn't need to be polished. Needs to be complete.
 
-![placeholder: a Notion or markdown document listing all pages, forms, and features of a Wix site as a checklist]
-
 ### Day 2. Extract everything (the manual part)
 
 Run the Screaming Frog crawl. Run the wget mirror. Save the RSS feed. Export every CSV from the Wix dashboard. Save the sitemap.
@@ -229,8 +223,6 @@ Run the RSS-to-markdown converter on `blog-feed.xml`. You should now have a `/co
 
 For non-blog pages, copy the visible text out of the HTML manually into Markdown. This is annoying but takes about 15 minutes per page. Do not try to convert the Wix HTML directly. It's wrapped in 14 layers of nested div soup. Easier to highlight the page in your browser, paste into a Markdown file, and clean it up.
 
-![placeholder: VS Code split view with a Wix page on the left and a clean Markdown version on the right]
-
 ### Day 4. Scaffold the Next.js app
 
 ```bash
@@ -241,8 +233,6 @@ npm run dev
 ```
 
 Open `http://localhost:3000`. You have a working Next.js 15 app on Tailwind. This took 90 seconds. The dev server has hot reload. Every change you save is reflected in the browser instantly.
-
-![placeholder: the default Next.js homepage running on localhost:3000]
 
 ### Day 5. Set up your content layer
 
@@ -259,8 +249,6 @@ Most small businesses leaving Wix should start with markdown. You're a one- or t
 Open your old Wix site in one browser window. Open VS Code in the other. Rebuild Home, About, Services, Contact in `app/page.tsx`, `app/about/page.tsx`, etc. Keep the copy verbatim from your live Wix site. Google ranks the words you have, not the words you'd like to have. Don't break that on day one.
 
 For layout, paste a screenshot of each Wix section into [Cursor](https://cursor.com/), [v0.dev](https://v0.dev/), or [Claude](https://claude.ai/) and ask for a Tailwind component. You'll get to 80 percent in minutes. Polish the last 20 percent by hand.
-
-![placeholder: side-by-side comparison of a live Wix homepage and a rebuilt Next.js version on localhost]
 
 ### Day 7. Rebuild the blog
 
@@ -295,8 +283,6 @@ That's the whole blog. About 40 lines for the index page too. Cheaper than the c
 Install [Tailwind Typography](https://tailwindcss.com/plus/?fp=tw-typography) (`@tailwindcss/typography`) and add `prose` to your blog body. Free, gorgeous, one class.
 
 Pick fonts that match your Wix site. Most Wix sites use Google Fonts under the hood, so check your live page's CSS in DevTools to see what's actually loading and use the same font in `next/font/google`.
-
-![placeholder: Lighthouse score panel showing 100/100/100/100 for the rebuilt site, vs. a typical Wix score of around 38]
 
 While we're here: Wix sites famously score badly on Lighthouse. The community average is around **38 out of 100** on mobile, weighted heavily by Core Web Vitals. A bare-bones Next.js + Tailwind site on Cloudflare Pages typically scores **95+ out of the box**. That's a real SEO and conversion-rate improvement, not a vanity metric.
 
@@ -338,8 +324,6 @@ Push your repo to GitHub. In the [Cloudflare dashboard](https://dash.cloudflare.
 
 First deploy is roughly 90 seconds. You now have a `*.pages.dev` URL. Click around, test every page, submit a form, verify analytics fire.
 
-![placeholder: Cloudflare Pages dashboard showing a successful first deploy with build logs]
-
 ### Day 12. Redirects (this is critical)
 
 Pull your saved `sitemap.xml` from Day 2. Cross-reference every URL on it against your new site's URL structure. For every URL pattern that's changing, write a 301 redirect.
@@ -363,8 +347,6 @@ In Cloudflare DNS, point your apex (`yourdomain.com`) and `www` to the Pages pro
 Don't unpublish your Wix site immediately. Keep it live on a subdomain like `legacy.yourdomain.com` for 24 hours so you have a fallback if anything breaks.
 
 Crawl your new site with Screaming Frog. Compare the report to your pre-cutover Wix crawl. Every URL that was returning a 200 should still be a 200. Fix any 404s before turning Wix off.
-
-![placeholder: Screaming Frog showing 0 4xx errors and a green status bar after the cutover]
 
 ### Day 14. Cancel Wix and breathe
 
@@ -431,8 +413,6 @@ That's not the world anymore. After your migration is done, you edit your site b
 5. Paste them in. Push. Cloudflare deploys in 30 seconds.
 
 If something breaks: **one click rolls back** to the previous deploy. Cloudflare Pages keeps every deploy forever; rollback is instant and free.
-
-![placeholder: a ChatGPT conversation with a paste-in instructions kit followed by a request to change the homepage headline, with the AI returning the exact code edit]
 
 This is the part that didn't exist three years ago, and it's the reason "Wix vs. self-hosted Next.js" used to be a real tradeoff and now isn't. You get the developer-grade output (fast, free, owned, exportable) and the marketer-grade workflow (chat in English, see the change). You stop paying $89/month for the privilege of using a website builder that won't let you leave.
 

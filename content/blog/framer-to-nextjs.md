@@ -170,8 +170,6 @@ Open your Framer project and list everything. Don't skip this. The migrations th
 - Every external embed (Calendly, Intercom, YouTube, Mailchimp)
 - Every animation that matters (the hero parallax, the scroll-driven section, the magnetic buttons)
 
-![placeholder: screenshot of the Framer left sidebar showing the Pages and CMS Collections tree]
-
 Save this as `migration-plan.md` in a fresh folder. It does not need to be pretty. It needs to be complete.
 
 ### Day 2. Lift the design data
@@ -189,8 +187,6 @@ wget --mirror --convert-links --adjust-extension \
 ```
 
 This gives you a folder of HTML and assets you can reference while rebuilding. Not the final codebase. Just the source material.
-
-![placeholder: terminal showing wget mirror output with "Downloaded 47 files, 18MB" message]
 
 ### Day 3. Pick your CMS layer
 
@@ -214,15 +210,11 @@ npm run dev
 
 Open `http://localhost:3000`. You have a working Next.js 15 app with Tailwind and the Motion animation library installed. Total time: 2 minutes.
 
-![placeholder: Next.js default homepage running at localhost:3000 with terminal showing the dev server output]
-
 ### Day 5. Rebuild the design system
 
 Don't try to perfectly clone Framer pixel-for-pixel. Aim for the spirit, not the literal HTML. Open your live site in one window, your editor in another.
 
 Start with global tokens. Colors, fonts, spacing. In `tailwind.config.ts`. Build atoms (Button, Input, Card) before pages. Keep it small and composable.
-
-![placeholder: side-by-side of the live Framer site and the localhost Next.js rebuild showing matching hero sections]
 
 Trick: take a screenshot of each section, paste it into [v0.dev](https://v0.dev/) or your AI editor, and ask for the Tailwind component. You'll get to 80% in minutes. Hand-polish the last 20%.
 
@@ -255,8 +247,6 @@ export function Hero() {
 
 Every Framer animation primitive (springs, scroll progress, hover, drag, layout transitions) is a one-liner in Motion. The [Motion docs](https://motion.dev/) are excellent. Bookmark them.
 
-![placeholder: Motion documentation page showing the springs + scroll-trigger examples with live previews]
-
 ### Day 8. Rebuild the blog
 
 Two routes: `app/blog/page.tsx` (the index) and `app/blog/[slug]/page.tsx` (individual posts).
@@ -283,8 +273,6 @@ Get every post rendering. Worry about typography on Day 9.
 ### Day 9. Polish, typography, dark mode
 
 Use [Tailwind Typography](https://tailwindcss.com/plus/?fp=tw-typography) (`@tailwindcss/typography`) for the article body. One class (`prose`) gives you better default typography than 90% of Framer sites.
-
-![placeholder: two-column comparison of the same blog post rendered in Framer and in the new Next.js site]
 
 ### Day 10. Forms
 
@@ -316,8 +304,6 @@ Add [Turnstile](https://www.cloudflare.com/products/turnstile/) on the front-end
 - Add `generateMetadata` to every page that needs custom og:image, title, description.
 - Add structured data: [`Organization`](https://schema.org/Organization) on the homepage, [`Article`](https://schema.org/Article) on blog posts, `FAQPage` on FAQ pages.
 
-![placeholder: Lighthouse score panel showing 100/100/100/100 for the new build]
-
 ### Day 12. Deploy to Cloudflare Pages
 
 Push your repo to GitHub. In the [Cloudflare dashboard](https://dash.cloudflare.com/), click **Pages → Connect to Git → select your repo**. Build command: `npm run build`. Pages handles the Next.js adapter automatically with the [Workers + Next.js integration](https://developers.cloudflare.com/pages/framework-guides/nextjs/).
@@ -339,8 +325,6 @@ async redirects() {
 If your URL structure is staying identical (and you should try to keep it that way), you don't need any redirects. **Keep every existing URL alive at the same path** if at all possible. Google noticed when you ranked for these. Don't make Google relearn your site.
 
 Then, in Cloudflare DNS, point your apex (`yourdomain.com`) and `www` to the Pages project. Cloudflare auto-issues SSL. **Don't unpublish Framer yet**. Keep it as a fallback for 24 hours.
-
-![placeholder: Cloudflare Pages dashboard showing the new deployment as Active with the custom domain attached]
 
 ### Day 14. Decommission Framer + monitor
 
@@ -409,8 +393,6 @@ The model:
 6. On approval, merges to main and the change goes live
 
 If something breaks: **one click rolls back** to the previous deploy. Cloudflare keeps every deploy forever. Rollback is instant.
-
-![placeholder: chat editor UI with a small business owner typing "swap the hero headline" and a preview iframe rendering the change in real time]
 
 This is the part that did not exist when most of the "should I leave Framer?" debates were written. It's why the Framer-vs-Next.js tradeoff used to be real and now is mostly emotional. You get the developer-grade output (real codebase you own) with the Framer-grade workflow (describe what you want, see it happen). And you stop paying $90/mo for the privilege of designing inside someone else's billing system.
 
