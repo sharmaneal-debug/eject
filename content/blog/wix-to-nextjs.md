@@ -1,5 +1,5 @@
 ---
-title: "Wix to Next.js: Yes, It's Possible (2026)"
+title: "Wix to Next.js: Yes, It's Possible"
 slug: "wix-to-nextjs"
 description: "Wix has zero code export. Most exit guides give up there. Here's the honest rebuild path. Manual content extraction, design rebuild, redirects, and free hosting forever."
 date: "2026-05-03"
@@ -9,8 +9,7 @@ ogImage: "/og/wix-to-nextjs.png"
 canonical: "https://ejectfrom.com/blog/wix-to-nextjs"
 ---
 
-# Wix to Next.js: Yes, It's Possible (2026)
-
+# Wix to Next.js: Yes, It's Possible
 You typed "wix to nextjs" into Google because you already know the answer to a question Wix doesn't want you to ask: **how do I get my site out?**
 
 You poked around the Wix help center. You found the "export" pages. You read the part where it says, very politely, that there is no way to export your site. You closed that tab. You opened a Reddit thread. Someone said "rebuild from scratch." You opened another tab. Someone tried to sell you a Wix-to-WordPress migrator that scrapes your live site like it's 2009. You closed that tab too.
@@ -34,7 +33,7 @@ Reading time: about 18 minutes. Time-to-payback after migration: usually 4 to 12
 
 ---
 
-## The honest cost math {#the-cost-math}
+## The honest cost math
 
 Let's start with the part Wix's pricing page is technically correct about and emotionally misleading on: how much your site actually costs to run.
 
@@ -93,7 +92,7 @@ But the numbers aren't even the strongest argument. The strongest argument is th
 
 ---
 
-## The lock-in story (this is the real one) {#the-lockin}
+## The lock-in story (this is the real one)
 
 Here's the part Wix doesn't put on the pricing page.
 
@@ -126,7 +125,7 @@ This is also why "wix to nextjs" search volume is so low and the SERP is so thin
 
 ---
 
-## What you'll need to manually extract {#what-you-extract}
+## What you'll need to manually extract
 
 Because there is no Wix API for content retrieval, the migration runs in reverse: instead of *exporting from* Wix, you *scrape from* the live site you've been paying to host. Your published pages are public, so this is fine. It's your content, on your domain.
 
@@ -200,7 +199,7 @@ That is the complete extraction list. Note what is *not* on the list: a `package
 
 ---
 
-## The 14-day rebuild playbook {#playbook}
+## The 14-day rebuild playbook
 
 Wix migrations take longer than [Framer](https://ejectfrom.com/blog/framer-to-nextjs) or [Webflow](https://ejectfrom.com/blog/webflow-to-nextjs) because of the manual content extraction in the previous section. Plan for two real weeks instead of the one weekend a Framer rebuild can take. If you only have evenings, stretch it to three weeks. That's fine.
 
@@ -378,7 +377,7 @@ Crawl your new site with Screaming Frog. Compare the report to your pre-cutover 
 
 ---
 
-## "Should I DIY or hire someone?" {#diy-or-hire}
+## "Should I DIY or hire someone?"
 
 Honest answer up front: of the four platforms we cover, **Wix is the least DIY-friendly migration**. Not because Next.js is hard. Because the source platform refuses to give you any structured data, and the manual extraction step requires patience that most small-business owners don't want to spend their evenings on.
 
@@ -417,7 +416,7 @@ Otherwise: keep going.
 
 ---
 
-## The chat editor (this is what changed) {#chat-editor}
+## The chat editor (this is what changed)
 
 The objection that used to kill Next.js migrations from Wix is the editing workflow. "But I'm not a coder, I just want to change the headline."
 
@@ -439,7 +438,7 @@ This is the part that didn't exist three years ago, and it's the reason "Wix vs.
 
 ---
 
-## How much will YOU save? {#cost-calculator}
+## How much will YOU save?
 
 The calculator below takes your current Wix setup. Plan, paid apps, team size. And shows you the 36-month delta on Eject + Cloudflare Pages.
 
@@ -461,7 +460,7 @@ For most readers of this post, the number lands between $2,800 and $7,200. For B
 
 ---
 
-## FAQ {#faq}
+## FAQ
 
 ### Can I export my Wix site?
 
@@ -503,7 +502,7 @@ The migration itself: **$49** (Express, you do the work with our toolkit) or **$
 
 ---
 
-## Ready? Pick your tier. {#cta}
+## Ready? Pick your tier.
 
 | Tier | Price | What you get |
 |------|-------|--------------|

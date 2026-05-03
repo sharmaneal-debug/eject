@@ -1,5 +1,5 @@
 ---
-title: "Webflow Is Too Expensive. Here's the Real Math (2026)"
+title: "Webflow Is Too Expensive. Here's the Real Math"
 slug: "webflow-is-too-expensive"
 description: "Webflow's listed price is the appetizer. The bill arrives later. Workspace seats, CMS-item caps, form-submission overages, bandwidth surprises. Here's the honest 36-month math with real numbers."
 date: "2026-05-03"
@@ -9,8 +9,7 @@ ogImage: "/og/webflow-is-too-expensive.png"
 canonical: "https://ejectfrom.com/blog/webflow-is-too-expensive"
 ---
 
-# Webflow Is Too Expensive. Here's the Real Math (2026)
-
+# Webflow Is Too Expensive. Here's the Real Math
 You logged into your Webflow billing page. You stared at the number for a second. You did some math. You realized your one marketing site costs more per month than your phone, your Spotify Family, your Notion team plan, and your CRM combined. You typed "webflow too expensive" into Google, half-hoping to find that you were wrong.
 
 You're not wrong.
@@ -32,7 +31,7 @@ Total reading time: about 14 minutes. Total potential savings: between $3,200 an
 
 ---
 
-## The headline cost vs. what you actually pay {#headline-cost}
+## The headline cost vs. what you actually pay
 
 Open [webflow.com/pricing](https://webflow.com/pricing) in a new tab. You'll see four numbers in a row, all crossed-out-marketing-friendly:
 
@@ -60,7 +59,7 @@ That table is the full bill. Not the one on the homepage.
 
 ---
 
-## The hidden upgrades, with real numbers {#hidden-upgrades}
+## The hidden upgrades, with real numbers
 
 Let's go line by line. Real prices, real triggers, real damage.
 
@@ -122,7 +121,7 @@ That's not a hidden cost. That's a re-classification. But it tells you something
 
 ---
 
-## The 36-month math, line by line {#36-month-math}
+## The 36-month math, line by line
 
 Let's stop generalizing and run the numbers on a specific, common scenario.
 
@@ -163,7 +162,7 @@ If you run an agency with 5 clients on Webflow? **$27,965 over three years.** If
 
 ---
 
-## When Webflow is genuinely worth it {#worth-it}
+## When Webflow is genuinely worth it
 
 Time for the part where we don't pretend Webflow is a scam. It's not. They built a real product, and there are scenarios where the price is fair value.
 
@@ -183,7 +182,7 @@ There's no shame in being any of those people. The point of this post is not "We
 
 ---
 
-## When Webflow is not worth it {#not-worth-it}
+## When Webflow is not worth it
 
 These are the situations where you're paying a lot of money to be locked into the wrong tool. If two or more of these describe you, it's time.
 
@@ -205,7 +204,7 @@ If three or more of those resonate: stop reading. [Run the calculator.](#cost-ca
 
 ---
 
-## Real customer voices {#voices}
+## Real customer voices
 
 We didn't make these up. These are public:
 
@@ -225,7 +224,7 @@ These are not edge cases. Search any developer forum from the last 18 months and
 
 ---
 
-## How much will YOU save? {#cost-calculator}
+## How much will YOU save?
 
 Plug in your current Webflow setup. Get a 36-month delta against owning your site on Cloudflare Pages.
 
@@ -247,7 +246,7 @@ For most readers of this post, the number lands between **$3,200 and $14,000**. 
 
 ---
 
-## The alternative: own your site {#alternative}
+## The alternative: own your site
 
 The whole reason Webflow can charge you $170/mo is that you don't own the underlying site. You own a license to publish it. The moment that license gets more expensive, you're stuck.
 
@@ -269,7 +268,7 @@ Want the deep version of this. The 14-day playbook, the day-by-day checklist, th
 
 ---
 
-## FAQ. Pricing only {#faq}
+## FAQ. Pricing only
 
 ### What does Webflow really cost over 5 years?
 
@@ -305,7 +304,7 @@ Eject Express ($49 one-time) for the auto-rebuild. Then host on Cloudflare Pages
 
 ---
 
-## Pick your tier {#cta}
+## Pick your tier
 
 | Tier | Price | What you get |
 |---|---|---|

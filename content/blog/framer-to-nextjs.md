@@ -1,5 +1,5 @@
 ---
-title: "Framer to Next.js: The Honest Migration Guide (2026)"
+title: "Framer to Next.js: The Honest Migration Guide"
 slug: "framer-to-nextjs"
 description: "Framer doesn't ship a code export. Here's the honest rebuild path. What it costs, what you lose, what you keep, and the day-by-day playbook to get out without losing your design."
 date: "2026-05-03"
@@ -9,8 +9,7 @@ ogImage: "/og/framer-to-nextjs.png"
 canonical: "https://ejectfrom.com/blog/framer-to-nextjs"
 ---
 
-# Framer to Next.js: The Honest Migration Guide (2026)
-
+# Framer to Next.js: The Honest Migration Guide
 You designed something beautiful in Framer. You shipped it. Traffic is decent. The site looks better than 95% of the internet. Then last October you got an email about pricing changes, and the site you'd been paying $20 a month for is suddenly a different number, and a different number again if you want to keep the CMS the way it is, and your stomach did the thing where you realize the tool you fell in love with is now charging you rent on your own design.
 
 You typed "framer to nextjs" into Google. You're in the right place.
@@ -31,7 +30,7 @@ Reading time: about 17 minutes. Three-year payback for the average reader: betwe
 
 ---
 
-## The honest cost math {#the-cost-math}
+## The honest cost math
 
 Framer's pricing page lists tidy little numbers. The bill you actually pay is a different shape.
 
@@ -88,7 +87,7 @@ The math isn't whether to migrate. The math is whether you'll do it in two weeks
 
 ---
 
-## What you actually lose by leaving Framer {#what-you-lose}
+## What you actually lose by leaving Framer
 
 This is the part most "Framer alternatives" posts skip. Framer does several things genuinely well, and if you migrate without a plan for each one you'll find out which ones the hard way.
 
@@ -157,7 +156,7 @@ That's the whole list. Eight things. Each has a free or near-free replacement. T
 
 ---
 
-## The 14-day day-by-day rebuild playbook {#playbook}
+## The 14-day day-by-day rebuild playbook
 
 Two weeks. Evenings and one weekend. Nothing in here requires a CS degree.
 
@@ -355,7 +354,7 @@ Then, in Cloudflare DNS, point your apex (`yourdomain.com`) and `www` to the Pag
 
 ---
 
-## Should I do this myself or hire someone? {#diy-or-hire}
+## Should I do this myself or hire someone?
 
 Real talk. Not every site is a good DIY candidate, and not every owner should spend two weeks of evenings on this.
 
@@ -390,7 +389,7 @@ If none of those are you: keep reading.
 
 ---
 
-## The chat editor. The missing piece {#chat-editor}
+## The chat editor. The missing piece
 
 Here's the core objection to leaving Framer: "I'm a small business owner, not a developer. Once it's in code I'll never touch it again."
 
@@ -417,7 +416,7 @@ This is the part that did not exist when most of the "should I leave Framer?" de
 
 ---
 
-## How much will YOU save? {#cost-calculator}
+## How much will YOU save?
 
 Below is the live calculator. Plug in your current Framer setup and see your 36-month delta on Eject + Cloudflare Pages.
 
@@ -439,7 +438,7 @@ Most readers see a number between **$1,800 and $7,200**.
 
 ---
 
-## FAQ {#faq}
+## FAQ
 
 ### Can I export my Framer site?
 
@@ -483,7 +482,7 @@ You chat with ChatGPT or Claude. Every Eject migration ships with a "Site Editor
 
 ---
 
-## Ready? Pick your tier. {#cta}
+## Ready? Pick your tier.
 
 | Tier | Price | What you get |
 |------|-------|--------------|

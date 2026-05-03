@@ -37,7 +37,7 @@ If you're already on Framer, Webflow, Wix, or Squarespace and you want to see th
 
 ---
 
-## The shift that just happened {#the-shift}
+## The shift that just happened
 
 In early 2024, asking ChatGPT to edit your website was a parlor trick. It would give you broken HTML, hallucinate file names, miss closing tags, and confidently tell you to install something that didn't exist. People wrote thinkpieces about how AI was overrated.
 
@@ -55,7 +55,7 @@ That's the shift. The rest of this post is what to do about it.
 
 ---
 
-## Why this changes the math {#why-it-changes-math}
+## Why this changes the math
 
 Here's the trade you've been making for the last decade, whether or not you ever wrote it down:
 
@@ -81,7 +81,7 @@ Run the numbers for your situation in the [calculator below](#cost-calculator). 
 
 ---
 
-## The mental model: your website is a folder {#mental-model}
+## The mental model: your website is a folder
 
 If you take one thing from this post, take this: **a website, at the bottom of the stack, is a folder of files.**
 
@@ -127,7 +127,7 @@ If that sounds too simple, good. It is too simple. That's the point. The simplic
 
 ---
 
-## The setup (one time, about 10 minutes) {#setup}
+## The setup (one time, about 10 minutes)
 
 Here's what you actually do, end to end. The first time takes about 10 minutes. After that, edits are 30-second affairs.
 
@@ -176,7 +176,7 @@ We'll [compare those three in detail below](#which-ai). For now, if you're brand
 
 ---
 
-## Twelve real prompts you'd actually type {#prompts}
+## Twelve real prompts you'd actually type
 
 Abstract is bad. Specific is good. Here are twelve real prompts. The kind you'd actually send on a Tuesday morning when you remember you've been meaning to update something on your site. Each one shows you the prompt, what the AI does, and why it works.
 
@@ -280,7 +280,7 @@ These twelve cover roughly 80% of the changes a small business owner would actua
 
 ---
 
-## ChatGPT vs. Claude vs. Cursor. When to use which {#which-ai}
+## ChatGPT vs. Claude vs. Cursor. When to use which
 
 The honest comparison. All three work. They have different strengths.
 
@@ -322,7 +322,7 @@ You don't need to commit. They're all free. Try them in that order; pick whichev
 
 ---
 
-## What the AI won't do well {#what-it-wont-do}
+## What the AI won't do well
 
 This is the section we wish more articles in this space included. AI is excellent at the kinds of edits we listed above. It is genuinely worse than a human for a specific, predictable list of things. We will name them.
 
@@ -356,7 +356,7 @@ The mental model: AI is a fast, capable junior employee with no context about yo
 
 ---
 
-## "But I'm not technical" {#not-technical}
+## "But I'm not technical"
 
 If this entire post has felt like it's almost-but-not-quite written for you. Like maybe everyone else reading this is a little more comfortable with code than you are. We want to address that head-on.
 
@@ -375,7 +375,7 @@ If you're reading this and thinking "I still don't think I can do this": we offe
 
 ---
 
-## How much would YOU save? {#cost-calculator}
+## How much would YOU save?
 
 The calculator below takes your current setup, your current monthly bill, and your team size, and shows you the 36-month and 60-month delta of moving to Eject + chat-based editing.
 
@@ -397,7 +397,7 @@ For most small businesses currently paying $20–$40/month for a website builder
 
 ---
 
-## FAQ {#faq}
+## FAQ
 
 ### Will I break my site?
 
@@ -441,7 +441,7 @@ Honest answer: the catch is that for the first week or two, you're learning. The
 
 ---
 
-## Ready to start editing your site by chat? {#cta}
+## Ready to start editing your site by chat?
 
 Three ways in:
 

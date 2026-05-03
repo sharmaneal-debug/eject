@@ -1,16 +1,15 @@
 ---
-title: "Webflow to Next.js: The 14-Day Migration Playbook (2026 Edition)"
+title: "Webflow to Next.js: The 14-Day Migration Playbook"
 slug: "webflow-to-nextjs"
 description: "Webflow's CMS plan starts at $23/mo and balloons fast. Here's the honest 36-month math, the day-by-day playbook to migrate to Next.js on Cloudflare Pages, and an interactive cost calculator. No fluff."
 date: "2026-05-02"
 author: "Eject Team"
 tags: ["webflow", "nextjs", "migration", "cloudflare-pages", "cms", "jamstack", "seo"]
 ogImage: "/og/webflow-to-nextjs.png"
-canonical: "https://eject.dev/blog/webflow-to-nextjs"
+canonical: "https://ejectfrom.com/blog/webflow-to-nextjs"
 ---
 
-# Webflow to Next.js: The 14-Day Migration Playbook (2026 Edition)
-
+# Webflow to Next.js: The 14-Day Migration Playbook
 You opened your Webflow billing page. You saw a number. You closed the tab. You opened it again. You did some napkin math. You realized you've been paying for one site what an entire startup pays for production infrastructure on AWS. You typed "webflow to nextjs" into Google.
 
 Welcome. You're in the right place.
@@ -29,7 +28,7 @@ Total reading time: about 18 minutes. Total payback: roughly $4,000–$8,000 ove
 
 ---
 
-## The honest cost math {#the-honest-cost-math}
+## The honest cost math
 
 Here's the thing nobody on Webflow's pricing page wants to walk you through: the listed plan price is the appetizer. The bill arrives later.
 
@@ -92,7 +91,7 @@ The question isn't whether to migrate. It's whether you're going to rip the band
 
 ---
 
-## What you actually lose by leaving Webflow {#what-you-actually-lose}
+## What you actually lose by leaving Webflow
 
 Time for the honest part. Webflow does several things genuinely well, and if you migrate without a replacement plan you're going to find out which ones the hard way.
 
@@ -157,7 +156,7 @@ That's the whole inventory. Eight things. Each has a free or near-free replaceme
 
 ---
 
-## The 14-day day-by-day playbook {#the-14-day-playbook}
+## The 14-day day-by-day playbook
 
 Two weeks. Evenings and one weekend. You can do this.
 
@@ -186,7 +185,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
  "https://api.webflow.com/v2/sites/YOUR_SITE_ID/collections"
 ```
 
-That returns every collection schema. For each collection, hit `/collections/{id}/items` and dump to JSON. We've published a [free export script](https://eject.dev/tools/webflow-export) (Node, MIT license, no signup) that does the whole tree in one command and saves it as a directory of markdown files.
+That returns every collection schema. For each collection, hit `/collections/{id}/items` and dump to JSON. We've published a [free export script](https://ejectfrom.com/tools/webflow-export) (Node, MIT license, no signup) that does the whole tree in one command and saves it as a directory of markdown files.
 
 ![placeholder: terminal showing the export script running, with "Exported 412 blog posts, 8 authors, 24 categories" output]
 
@@ -333,7 +332,7 @@ You've already verified the Cloudflare Pages preview at `*.pages.dev`. Now:
 
 ---
 
-## The "should I do this myself" decision tree {#diy-or-hire}
+## The "should I do this myself" decision tree
 
 Real talk: not every site is a good candidate for migration, and not every owner should DIY.
 
@@ -366,7 +365,7 @@ If none of those are you: keep reading.
 
 ---
 
-## The chat editor. The missing piece {#the-chat-editor}
+## The chat editor. The missing piece
 
 Here's the core objection to leaving Webflow: "but my marketing team can't edit code."
 
@@ -392,7 +391,7 @@ This is the part that didn't exist two years ago. It's why "Webflow vs. Next.js"
 
 ---
 
-## How much will YOU save? {#cost-calculator}
+## How much will YOU save?
 
 Below is the live calculator. Plug in your current Webflow setup, see your 36-month delta on Eject + Cloudflare Pages.
 
@@ -414,11 +413,11 @@ For most readers of this post, the number is between $3,200 and $9,800.
 
 ---
 
-## FAQ {#faq}
+## FAQ
 
 ### Can I export my Webflow site?
 
-Partially. Webflow lets you export static HTML/CSS only on a Site Plan, and **the [CMS export is locked behind paid plans](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site)**. The cleanest path is the [CMS API](https://developers.webflow.com/). It gives you full data access and is what we use in the [Eject export tool](https://eject.dev/tools/webflow-export).
+Partially. Webflow lets you export static HTML/CSS only on a Site Plan, and **the [CMS export is locked behind paid plans](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site)**. The cleanest path is the [CMS API](https://developers.webflow.com/). It gives you full data access and is what we use in the [Eject export tool](https://ejectfrom.com/tools/webflow-export).
 
 ### What happens to my CMS content?
 
@@ -456,7 +455,7 @@ Forms become 40 lines of code in a Next.js [route handler](https://nextjs.org/do
 
 ---
 
-## Ready? Pick your tier. {#cta}
+## Ready? Pick your tier.
 
 | Tier | Price | What you get |
 |------|-------|--------------|
@@ -464,7 +463,7 @@ Forms become 40 lines of code in a Next.js [route handler](https://nextjs.org/do
 | **Done-with-You** | **$299 one-time** | Everything above + 5 business days of async Slack support with our migration team + a code review of your final repo before cutover. |
 | **Done-for-You** | **$1,499 one-time** | We migrate the whole site for you. 3 business days. You review and approve. Includes 30 days of post-launch support and the chat editor onboarded for your team. |
 
-**[Start your migration →](https://eject.dev/start)**
+**[Start your migration →](https://ejectfrom.com/start)**
 
 Or if you're not sure yet: [run the calculator](#cost-calculator). The number tends to make the decision for you.
 
