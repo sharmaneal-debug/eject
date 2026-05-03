@@ -1,5 +1,6 @@
 import { Hero } from "@/components/hero";
 import { WhyOwn } from "@/components/why-own";
+import { ChatVsDev } from "@/components/chat-vs-dev";
 import { FeatureGrid } from "@/components/feature-grid";
 import { ComparisonTable } from "@/components/comparison-table";
 import { CostCalculator } from "@/components/cost-calculator";
@@ -18,6 +19,7 @@ export default function HomePage() {
  <JsonLd data={[organizationSchema(), websiteSchema(), serviceSchema()]} />
  <Hero />
  <WhyOwn />
+ <ChatVsDev />
  <AiKit />
  <FeatureGrid />
  <ComparisonTable />

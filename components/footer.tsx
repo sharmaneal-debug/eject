@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site";
+import { EjectMark } from "./eject-mark";
 
 export function Footer() {
   return (
@@ -7,7 +8,9 @@ export function Footer() {
       <div className="max-w-content mx-auto px-6 py-12 grid gap-8 md:grid-cols-4 text-sm">
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-ink text-paper font-mono text-xs">{">"}</span>
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-ink text-paper">
+              <EjectMark size={14} />
+            </span>
             <span className="font-semibold">{siteConfig.name}</span>
           </div>
           <p className="text-ink-muted leading-relaxed max-w-xs">{siteConfig.shortTagline}</p>

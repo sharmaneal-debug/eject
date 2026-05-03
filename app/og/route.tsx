@@ -120,15 +120,16 @@ export async function GET(req: Request) {
                 height: 44,
                 borderRadius: 10,
                 background: "#0B0B0F",
-                color: "#FBFAF7",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 22,
-                fontWeight: 600,
               }}
             >
-              {">"}
+              {/* Eject mark drawn inline (next/og doesn't support external SVG components) */}
+              <svg width="22" height="22" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 7 L24 19 H8 Z" fill="#FBFAF7" />
+                <rect x="8" y="21" width="16" height="4" rx="1" fill="#FBFAF7" />
+              </svg>
             </div>
             <span style={{ fontSize: 24, fontWeight: 600, color: "#0B0B0F", fontFamily: "system-ui" }}>
               {siteConfig.name}
