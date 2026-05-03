@@ -1,9 +1,0 @@
-name = "eject"
-compatibility_date = "2024-09-23"
-compatibility_flags = ["nodejs_compat"]
-
-# Cloudflare Pages deployment uses the `.vercel/output/static` directory
-# produced by `pnpm pages:build` (which calls @cloudflare/next-on-pages under
-# the hood). The adapter handles Next.js App Router routing, edge functions,
-# and Node.js runtime API routes (Stripe SDK, Resend SDK).
-pages_build_output_dir = ".vercel/output/static"
