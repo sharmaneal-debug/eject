@@ -105,23 +105,31 @@ export function ScanResults({ data }: { data: ScanData }) {
 
             <div className="mb-12">
               <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-5">
-                Here&apos;s exactly what happens
+                Two ways to do this
               </p>
-              <div className="grid md:grid-cols-3 gap-px bg-line rounded-2xl overflow-hidden border border-line">
-                <Step
-                  n="1"
-                  title="We rebuild your site"
-                  body="Our system rebuilds your site to look exactly like it does today — same fonts, same colors, same layout. We don't change a thing unless you ask."
+              <div className="grid md:grid-cols-2 gap-px bg-line rounded-2xl overflow-hidden border border-line">
+                <Path
+                  badge="Express · $49"
+                  title="Paste your URL. We rebuild it. You approve."
+                  steps={[
+                    "Pay $49",
+                    "We rebuild your site automatically",
+                    "You get a preview link in your inbox",
+                    "You click around, tell us if anything's off",
+                    "We send you the files + free hosting setup",
+                  ]}
                 />
-                <Step
-                  n="2"
-                  title="It goes on free hosting"
-                  body="Cloudflare's free tier — same speed, same domain, zero monthly bill. Express: you click through a 10-min guide. Concierge: we do it for you."
-                />
-                <Step
-                  n="3"
-                  title="You can edit it forever"
-                  body="We give you copy-paste instructions for ChatGPT, Claude, or Cursor. Type 'change my hero to say X.' Done. No coding, no Eject login."
+                <Path
+                  badge="Concierge · $299"
+                  title="Don't want to deal with any of it? Just message us."
+                  steps={[
+                    "Pay $299",
+                    "Send us a quick message — that's the entire intake",
+                    "A human handles the whole rebuild",
+                    "We deploy it for you and move your domain",
+                    "Live in 7 days, with one round of edits",
+                  ]}
+                  dark
                 />
               </div>
             </div>
@@ -194,12 +202,25 @@ function Stat({ label, value, sub, accent = false }: { label: string; value: str
   );
 }
 
-function Step({ n, title, body }: { n: string; title: string; body: string }) {
+function Path({ badge, title, steps, dark = false }: { badge: string; title: string; steps: string[]; dark?: boolean }) {
   return (
-    <div className="bg-white p-6 md:p-7">
-      <p className="font-mono text-xs text-signal mb-3">Step {n}</p>
-      <p className="font-semibold text-lg mb-2">{title}</p>
-      <p className="text-ink-soft text-sm leading-relaxed">{body}</p>
+    <div className={`p-7 md:p-9 ${dark ? "bg-ink text-paper" : "bg-white"}`}>
+      <p className={`text-xs font-mono uppercase tracking-widest mb-4 ${dark ? "text-paper/60" : "text-signal"}`}>
+        {badge}
+      </p>
+      <p className={`font-semibold text-xl tracking-tight mb-5 ${dark ? "text-paper" : "text-ink"}`}>
+        {title}
+      </p>
+      <ol className={`space-y-2.5 text-sm ${dark ? "text-paper/80" : "text-ink-soft"}`}>
+        {steps.map((s, i) => (
+          <li key={i} className="flex gap-3">
+            <span className={`font-mono text-xs shrink-0 w-5 ${dark ? "text-signal" : "text-signal"}`}>
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span className="leading-snug">{s}</span>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }

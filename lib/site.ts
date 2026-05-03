@@ -5,25 +5,25 @@ export const siteConfig = {
   tagline: "Stop paying $300 a year for your website.",
   shortTagline: "Your website. Free hosting. No monthly bill.",
   description:
-    "Eject takes your Webflow, Framer, Wix, or Squarespace site and gives you back a free version you own forever. No more monthly bills.",
+    "Eject takes your Webflow, Framer, Wix, or Squarespace site and gives you back a free version you own forever — one you can edit just by chatting with AI.",
   email: "hi@eject.co",
   twitter: "@useeject",
 
   // Two tiers. Both are "done for you" — the difference is who.
-  // Express: our system rebuilds your site automatically + we send the kit.
-  // Concierge: a human hand-polishes it and ships the whole thing.
+  // Express: paste URL → our system rebuilds → preview link → you approve → yours.
+  // Concierge: message us → human handles everything → done in 7 days.
   pricing: {
     express: {
       id: "express",
       name: "Express",
       price: 49,
-      blurb: "We auto-build your site. You get a finished folder plus AI editing instructions.",
+      blurb: "Paste your URL. We rebuild your site. You get a preview link, approve it, and it's yours.",
       bullets: [
-        "Your site, rebuilt automatically — pages, blog, forms, photos",
-        "Step-by-step deploy guide for free hosting (10 mins, no coding)",
-        "AI editing kit: instruction file + 100+ ready-to-use prompts",
-        "Use any AI you already have (ChatGPT, Claude, Cursor — free tiers work)",
-        "7 days of email support",
+        "Paste your site URL — that's the whole intake",
+        "We rebuild it automatically (same fonts, photos, layout, copy)",
+        "You get a preview link — click around, see the real site",
+        "Tell us anything that's off; we fix it",
+        "It becomes yours: site files + AI editing kit + free hosting",
       ],
       cta: "Start for $49",
     },
@@ -31,14 +31,13 @@ export const siteConfig = {
       id: "concierge",
       name: "Concierge",
       price: 299,
-      blurb: "A human does the whole thing. You get a finished, deployed website — no setup needed.",
+      blurb: "Don't want to deal with any of it? Send us a message. We have your new site live in 7 days.",
       bullets: [
-        "Everything in Express, plus:",
-        "Hand-polished pixel-perfect to your old site",
-        "We deploy it and move your domain — no setup on your end",
-        "One round of revisions included",
-        "7-day delivery, with a real human you email",
-        "30 days of priority support",
+        "Just message us — no setup, no questionnaire",
+        "A human handles the whole thing personally",
+        "We rebuild, deploy, and move your domain — all of it",
+        "Live in 7 days, with one round of revisions included",
+        "Same AI editing kit, plus 30 days of priority support",
       ],
       cta: "Start for $299",
     },

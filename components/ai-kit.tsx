@@ -43,13 +43,13 @@ export function AiKit() {
 
   return (
     <Section className="bg-ink text-paper">
-      <Eyebrow>How you edit it</Eyebrow>
+      <Eyebrow>The superpower</Eyebrow>
       <h2 className="h-section text-3xl md:text-5xl max-w-3xl mb-4 text-paper">
-        Use any AI you already use.{" "}
-        <span className="text-paper/40">It just works.</span>
+        Edit your website by chatting.{" "}
+        <span className="text-paper/40">Like, just typing what you want.</span>
       </h2>
       <p className="text-paper/70 max-w-2xl mb-10 text-lg">
-        After we move your site, you don&apos;t need us to keep editing it. We give you a small instruction file. You paste it into ChatGPT, Claude, or Cursor — free tiers work fine — and you&apos;re editing your site by chatting.
+        Your website is now a folder of files. Any AI can read and edit it. ChatGPT. Claude. Cursor. Free tiers all work. You paste a small instruction file once. After that, you just type things like &ldquo;change my hero to say X&rdquo; and the AI does it. No new tool. No subscription. No designer.
       </p>
 
       <div className="flex flex-wrap items-center gap-2 mb-6">

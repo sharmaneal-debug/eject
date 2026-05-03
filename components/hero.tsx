@@ -27,7 +27,6 @@ export function Hero() {
         setError(json.error || "couldn't scan that site. check the URL?");
       } else {
         setData(json as ScanData);
-        // smooth scroll to results
         setTimeout(() => {
           const el = document.getElementById("scan-results");
           el?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -55,13 +54,13 @@ export function Hero() {
           </div>
 
           <h1 className="h-display text-5xl md:text-7xl lg:text-[5.5rem] tracking-tightest max-w-5xl">
-            Stop paying for your website{" "}
-            <span className="text-ink/40">every month.</span>
+            Own your website.{" "}
+            <span className="text-ink/40">Edit it by chatting.</span>
           </h1>
 
           <p className="mt-6 text-lg md:text-xl text-ink-soft max-w-2xl leading-relaxed">
-            We move your Webflow, Framer, Wix, or Squarespace site to a free version you own forever.
-            One payment. No monthly bill. It just works.
+            Paste your Webflow, Framer, Wix, or Squarespace URL below. We rebuild your site as one you own.
+            You get a preview link to approve. After that, it&apos;s yours forever — and you can change anything just by typing what you want into ChatGPT.
           </p>
 
           <form
@@ -96,21 +95,21 @@ export function Hero() {
                     : "bg-ink text-paper hover:bg-signal disabled:opacity-50"
                 )}
               >
-                {scanning ? "Scanning…" : "Scan my site →"}
+                {scanning ? "Scanning…" : "See what we'd build →"}
               </button>
             </div>
             <p className="mt-3 text-sm text-ink-muted">
               {error ? (
                 <span className="text-signal">{error}</span>
               ) : (
-                "Free, instant, no email needed. We'll show you exactly what we'd do."
+                <>Free, instant. No email needed. We&apos;ll show you the cost, the savings, and what we&apos;d ship.</>
               )}
             </p>
           </form>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-ink-muted font-mono uppercase tracking-widest">
             <span>· From $49 one-time</span>
-            <span>· Done in 7 days or less</span>
+            <span>· Preview before you pay</span>
             <span>· No subscription, ever</span>
           </div>
         </div>

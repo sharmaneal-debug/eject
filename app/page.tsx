@@ -1,4 +1,5 @@
 import { Hero } from "@/components/hero";
+import { WhyOwn } from "@/components/why-own";
 import { FeatureGrid } from "@/components/feature-grid";
 import { ComparisonTable } from "@/components/comparison-table";
 import { AiKit } from "@/components/ai-kit";
@@ -12,9 +13,10 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <WhyOwn />
+      <AiKit />
       <FeatureGrid />
       <ComparisonTable />
-      <AiKit />
       <PricingTable />
       <SocialProof />
       <Faq />
@@ -25,7 +27,7 @@ export default function HomePage() {
             Stop renting your website.
           </h2>
           <p className="text-paper/70 max-w-xl mx-auto mb-8">
-            Paste your URL at the top. We&apos;ll show you what we&apos;d do — free, in seconds.
+            Paste your URL at the top. We&apos;ll show you a preview — for free, in seconds.
           </p>
           <Link
             href="/"
