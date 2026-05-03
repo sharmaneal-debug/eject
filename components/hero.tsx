@@ -109,8 +109,8 @@ export function Hero() {
           </form>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-ink-muted font-mono uppercase tracking-widest">
-            <span>· One-time payment from $299</span>
-            <span>· Done in 7 days</span>
+            <span>· From $49 one-time</span>
+            <span>· Done in 7 days or less</span>
             <span>· No subscription, ever</span>
           </div>
         </div>

@@ -31,6 +31,9 @@ export function ScanResults({ data }: { data: ScanData }) {
     }
   })();
 
+  // Eject 3-year cost when going through Express tier (cheapest path).
+  const ejectExpress3yr = siteConfig.pricing.express.price + 15 * 3;
+
   return (
     <section
       id="scan-results"
@@ -59,7 +62,7 @@ export function ScanResults({ data }: { data: ScanData }) {
           <Stat
             label="What you're paying"
             value={`$${data.annualCostEstimate}/yr`}
-            sub={`Roughly $${data.monthlyCostEstimate}/month — based on typical ${data.platformLabel} plans`}
+            sub={`Roughly $${data.monthlyCostEstimate}/month — typical ${data.platformLabel} plans`}
             accent
           />
         </div>
@@ -77,22 +80,24 @@ export function ScanResults({ data }: { data: ScanData }) {
                 <div className="text-3xl text-ink/30 hidden md:block">→</div>
                 <div>
                   <p className="text-xs font-mono uppercase tracking-widest text-signal mb-2">
-                    Same site on Eject
+                    Same site, on Eject Express
                   </p>
                   <p className="text-4xl md:text-5xl h-display tracking-tightest text-signal">
-                    ${data.ejectThreeYearCost.toLocaleString()}
+                    ${ejectExpress3yr.toLocaleString()}
                   </p>
                   <p className="text-xs text-ink-muted mt-1 font-mono">
-                    One payment + ~$15/yr for your domain. That&apos;s it.
+                    $49 once + ~$15/yr for your domain. That&apos;s it.
                   </p>
                 </div>
               </div>
-              {data.threeYearSavings > 0 && (
+              {data.threeYearCostEstimate > ejectExpress3yr && (
                 <div className="mt-6 pt-6 border-t border-line">
                   <p className="text-sm">
                     You&apos;d save{" "}
-                    <span className="font-semibold text-signal">${data.threeYearSavings.toLocaleString()}</span> over 3 years.
-                    Forever after that, it&apos;s the cost of your domain.
+                    <span className="font-semibold text-signal">
+                      ${(data.threeYearCostEstimate - ejectExpress3yr).toLocaleString()}
+                    </span>{" "}
+                    over 3 years. Forever after that, it&apos;s just the cost of your domain.
                   </p>
                 </div>
               )}
@@ -106,48 +111,53 @@ export function ScanResults({ data }: { data: ScanData }) {
                 <Step
                   n="1"
                   title="We rebuild your site"
-                  body="We copy how it looks today and rebuild it as a website you own. No designer needed. We don't change a thing unless you ask."
+                  body="Our system rebuilds your site to look exactly like it does today — same fonts, same colors, same layout. We don't change a thing unless you ask."
                 />
                 <Step
                   n="2"
-                  title="We move you to free hosting"
-                  body="Your site goes live on Cloudflare — same speed, same domain, zero monthly bill. We handle the technical part."
+                  title="It goes on free hosting"
+                  body="Cloudflare's free tier — same speed, same domain, zero monthly bill. Express: you click through a 10-min guide. Concierge: we do it for you."
                 />
                 <Step
                   n="3"
                   title="You can edit it forever"
-                  body="We give you copy-paste instructions for ChatGPT or Claude. Type 'change my hero to say X.' Done. No coding."
+                  body="We give you copy-paste instructions for ChatGPT, Claude, or Cursor. Type 'change my hero to say X.' Done. No coding, no Eject login."
                 />
               </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <Link
-                href={`/checkout?tier=dfy&url=${encodeURIComponent(hostname)}`}
-                className="rounded-2xl border-2 border-ink bg-ink text-paper p-7 hover:bg-signal hover:border-signal transition group"
+                href={`/checkout?tier=express&url=${encodeURIComponent(hostname)}`}
+                className="rounded-2xl border-2 border-line bg-white p-7 hover:border-ink transition group"
               >
-                <p className="text-xs font-mono uppercase tracking-widest text-paper/60 mb-2">{siteConfig.pricing.dfy.name}</p>
+                <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">{siteConfig.pricing.express.name}</p>
                 <p className="h-section text-3xl md:text-4xl mb-2">
-                  ${siteConfig.pricing.dfy.price}
-                  <span className="text-paper/50 text-base font-normal"> · one-time</span>
+                  ${siteConfig.pricing.express.price}
+                  <span className="text-ink-muted text-base font-normal"> · one-time</span>
                 </p>
-                <p className="text-paper/80 text-sm mb-4">{siteConfig.pricing.dfy.blurb}</p>
-                <p className="text-paper text-sm font-medium">
-                  Start my migration <span className="group-hover:translate-x-1 inline-block transition">→</span>
+                <p className="text-ink-soft text-sm mb-4">{siteConfig.pricing.express.blurb}</p>
+                <p className="text-ink text-sm font-medium">
+                  {siteConfig.pricing.express.cta} <span className="group-hover:translate-x-1 inline-block transition">→</span>
                 </p>
               </Link>
               <Link
-                href={`/checkout?tier=diy&url=${encodeURIComponent(hostname)}`}
-                className="rounded-2xl border-2 border-line bg-white p-7 hover:border-ink transition group"
+                href={`/checkout?tier=concierge&url=${encodeURIComponent(hostname)}`}
+                className="rounded-2xl border-2 border-ink bg-ink text-paper p-7 hover:bg-signal hover:border-signal transition group"
               >
-                <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">{siteConfig.pricing.diy.name}</p>
+                <div className="flex items-baseline justify-between mb-2">
+                  <p className="text-xs font-mono uppercase tracking-widest text-paper/60">{siteConfig.pricing.concierge.name}</p>
+                  <span className="text-[10px] font-mono uppercase tracking-widest bg-signal text-paper rounded-full px-2 py-0.5">
+                    Most popular
+                  </span>
+                </div>
                 <p className="h-section text-3xl md:text-4xl mb-2">
-                  ${siteConfig.pricing.diy.price}
-                  <span className="text-ink-muted text-base font-normal"> · one-time</span>
+                  ${siteConfig.pricing.concierge.price}
+                  <span className="text-paper/50 text-base font-normal"> · one-time</span>
                 </p>
-                <p className="text-ink-soft text-sm mb-4">{siteConfig.pricing.diy.blurb}</p>
-                <p className="text-ink text-sm font-medium">
-                  Get the kit <span className="group-hover:translate-x-1 inline-block transition">→</span>
+                <p className="text-paper/80 text-sm mb-4">{siteConfig.pricing.concierge.blurb}</p>
+                <p className="text-paper text-sm font-medium">
+                  {siteConfig.pricing.concierge.cta} <span className="group-hover:translate-x-1 inline-block transition">→</span>
                 </p>
               </Link>
             </div>

@@ -2,10 +2,10 @@
 /**
  * Eject — Stripe product/price bootstrap
  * --------------------------------------
- * Creates the two products (DIY $499, DFY $299) in your Stripe account and
- * prints the price IDs to paste into .env.
+ * Creates the two products (Express $49, Concierge $299) in your Stripe
+ * account and prints the price IDs to paste into .env.
  *
- *   STRIPE_SECRET_KEY=sk_test_... pnpm tsx scripts/setup-stripe.ts
+ *   STRIPE_SECRET_KEY=sk_test_... pnpm setup-stripe
  *
  * Idempotent: re-running won't create duplicates as long as the product
  * lookup_key matches an existing product.
@@ -23,12 +23,11 @@ async function main() {
   const stripe = new Stripe(key, { apiVersion: "2025-02-24.acacia" });
 
   const tiers = [
-    { lookupKey: "eject_diy_v1", config: siteConfig.pricing.diy },
-    { lookupKey: "eject_dfy_v1", config: siteConfig.pricing.dfy },
+    { lookupKey: "eject_express_v1", config: siteConfig.pricing.express, envKey: "STRIPE_PRICE_EXPRESS" },
+    { lookupKey: "eject_concierge_v1", config: siteConfig.pricing.concierge, envKey: "STRIPE_PRICE_CONCIERGE" },
   ] as const;
 
   for (const t of tiers) {
-    // Look for an existing product by metadata.eject_tier_lookup; create if missing.
     const search = await stripe.products.search({
       query: `metadata['eject_tier_lookup']:'${t.lookupKey}'`,
     });
@@ -36,7 +35,7 @@ async function main() {
     let product = search.data[0];
     if (!product) {
       product = await stripe.products.create({
-        name: t.config.name,
+        name: `Eject ${t.config.name}`,
         description: t.config.blurb,
         metadata: { eject_tier_lookup: t.lookupKey, eject_tier_id: t.config.id },
       });
@@ -45,7 +44,6 @@ async function main() {
       console.log(`= product ${t.config.id} already exists → ${product.id}`);
     }
 
-    // Find existing price at the right amount; create if missing.
     const prices = await stripe.prices.list({ product: product.id, active: true, limit: 100 });
     const targetCents = t.config.price * 100;
     let price = prices.data.find((p) => p.unit_amount === targetCents && p.currency === "usd");
@@ -61,7 +59,7 @@ async function main() {
       console.log(`= price ${t.config.id} $${t.config.price} already exists → ${price.id}`);
     }
 
-    console.log(`   STRIPE_PRICE_${t.config.id.toUpperCase()}=${price.id}`);
+    console.log(`   ${t.envKey}=${price.id}`);
   }
 
   console.log("\nPaste the STRIPE_PRICE_* lines into your .env then redeploy.\n");

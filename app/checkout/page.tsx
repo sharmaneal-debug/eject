@@ -3,18 +3,19 @@ import Link from "next/link";
 import { siteConfig } from "@/lib/site";
 import { Section, Eyebrow } from "@/components/section";
 import { CheckoutForm } from "@/components/checkout-form";
+import { isValidTier, type Tier } from "@/lib/stripe";
 
 export const metadata: Metadata = {
   title: "Checkout",
-  description: "One payment. Migration in 7 days.",
+  description: "One payment. We start the migration.",
 };
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ tier?: string; url?: string }> }) {
   const sp = await searchParams;
-  const tier = (sp.tier === "diy" || sp.tier === "dfy" ? sp.tier : "dfy") as "diy" | "dfy";
-  const config = tier === "dfy" ? siteConfig.pricing.dfy : siteConfig.pricing.diy;
-  const otherTier = tier === "dfy" ? "diy" : "dfy";
-  const otherConfig = tier === "dfy" ? siteConfig.pricing.diy : siteConfig.pricing.dfy;
+  const tier: Tier = isValidTier(sp.tier) ? sp.tier : "express";
+  const config = tier === "concierge" ? siteConfig.pricing.concierge : siteConfig.pricing.express;
+  const otherTier: Tier = tier === "concierge" ? "express" : "concierge";
+  const otherConfig = tier === "concierge" ? siteConfig.pricing.express : siteConfig.pricing.concierge;
 
   return (
     <Section>
@@ -52,7 +53,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
           <div className="mt-12 grid sm:grid-cols-3 gap-3 text-xs text-ink-muted font-mono uppercase tracking-widest">
             <span>· No subscription</span>
             <span>· 14-day refund</span>
-            <span>· Done in 7 days</span>
+            <span>{tier === "concierge" ? "· 7-day delivery" : "· Auto-build"}</span>
           </div>
         </div>
 

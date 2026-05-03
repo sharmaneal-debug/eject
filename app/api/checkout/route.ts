@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { getStripe, priceIdForTier, tierConfig, type Tier } from "@/lib/stripe";
+import { getStripe, priceIdForTier, tierConfig, isValidTier, type Tier } from "@/lib/stripe";
 import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
 
 type Body = {
-  tier?: Tier;
+  tier?: Tier | string;
   url?: string;
   email?: string;
 };
@@ -18,9 +18,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "bad json" }, { status: 400 });
   }
 
-  if (body.tier !== "diy" && body.tier !== "dfy") {
+  if (!isValidTier(body.tier)) {
     return NextResponse.json({ ok: false, error: "invalid tier" }, { status: 400 });
   }
+
+  const tier = body.tier;
 
   const stripe = getStripe();
   if (!stripe) {
@@ -29,16 +31,16 @@ export async function POST(req: Request) {
         ok: false,
         error: "stripe is not configured yet — set STRIPE_SECRET_KEY in .env",
         preview: true,
-        tier: tierConfig(body.tier),
+        tier: tierConfig(tier),
       },
       { status: 503 },
     );
   }
 
-  const priceId = priceIdForTier(body.tier);
+  const priceId = priceIdForTier(tier);
   if (!priceId) {
     return NextResponse.json(
-      { ok: false, error: `STRIPE_PRICE_${body.tier.toUpperCase()} is not set — run scripts/setup-stripe.ts` },
+      { ok: false, error: `STRIPE_PRICE_${tier.toUpperCase()} is not set — run scripts/setup-stripe.ts` },
       { status: 503 },
     );
   }
@@ -54,11 +56,11 @@ export async function POST(req: Request) {
       customer_email: body.email,
       allow_promotion_codes: true,
       metadata: {
-        tier: body.tier,
+        tier,
         siteUrl: body.url ?? "",
       },
       payment_intent_data: {
-        metadata: { tier: body.tier, siteUrl: body.url ?? "" },
+        metadata: { tier, siteUrl: body.url ?? "" },
       },
     });
 

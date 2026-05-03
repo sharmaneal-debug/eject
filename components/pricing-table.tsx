@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
-const tiers = [siteConfig.pricing.dfy, siteConfig.pricing.diy];
+const tiers = [siteConfig.pricing.express, siteConfig.pricing.concierge];
 
 export function PricingTable() {
   return (
@@ -18,8 +18,8 @@ export function PricingTable() {
       </p>
 
       <div className="grid md:grid-cols-2 gap-5">
-        {tiers.map((t, i) => {
-          const accent = i === 0; // DFY featured
+        {tiers.map((t) => {
+          const accent = t.id === "concierge"; // Concierge featured (premium upsell)
           return (
             <div
               key={t.id}
@@ -64,9 +64,12 @@ export function PricingTable() {
       </div>
 
       <div className="mt-10 max-w-3xl text-sm text-ink-muted leading-relaxed">
-        <p className="mb-2"><span className="font-medium text-ink">Why is &quot;do it yourself&quot; more expensive?</span></p>
+        <p className="mb-2"><span className="font-medium text-ink">What&apos;s the real difference?</span></p>
         <p>
-          Because it&apos;s a complete kit you keep forever — your website files, a video walkthrough, and AI instructions you can paste into ChatGPT or Claude to make changes whenever you want. The cheaper option is just &quot;we move you over and hand you the keys.&quot;
+          <strong className="text-ink">Express ($49):</strong> our system rebuilds your site automatically. You download a folder with everything, follow a 10-minute deploy guide, and you&apos;re live. Best if you don&apos;t mind clicking through a couple of setup steps yourself.
+        </p>
+        <p className="mt-2">
+          <strong className="text-ink">Concierge ($299):</strong> a real person hand-polishes the rebuild, deploys it for you, moves your domain, and gives you a finished website. Best if you don&apos;t want to do anything.
         </p>
       </div>
     </Section>

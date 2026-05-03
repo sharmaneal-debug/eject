@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import type { Tier } from "@/lib/stripe";
 
-export function CheckoutForm({ tier, prefilledUrl }: { tier: "diy" | "dfy"; prefilledUrl?: string }) {
+export function CheckoutForm({ tier, prefilledUrl }: { tier: Tier; prefilledUrl?: string }) {
   const [email, setEmail] = useState("");
   const [siteUrl, setSiteUrl] = useState(prefilledUrl ? prefilledUrl.replace(/^https?:\/\//i, "") : "");
   const [name, setName] = useState("");
