@@ -13,13 +13,13 @@ const features = [
  },
  {
  badge: "03",
- title: "Free hosting that just works",
- body: "Your new site lives on Cloudflare's free tier. Same speed (often faster). Free SSL. Free CDN. Zero monthly bill, forever.",
+ title: "Free hosting (we show you where)",
+ body: "Your new site can live on Cloudflare Pages, Vercel, Netlify, or GitHub Pages. All have free tiers that cover small-business traffic without ever charging. Express: 10-minute setup guide. Concierge: we set it up for you.",
  },
  {
  badge: "04",
  title: "Your old domain still works",
- body: "We move your domain over. Your visitors don't know anything changed. Your Google rankings stay put. Old links keep working.",
+ body: "Same URL. Same Google rankings. Same email forwarding. Old links keep working. Express: we hand you the DNS records to point at your new host. Concierge: we move the domain over for you.",
  },
  {
  badge: "05",
@@ -29,7 +29,7 @@ const features = [
  {
  badge: "06",
  title: "You own everything",
- body: "Your website files are yours. Your domain is yours. Your hosting account is yours. There's no Eject login. We hand you the keys and walk away.",
+ body: "Your website files are yours. Your domain is yours. Your hosting account is in your name. There's no Eject login because there's nothing to log into. We hand you the keys and walk away.",
  },
 ];
 

@@ -118,7 +118,7 @@ export function ScanResults({ data }: { data: ScanData }) {
  "We rebuild your site automatically",
  "You get a preview link in your inbox",
  "You click around, tell us if anything's off",
- "We send you the files + free hosting setup",
+ "We hand you the files + a 10-min deploy guide for free hosting",
  ]}
  />
  <Path
@@ -128,7 +128,7 @@ export function ScanResults({ data }: { data: ScanData }) {
  "Pay $299",
  "Send us a quick message. That's the entire intake",
  "A human handles the whole rebuild",
- "We deploy it for you and move your domain",
+ "We deploy it on free hosting for you and move your domain",
  "Live in 7 days, with one round of edits",
  ]}
  dark

@@ -17,7 +17,7 @@ const data: Record<
  "CMS extracted via Webflow's API (every collection, every field)",
  "Forms moved to Resend (free up to 3K/mo)",
  "301 redirects from every old URL. SEO survives",
- "Cloudflare Pages free hosting, $0/mo",
+ "Free hosting (Cloudflare Pages, Vercel, Netlify, GitHub Pages all work). $0/mo.",
  ],
  },
  framer: {
@@ -29,7 +29,7 @@ const data: Record<
  "Animations preserved via Framer Motion (open source)",
  "CMS collections walked from rendered DOM",
  "Custom domain, SSL, sitemap. Included",
- "Cloudflare Pages free hosting, $0/mo",
+ "Free hosting (Cloudflare Pages, Vercel, Netlify, GitHub Pages all work). $0/mo.",
  ],
  },
  wix: {
@@ -41,7 +41,7 @@ const data: Record<
  "Manual content extraction (Wix has no API)",
  "Pixel-matched design rebuild in Next.js + Tailwind",
  "10-day turnaround (longer than Framer/Webflow because no API)",
- "Cloudflare Pages free hosting, $0/mo",
+ "Free hosting (Cloudflare Pages, Vercel, Netlify, GitHub Pages all work). $0/mo.",
  ],
  },
  squarespace: {
@@ -53,7 +53,7 @@ const data: Record<
  "Blog/CMS migrated to MDX in your repo",
  "Design rebuilt with Tailwind",
  "Forms, sitemaps, redirects wired",
- "Cloudflare Pages free hosting, $0/mo",
+ "Free hosting (Cloudflare Pages, Vercel, Netlify, GitHub Pages all work). $0/mo.",
  ],
  },
 };

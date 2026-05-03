@@ -5,7 +5,7 @@ import { Section, Eyebrow } from "@/components/section";
 export const metadata: Metadata = {
  title: "Cost calculator. See what you'd save",
  description:
- "Plug in your Webflow / Framer / Wix / Squarespace plan. See what you'd save by moving to a website you own. One-time payment, free hosting, free AI editing.",
+ "Plug in your Webflow / Framer / Wix / Squarespace plan. See what you'd save by moving to a website you own and host on a free tier. One-time payment, free editing with any AI.",
 };
 
 export default function Page() {

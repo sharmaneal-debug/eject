@@ -127,7 +127,7 @@ export async function GET(req: Request) {
             >
               {/* Eject mark drawn inline (next/og doesn't support external SVG components) */}
               <svg width="22" height="22" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 7 L24 19 H8 Z" fill="#FBFAF7" />
+                <path d="M16 7 L24 19 H8 Z" fill="#FF5C2A" />
                 <rect x="8" y="21" width="16" height="4" rx="1" fill="#FBFAF7" />
               </svg>
             </div>

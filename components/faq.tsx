@@ -7,7 +7,7 @@ const items = [
  },
  {
  q: "What about my domain?",
- a: "It comes with you. Same URL, same Google ranking, same email forwarding. We handle the technical move so your visitors land in the right place from day one.",
+ a: "It comes with you. Same URL, same Google rankings, same email forwarding. Concierge: we move the domain to point at your new host for you. Express: we hand you the DNS records and a guide; the move takes about 5 minutes at your registrar.",
  },
  {
  q: "What if I want to change something later?",
@@ -18,8 +18,8 @@ const items = [
  a: "Yes. And usually it improves. We set up redirects from every old page so Google finds your new site at the right addresses. Sites we've moved typically score 30–50 points higher on Google's PageSpeed test.",
  },
  {
- q: "Is this really free hosting?",
- a: "Yes. Cloudflare's free tier covers more traffic than 99% of small business websites ever get. Your only ongoing cost is your domain (about $15 a year), which you already pay.",
+ q: "Where does my new site actually live?",
+ a: "On any free static host you want. Cloudflare Pages, Netlify, Vercel, GitHub Pages. All four have free tiers that cover small-business traffic without ever charging. We give you a 10-minute setup guide (Express) or do the setup for you (Concierge). Eject doesn't host anything; the site is on infrastructure you control, in your name. Your only ongoing cost is your domain (~$15/year), which you already pay.",
  },
  {
  q: "What about my contact form?",
