@@ -4,7 +4,6 @@ import { siteConfig } from "@/lib/site";
 const links = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/calculator", label: "Cost calculator" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -24,10 +23,10 @@ export function Header() {
           ))}
         </nav>
         <Link
-          href="/migrate"
+          href="/"
           className="rounded-md bg-ink text-paper px-4 py-2 text-sm font-medium hover:bg-signal transition"
         >
-          Get started
+          Scan my site
         </Link>
       </div>
     </header>

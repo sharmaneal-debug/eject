@@ -1,52 +1,40 @@
 import { Section, Eyebrow } from "./section";
-import { Check, X } from "lucide-react";
 
 const rows = [
-  { label: "Real annual cost", webflow: "$300–$2,800", eject: "$5 (just the domain)" },
-  { label: "Code export", webflow: "Static HTML, gated", eject: "Full Next.js repo, yours" },
-  { label: "CMS migration", webflow: "—", eject: "API extracted to MDX or Sanity" },
-  { label: "Forms", webflow: "Limit 250/mo", eject: "Resend free tier" },
-  { label: "SEO continuity", webflow: "Up to you", eject: "301 redirects + canonicals included" },
-  { label: "Editor for non-coders", webflow: true, eject: "AI chat editor (optional, $79/mo)" },
-  { label: "Vendor lock-in", webflow: true, eject: false },
-  { label: "Hosting redundancy", webflow: "Webflow only", eject: "Move to Vercel in 10 minutes" },
+  { label: "What you pay", before: "$300–$2,800 a year, every year", after: "$299–$499 once. Then your domain (~$15/yr)." },
+  { label: "Editing your site", before: "Their editor only. Subscription required.", after: "Any AI you already use — ChatGPT, Claude, Cursor." },
+  { label: "Hosting", before: "Their hosting only. Goes down? Tough.", after: "Cloudflare free tier. Move to Vercel in 10 minutes if you want." },
+  { label: "If they raise prices", before: "You pay it or rebuild from scratch.", after: "You don't. The site is yours." },
+  { label: "If they shut your account", before: "Your site disappears.", after: "Nothing happens. We're not in the loop." },
+  { label: "Your old domain", before: "Tied to their account.", after: "Comes with you. Same URL. Same rankings." },
 ];
-
-function Cell({ value }: { value: string | boolean }) {
-  if (value === true) return <X className="h-4 w-4 text-ink-muted inline" />;
-  if (value === false) return <Check className="h-4 w-4 text-signal inline" />;
-  return <span>{value}</span>;
-}
 
 export function ComparisonTable() {
   return (
     <Section>
       <Eyebrow>Honest comparison</Eyebrow>
       <h2 className="h-section text-3xl md:text-5xl max-w-3xl mb-3">
-        Same site. Different bill. <span className="text-ink/40">Different freedom.</span>
+        Same site.{" "}
+        <span className="text-ink/40">No more monthly bills.</span>
       </h2>
       <p className="text-ink-soft max-w-2xl mb-12">
-        Numbers below assume a typical CMS-backed marketing site on Webflow's CMS plan over 36 months. Adjust your own in the calculator.
+        Webflow, Framer, Wix, Squarespace — they all work the same way. They charge you forever. Eject ends that.
       </p>
 
       <div className="rounded-2xl border border-line bg-white overflow-hidden">
-        <div className="grid grid-cols-3 bg-paper-warm border-b border-line text-xs font-mono uppercase tracking-widest text-ink-muted">
-          <div className="p-4">Dimension</div>
-          <div className="p-4 border-l border-line">On Webflow</div>
-          <div className="p-4 border-l border-line bg-signal/10 text-ink">On Eject</div>
+        <div className="grid grid-cols-[1.2fr_1fr_1fr] bg-paper-warm border-b border-line text-xs font-mono uppercase tracking-widest text-ink-muted">
+          <div className="p-4">&nbsp;</div>
+          <div className="p-4 border-l border-line">Today</div>
+          <div className="p-4 border-l border-line bg-signal/10 text-ink">After Eject</div>
         </div>
         {rows.map((r, i) => (
           <div
             key={r.label}
-            className={`grid grid-cols-3 ${i !== rows.length - 1 ? "border-b border-line" : ""}`}
+            className={`grid grid-cols-[1.2fr_1fr_1fr] ${i !== rows.length - 1 ? "border-b border-line" : ""}`}
           >
             <div className="p-5 font-medium text-sm">{r.label}</div>
-            <div className="p-5 border-l border-line text-sm text-ink-soft">
-              <Cell value={r.webflow} />
-            </div>
-            <div className="p-5 border-l border-line text-sm bg-signal/[0.04] text-ink">
-              <Cell value={r.eject} />
-            </div>
+            <div className="p-5 border-l border-line text-sm text-ink-soft">{r.before}</div>
+            <div className="p-5 border-l border-line text-sm bg-signal/[0.04] text-ink">{r.after}</div>
           </div>
         ))}
       </div>

@@ -3,42 +3,43 @@ import { Section, Eyebrow } from "./section";
 const features = [
   {
     badge: "01",
-    title: "We crawl your live site",
-    body: "Paste your URL. Our pipeline (Playwright + design-token extraction + AI rebuild) reconstructs every page as a Next.js component. Real markup, real Tailwind, no iframe hacks.",
+    title: "Same site. Pixel for pixel.",
+    body: "We don't redesign anything. We rebuild your site to look exactly like it does today — same fonts, same colors, same layout. Your customers won't notice a thing.",
   },
   {
     badge: "02",
-    title: "We migrate the CMS too",
-    body: "Webflow CMS via API. Framer collections via DOM walk. Wix via manual extraction. Output: markdown in your repo, or Sanity/Payload if you prefer a CMS UI.",
+    title: "We move your blog and pages",
+    body: "Every blog post, every page, every form. All your content comes with you. Nothing gets lost. We hand you the new site with everything in place.",
   },
   {
     badge: "03",
-    title: "We hand you the GitHub repo",
-    body: "Under your account, not ours. There's no us in the middle. Hire any Next.js dev, fork it, fire us — the site keeps running because we never gated anything.",
+    title: "Free hosting that just works",
+    body: "Your new site lives on Cloudflare's free tier. Same speed (often faster). Free SSL. Free CDN. Zero monthly bill — forever.",
   },
   {
     badge: "04",
-    title: "We deploy to Cloudflare Pages",
-    body: "Free tier covers 100k requests/day, unlimited bandwidth, free SSL, global CDN. Your only ongoing cost is the domain — that's the $5/year story.",
+    title: "Your old domain still works",
+    body: "We move your domain over. Your visitors don't know anything changed. Your Google rankings stay put. Old links keep working.",
   },
   {
     badge: "05",
-    title: "Forms, redirects, sitemaps — all wired",
-    body: "Webflow forms get replaced by Resend. Old URLs get 301s so your SEO survives. Sitemap auto-generates. Robots.txt is a file you can actually edit.",
+    title: "Edit it with any AI you already use",
+    body: "We give you copy-paste instructions for ChatGPT, Claude, or Cursor (free tiers work fine). Type 'change my hero to say X.' That's it. No coding.",
   },
   {
     badge: "06",
-    title: "Edit it forever by chat (optional)",
-    body: "Add the Editor retainer ($79/mo) and you keep updating your site in plain English. \"Change the hero headline to X.\" \"Add a testimonial here.\" Each edit becomes a real git commit.",
+    title: "You own everything",
+    body: "Your website files are yours. Your domain is yours. Your hosting account is yours. There's no Eject login. We hand you the keys and walk away.",
   },
 ];
 
 export function FeatureGrid() {
   return (
     <Section className="bg-white border-y border-line">
-      <Eyebrow>What ships</Eyebrow>
+      <Eyebrow>What you get</Eyebrow>
       <h2 className="h-section text-3xl md:text-5xl max-w-3xl mb-12">
-        A migration. Not a license. <span className="text-ink/40">You own everything we ship.</span>
+        Everything moves over.{" "}
+        <span className="text-ink/40">Nothing breaks.</span>
       </h2>
       <div className="grid md:grid-cols-2 gap-px bg-line rounded-2xl overflow-hidden border border-line">
         {features.map((f) => (
