@@ -52,6 +52,84 @@ export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: str
 
 // ---------- Templates ----------
 
+// Internal notification to Neal whenever a paid customer comes through.
+// Sent in addition to the customer's kickoff email, so leads land in his
+// existing Laniakea inbox without needing a separate database. Uses Reply-To
+// of the customer so Neal can reply directly from his inbox.
+export function paidLeadNotification(opts: {
+  name: string;
+  email: string;
+  tier: "express" | "concierge";
+  siteUrl: string;
+  amount: number;
+  stripeSessionId?: string;
+}) {
+  const subject = `💸 ${opts.tier === "concierge" ? "Concierge" : "Express"} · $${opts.amount} · ${opts.email}`;
+  const text = `New paid customer.
+
+Tier:    ${opts.tier === "concierge" ? "Concierge" : "Express"} ($${opts.amount})
+Name:    ${opts.name || "(not provided)"}
+Email:   ${opts.email}
+Site:    ${opts.siteUrl || "(none)"}
+Stripe:  ${opts.stripeSessionId || "(unknown)"}
+
+Reply to this email and your reply goes directly to the customer.
+Their kickoff email has already been sent.
+
+Eject internal notification`;
+  const html = `<!doctype html>
+<html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
+<p style="font-size: 18px; font-weight: 600;">New paid customer</p>
+<table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
+<tr><td style="padding: 6px 12px; color: #5A5A66; width: 90px;">Tier</td><td style="padding: 6px 12px;"><strong>${opts.tier === "concierge" ? "Concierge" : "Express"}</strong> ($${opts.amount})</td></tr>
+<tr><td style="padding: 6px 12px; color: #5A5A66;">Name</td><td style="padding: 6px 12px;">${escape(opts.name || "(not provided)")}</td></tr>
+<tr><td style="padding: 6px 12px; color: #5A5A66;">Email</td><td style="padding: 6px 12px;"><a href="mailto:${escape(opts.email)}">${escape(opts.email)}</a></td></tr>
+<tr><td style="padding: 6px 12px; color: #5A5A66;">Site</td><td style="padding: 6px 12px;">${escape(opts.siteUrl || "(none)")}</td></tr>
+<tr><td style="padding: 6px 12px; color: #5A5A66;">Stripe</td><td style="padding: 6px 12px; font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: #5A5A66;">${escape(opts.stripeSessionId || "(unknown)")}</td></tr>
+</table>
+<p style="font-size: 14px; color: #5A5A66; border-top: 1px solid #E5E1D7; padding-top: 16px; margin-top: 24px;">
+Reply to this email and your reply goes directly to the customer. Their kickoff email has already been sent.
+</p>
+</body></html>`;
+  return { subject, text, html, replyTo: opts.email };
+}
+
+export async function sendPaidLeadNotification(args: {
+  name: string;
+  email: string;
+  tier: "express" | "concierge";
+  siteUrl: string;
+  amount: number;
+  stripeSessionId?: string;
+}): Promise<{ ok: boolean; id?: string; error?: string }> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return { ok: false, error: "resend not configured" };
+  const tpl = paidLeadNotification(args);
+  const internalRecipient = process.env.LEAD_NOTIFICATION_TO || "neal@laniakea.design";
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        from: process.env.RESEND_FROM || "Eject <onboarding@resend.dev>",
+        to: [internalRecipient],
+        subject: tpl.subject,
+        html: tpl.html,
+        text: tpl.text,
+        reply_to: tpl.replyTo,
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      return { ok: false, error: `resend ${res.status}: ${body.slice(0, 200)}` };
+    }
+    const data = (await res.json()) as { id?: string };
+    return { ok: true, id: data.id };
+  } catch (err) {
+    return { ok: false, error: (err as Error).message };
+  }
+}
+
 export function expressKickoffEmail(opts: { name: string; siteUrl: string }) {
  const subject = `${opts.name}, your Eject migration is starting`;
  const text = `Hi ${opts.name || "there"},

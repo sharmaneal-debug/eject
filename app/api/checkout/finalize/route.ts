@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { sendEmail, expressKickoffEmail, conciergeKickoffEmail } from "@/lib/email";
+import { sendEmail, expressKickoffEmail, conciergeKickoffEmail, sendPaidLeadNotification } from "@/lib/email";
 import { logLead } from "@/lib/leads";
 
 export const runtime = "edge";
@@ -49,6 +49,18 @@ export async function POST(req: Request) {
   const tpl = tier === "concierge" ? conciergeKickoffEmail({ name, siteUrl }) : expressKickoffEmail({ name, siteUrl });
 
   const result = await sendEmail({ to: email, ...tpl, customerName: name });
+
+  // Notify Neal directly. Real-time database alternative to Apps Script:
+  // every paid customer lands in his Laniakea inbox with reply-to set to
+  // the customer so he can reply straight from his inbox.
+  await sendPaidLeadNotification({
+    name,
+    email,
+    tier,
+    siteUrl,
+    amount: typeof session.amount_total === "number" ? session.amount_total / 100 : 0,
+    stripeSessionId: session.id,
+  });
 
   // Log paid customer to the lead store.
   await logLead({

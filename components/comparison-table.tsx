@@ -1,7 +1,7 @@
 import { Section, Eyebrow } from "./section";
 
 const rows = [
- { label: "What you pay", before: "$300–$2,800 a year, every year", after: "$299–$499 once. Then your domain (~$15/yr)." },
+ { label: "What you pay", before: "$300–$2,800 a year, every year", after: "$49–$299 once. Then your domain (~$15/yr)." },
  { label: "Editing your site", before: "Their editor only. Subscription required.", after: "Any AI you already use. ChatGPT, Claude, Cursor." },
  { label: "Hosting", before: "Their hosting only. Goes down? Tough.", after: "Cloudflare free tier. Move to Vercel in 10 minutes if you want." },
  { label: "If they raise prices", before: "You pay it or rebuild from scratch.", after: "You don't. The site is yours." },

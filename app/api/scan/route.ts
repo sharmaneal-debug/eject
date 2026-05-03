@@ -61,6 +61,12 @@ function normalizeUrl(input: string): string {
  let s = input.trim();
  if (!s) throw new Error("missing url");
  if (!/^https?:\/\//i.test(s)) s = `https://${s}`;
+ // Reject obvious garbage: must have a dot in the hostname
+ const hostMatch = s.match(/^https?:\/\/([^/]+)/i);
+ const host = hostMatch?.[1] ?? "";
+ if (!host.includes(".") || host.length < 4) {
+   throw new Error("That doesn't look like a website URL. Try something like example.com.");
+ }
  const u = new URL(s);
  return u.toString();
 }
@@ -159,10 +165,18 @@ export async function POST(req: Request) {
  const origin = new URL(url).origin;
 
  // Fetch homepage; budget ~6s.
- const homeRes = await fetchWithTimeout(url, 6500);
+ let homeRes;
+ try {
+ homeRes = await fetchWithTimeout(url, 6500);
+ } catch {
+ return NextResponse.json(
+ { ok: false, error: "We couldn't find that website. Check the URL and try again." },
+ { status: 422 },
+ );
+ }
  if (!homeRes.ok) {
  return NextResponse.json(
- { ok: false, error: `couldn't reach the site (status ${homeRes.status}). check the URL.` },
+ { ok: false, error: `That URL returned ${homeRes.status}. Maybe the site is down, or the URL is wrong?` },
  { status: 422 },
  );
  }
@@ -216,8 +230,14 @@ export async function POST(req: Request) {
  durationMs: Date.now() - t0,
  });
  } catch (err) {
+ const msg = (err as Error).message || "";
+ // If our normalizer threw a friendly message, pass it through with 422
+ if (msg.includes("doesn't look like a website URL") || msg.includes("missing url")) {
+ return NextResponse.json({ ok: false, error: msg }, { status: 422 });
+ }
+ // Anything else: avoid leaking internals
  return NextResponse.json(
- { ok: false, error: (err as Error).message || "scan failed" },
+ { ok: false, error: "We couldn't find that website. Check the URL and try again." },
  { status: 500 },
  );
  }

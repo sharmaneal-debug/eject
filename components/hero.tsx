@@ -24,7 +24,7 @@ export function Hero() {
  });
  const json = await res.json();
  if (!json.ok) {
- setError(json.error || "couldn't scan that site. check the URL?");
+ setError(json.error || "We couldn't find that website. Check the URL and try again.");
  } else {
  setData(json as ScanData);
  setTimeout(() => {
@@ -33,7 +33,7 @@ export function Hero() {
  }, 100);
  }
  } catch {
- setError("something went wrong. try again?");
+ setError("Network hiccup. Try again?");
  } finally {
  setScanning(false);
  }
