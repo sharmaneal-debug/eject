@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { IntakeForm } from "@/components/intake-form";
 import { Section, Eyebrow } from "@/components/section";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
  title: "Start a migration",
  description: "Tell us about your site. We send a free 5-minute Loom audit within 24 hours. No call required.",

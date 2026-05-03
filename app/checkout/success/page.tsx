@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Section, Eyebrow } from "@/components/section";
 import { FinalizeOnLoad } from "@/components/finalize-on-load";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "You're in",
   description: "Migration kickoff in your inbox in the next few minutes.",

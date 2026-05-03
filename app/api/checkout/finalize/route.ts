@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { sendEmail, expressKickoffEmail, conciergeKickoffEmail } from "@/lib/email";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 // Called by /checkout/success after the user lands post-payment.
 // Verifies the session is paid, then sends the appropriate kickoff email.

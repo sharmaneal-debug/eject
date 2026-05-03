@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getStripe, priceIdForTier, tierConfig, isValidTier, type Tier } from "@/lib/stripe";
 import { siteConfig } from "@/lib/site";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 type Body = {
  tier?: Tier | string;

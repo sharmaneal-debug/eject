@@ -5,6 +5,8 @@ import { Section, Eyebrow } from "@/components/section";
 import { CheckoutForm } from "@/components/checkout-form";
 import { isValidTier, type Tier } from "@/lib/stripe";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
  title: "Checkout",
  description: "One payment. We start the migration.",
