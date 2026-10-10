@@ -2,6 +2,7 @@
 // Free tier: 3,000 emails/month, 100/day, 1 verified domain.
 // Setup steps in docs/setup-resend.md.
 
+import { tierConfig, type Tier } from "./pricing";
 import { siteConfig } from "./site";
 
 type SendArgs = {
@@ -13,15 +14,23 @@ type SendArgs = {
  customerName?: string;
 };
 
-export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: string; error?: string }> {
+/** Configured sender. Returns null when RESEND_FROM is unset so we never fall back to onboarding@resend.dev. */
+export function resendFromAddress(): string | null {
+  const from = process.env.RESEND_FROM?.trim();
+  return from || null;
+}
+
+export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: string; error?: string; skipped?: boolean }> {
  const apiKey = process.env.RESEND_API_KEY;
  if (!apiKey) {
- console.warn("[email] RESEND_API_KEY not set; skipping send to", args.to);
- return { ok: false, error: "resend not configured" };
+ console.warn("[email] RESEND_API_KEY not set; skipping send");
+ return { ok: false, skipped: true, error: "RESEND_API_KEY not set" };
  }
- // Default to Resend's verified onboarding sender if you haven't verified your
- // own domain yet. Once ejectfrom.com is verified in Resend, set RESEND_FROM in env.
- const from = process.env.RESEND_FROM || "Eject <onboarding@resend.dev>";
+ const from = resendFromAddress();
+ if (!from) {
+ console.warn("[email] RESEND_FROM not set; skipping send");
+ return { ok: false, skipped: true, error: "RESEND_FROM not set" };
+ }
 
  try {
  const res = await fetch("https://api.resend.com/emails", {
@@ -59,15 +68,16 @@ export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: str
 export function paidLeadNotification(opts: {
   name: string;
   email: string;
-  tier: "express" | "concierge";
+  tier: Tier;
   siteUrl: string;
   amount: number;
   stripeSessionId?: string;
 }) {
-  const subject = `💸 ${opts.tier === "concierge" ? "Concierge" : "Express"} · $${opts.amount} · ${opts.email}`;
+  const offer = tierConfig(opts.tier);
+  const subject = `Paid · ${offer.name} · $${opts.amount} · ${opts.email}`;
   const text = `New paid customer.
 
-Tier:    ${opts.tier === "concierge" ? "Concierge" : "Express"} ($${opts.amount})
+Tier:    ${offer.name} ($${opts.amount})
 Name:    ${opts.name || "(not provided)"}
 Email:   ${opts.email}
 Site:    ${opts.siteUrl || "(none)"}
@@ -81,7 +91,7 @@ Eject internal notification`;
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
 <p style="font-size: 18px; font-weight: 600;">New paid customer</p>
 <table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
-<tr><td style="padding: 6px 12px; color: #5A5A66; width: 90px;">Tier</td><td style="padding: 6px 12px;"><strong>${opts.tier === "concierge" ? "Concierge" : "Express"}</strong> ($${opts.amount})</td></tr>
+<tr><td style="padding: 6px 12px; color: #5A5A66; width: 90px;">Tier</td><td style="padding: 6px 12px;"><strong>${tierConfig(opts.tier).name}</strong> ($${opts.amount})</td></tr>
 <tr><td style="padding: 6px 12px; color: #5A5A66;">Name</td><td style="padding: 6px 12px;">${escape(opts.name || "(not provided)")}</td></tr>
 <tr><td style="padding: 6px 12px; color: #5A5A66;">Email</td><td style="padding: 6px 12px;"><a href="mailto:${escape(opts.email)}">${escape(opts.email)}</a></td></tr>
 <tr><td style="padding: 6px 12px; color: #5A5A66;">Site</td><td style="padding: 6px 12px;">${escape(opts.siteUrl || "(none)")}</td></tr>
@@ -97,21 +107,24 @@ Reply to this email and your reply goes directly to the customer. Their kickoff 
 export async function sendPaidLeadNotification(args: {
   name: string;
   email: string;
-  tier: "express" | "concierge";
+  tier: Tier;
   siteUrl: string;
   amount: number;
   stripeSessionId?: string;
-}): Promise<{ ok: boolean; id?: string; error?: string }> {
+}): Promise<{ ok: boolean; id?: string; error?: string; skipped?: boolean }> {
   const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) return { ok: false, error: "resend not configured" };
+  const from = resendFromAddress();
+  if (!apiKey || !from) {
+    return { ok: false, skipped: true, error: !apiKey ? "RESEND_API_KEY not set" : "RESEND_FROM not set" };
+  }
   const tpl = paidLeadNotification(args);
-  const internalRecipient = process.env.LEAD_NOTIFICATION_TO || "neal@laniakea.design";
+  const internalRecipient = process.env.LEAD_NOTIFICATION_TO || siteConfig.email;
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        from: process.env.RESEND_FROM || "Eject <onboarding@resend.dev>",
+        from,
         to: [internalRecipient],
         subject: tpl.subject,
         html: tpl.html,
@@ -130,20 +143,24 @@ export async function sendPaidLeadNotification(args: {
   }
 }
 
-export function expressKickoffEmail(opts: { name: string; siteUrl: string }) {
- const subject = `${opts.name}, your Eject migration is starting`;
+export function expressKickoffEmail(opts: { name: string; siteUrl: string; intakeUrl?: string }) {
+ const offer = tierConfig("automated");
+ const subject = `${opts.name || "Hi"}, your Eject ${offer.name} payment is in`;
+ const next = opts.intakeUrl
+  ? `Open this link to submit ${opts.siteUrl} for a simple-site score: ${opts.intakeUrl}`
+  : `Reply with the site URL if we don't already have ${opts.siteUrl}.`;
  const text = `Hi ${opts.name || "there"},
 
-Your $49 Express payment came through. Here's what happens next:
+Your $${offer.price} ${offer.name} payment came through. You will edit the site by chatting with your own agent. Here is what actually happens next:
 
-1. Within the next 1–2 hours, our system starts crawling ${opts.siteUrl}.
-2. You'll get a preview link in your inbox within 24–48 hours. A real, live version of your site rebuilt as code you own.
-3. Click around. If anything's off, hit reply and tell us. We'll fix it.
-4. Once you approve, we send you the files plus a 10-minute deploy guide for free hosting on Cloudflare.
+1. ${next}
+2. We crawl the public pages and score complexity: page count, assets, animation and JS weight, CMS, forms, commerce, and platform.
+3. You get an ELIGIBLE or NOT ELIGIBLE result. Simple marketing, portfolio, and landing pages continue. Stores and heavy CMS sites are refunded or referred out. We do not issue the refund automatically; email us and a person sends it.
+4. If it is eligible, you get the kit (playbook, prompts, deploy notes, editor notes) plus a content snapshot and hosting instructions. A visual rebuild and a preview link are not created automatically. Those happen when you run the kit, or when a person reviews the queued handoff.
 
-You'll also receive an "AI editing kit". A small instruction file you paste into ChatGPT (or Claude) once. After that, you can change anything on your site by typing what you want. No code, no tool to learn.
+We do not promise a PageSpeed increase.
 
-Reply to this email with anything you want us to know about your site. We read every reply.
+Reply to this email if a step is unclear.
 
 Thanks,
 The Eject team
@@ -153,15 +170,14 @@ ${siteConfig.url}
  const html = `<!doctype html>
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
  <p style="font-size: 18px;">Hi ${escape(opts.name) || "there"},</p>
- <p>Your <strong>$49 Express</strong> payment came through. Here's what happens next:</p>
+ <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. You will edit the site by chatting with your own agent.</p>
  <ol style="padding-left: 20px;">
- <li>Within the next 1–2 hours, our system starts crawling <code>${escape(opts.siteUrl)}</code>.</li>
- <li>You'll get a preview link in your inbox within 24–48 hours. A real, live version of your site rebuilt as code you own.</li>
- <li>Click around. If anything's off, hit reply and tell us. We'll fix it.</li>
- <li>Once you approve, we send you the files plus a 10-minute deploy guide for free hosting on Cloudflare.</li>
+ <li>${opts.intakeUrl ? `Submit the site for scoring: <a href="${escape(opts.intakeUrl)}">${escape(opts.intakeUrl)}</a>` : `Reply with the site URL for ${escape(opts.siteUrl)}.`}</li>
+ <li>We crawl public pages and score complexity. Simple marketing, portfolio, and landing pages can continue.</li>
+ <li>Stores and heavy CMS sites are marked NOT ELIGIBLE. Email us for a refund or a referral. The refund is not sent automatically.</li>
+ <li>Eligible orders get the kit plus a content snapshot and hosting instructions. A preview link is not generated automatically.</li>
  </ol>
- <p>You'll also receive an "AI editing kit". A small instruction file you paste into ChatGPT (or Claude) once. After that, you can change anything on your site by typing what you want. No code, no tool to learn.</p>
- <p>Reply to this email with anything you want us to know about your site. We read every reply.</p>
+ <p>We do not promise a PageSpeed increase.</p>
  <p style="color: #5A5A66; font-size: 14px; margin-top: 32px;">
     Thanks,<br/>
     The Eject team<br/>
@@ -172,22 +188,23 @@ ${siteConfig.url}
  return { subject, text, html };
 }
 
-export function conciergeKickoffEmail(opts: { name: string; siteUrl: string }) {
- const subject = `${opts.name}, your Eject Concierge migration is starting`;
+export function conciergeKickoffEmail(opts: { name: string; siteUrl: string; intakeUrl?: string }) {
+ const offer = tierConfig("done_for_you");
+ const subject = `${opts.name || "Hi"}, your Eject ${offer.name} payment is in`;
  const text = `Hi ${opts.name || "there"},
 
-Your $299 Concierge payment came through. A real human (not a bot) is on it.
+Your $${offer.price} ${offer.name} payment came through. A person hand-polishes a simple site (up to 10 pages, 1 form, 2 revision rounds, a 30-minute handoff). You edit it afterwards by chatting with your own agent.
 
 What happens next:
 
-1. Within 24 hours, you'll get a personal email from us asking 2–3 quick questions about ${opts.siteUrl}: anything specific you want preserved, anything you want changed, when you want to launch.
-2. We rebuild your site by hand. Pixel-matched to today.
-3. Day 4–5: we send you a preview link to review. One round of revisions included.
-4. Day 7: we deploy your site to free hosting, move your domain over, and hand you the keys.
+1. ${opts.intakeUrl ? `Submit ${opts.siteUrl} here so we can score it: ${opts.intakeUrl}` : `We confirm ${opts.siteUrl} with you.`}
+2. The score says ELIGIBLE or NOT ELIGIBLE. We only continue with simple marketing, portfolio, and landing pages. Stores and heavy CMS sites are refunded or referred out. Email us for the refund; it is not sent automatically.
+3. If it is eligible, a person runs the migration and writes when there is something to review. A preview link is sent only after that review. It is not generated the moment you pay.
+4. Hosting is coordinated with you. The repo includes AGENTS.md so you can keep editing by chatting with your own agent. There is no hosted chat app and no editor subscription.
 
-You'll get the same AI editing kit Express customers get. Copy-paste instructions for editing your site with ChatGPT or Claude after the migration is done.
+We do not promise a PageSpeed increase.
 
-Reply with anything you want us to know. The more context, the better.
+Reply with anything you want preserved or changed.
 
 Thanks,
 The Eject team
@@ -197,16 +214,14 @@ ${siteConfig.url}
  const html = `<!doctype html>
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
  <p style="font-size: 18px;">Hi ${escape(opts.name) || "there"},</p>
- <p>Your <strong>$299 Concierge</strong> payment came through. A real human (not a bot) is on it.</p>
- <p><strong>What happens next:</strong></p>
+ <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. A person hand-polishes a simple site. You edit it afterwards with your own agent.</p>
  <ol style="padding-left: 20px;">
- <li>Within 24 hours, a personal email from us asking 2–3 quick questions about <code>${escape(opts.siteUrl)}</code>.</li>
- <li>We rebuild your site by hand, pixel-matched to today.</li>
- <li>Day 4–5: preview link to review. One round of revisions included.</li>
- <li>Day 7: we deploy to free hosting, move your domain, hand you the keys.</li>
+ <li>${opts.intakeUrl ? `Submit the site for scoring: <a href="${escape(opts.intakeUrl)}">${escape(opts.intakeUrl)}</a>` : `We confirm <code>${escape(opts.siteUrl)}</code> with you.`}</li>
+ <li>Simple marketing, portfolio, and landing pages can continue. Anything else is refunded or referred out.</li>
+ <li>A preview link is sent only after a person has reviewed a rebuild. It is not automatic.</li>
+ <li>Hosting changes are coordinated with you. AGENTS.md is how you edit afterwards, with your own agent.</li>
  </ol>
- <p>You'll get the same AI editing kit Express customers get. Copy-paste instructions for editing your site with ChatGPT or Claude after the migration is done.</p>
- <p>Reply with anything you want us to know. The more context, the better.</p>
+ <p>We do not promise a PageSpeed increase.</p>
  <p style="color: #5A5A66; font-size: 14px; margin-top: 32px;">
     Thanks,<br/>
     The Eject team<br/>

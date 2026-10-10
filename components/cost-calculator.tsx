@@ -43,13 +43,13 @@ const DEFAULT_PLAN: Record<Platform, string> = {
  squarespace: "business",
 };
 
-type Tier = "express" | "concierge";
+type CheckoutChoice = "automated" | "done_for_you";
 
 export function CostCalculator() {
  const [platform, setPlatform] = useState<Platform>("webflow");
  const [planId, setPlanId] = useState(DEFAULT_PLAN.webflow);
  const [seats, setSeats] = useState(2);
- const [tier, setTier] = useState<Tier>("express");
+ const [tier, setTier] = useState<CheckoutChoice>("automated");
 
  const plans = platformPlans[platform];
  const plan = plans.find((p) => p.id === planId) ?? plans[0];
@@ -66,7 +66,8 @@ export function CostCalculator() {
  // Eject = one-time fee. Ongoing hosting + AI editor = $0 (Cloudflare free,
  // ChatGPT/Claude free tiers). Domain renewal is paid to your registrar
  // either way. Same on both sides. So we don't count it.
- const ejectOneTime = tier === "express" ? siteConfig.pricing.express.price : siteConfig.pricing.concierge.price;
+ const offer = tier === "done_for_you" ? siteConfig.pricing.concierge : siteConfig.pricing.express;
+ const ejectOneTime = offer.price;
  const ejectAnnualOngoing = 0;
 
  const eject3yr = ejectOneTime + ejectAnnualOngoing * 3;
@@ -133,16 +134,16 @@ export function CostCalculator() {
  <p className="text-sm font-medium mb-3">How do you want to do this?</p>
  <div className="grid grid-cols-2 gap-2">
  <TierButton
- active={tier === "express"}
- onClick={() => setTier("express")}
- name={`Express · $${siteConfig.pricing.express.price}`}
- blurb="Auto-rebuild + AI kit. You deploy."
+ active={tier === "automated"}
+ onClick={() => setTier("automated")}
+ name={`${siteConfig.pricing.express.name} · $${siteConfig.pricing.express.price}`}
+ blurb="Automated migration. You edit by chatting with your own agent."
  />
  <TierButton
- active={tier === "concierge"}
- onClick={() => setTier("concierge")}
- name={`Concierge · $${siteConfig.pricing.concierge.price}`}
- blurb="A human does the whole thing."
+ active={tier === "done_for_you"}
+ onClick={() => setTier("done_for_you")}
+ name={`${siteConfig.pricing.concierge.name} · $${siteConfig.pricing.concierge.price}`}
+ blurb="Hand-polished, capped to simple sites."
  />
  </div>
  </div>
@@ -191,7 +192,7 @@ export function CostCalculator() {
  href={`/checkout?tier=${tier}`}
  className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-ink text-paper px-4 py-3 text-sm font-medium hover:bg-signal transition"
  >
- Start with {tier === "express" ? "Express" : "Concierge"} · ${ejectOneTime} →
+ Start with {offer.name} · ${ejectOneTime} →
  </Link>
  </div>
  </div>

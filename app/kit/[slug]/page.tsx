@@ -5,23 +5,34 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import { getKitPage, kitSlugs, listKitPages } from "@/lib/kit";
+import { kitHref, requirePaidKit } from "@/lib/kit-access";
+import { KitLocked } from "@/components/kit-locked";
 import { Section, Eyebrow } from "@/components/section";
 
 export async function generateStaticParams() {
   return kitSlugs().map((slug) => ({ slug }));
 }
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ token?: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const { token } = await searchParams;
+  const access = await requirePaidKit(token);
+  if (!access.ok) return { title: "Express Kit", robots: { index: false, follow: false } };
   const p = getKitPage(slug);
-  if (!p) return {};
+  if (!p) return { robots: { index: false, follow: false } };
   return {
     title: `${p.title} · Express Kit`,
     description: p.description,
+    robots: { index: false, follow: false },
   };
 }
 
@@ -85,8 +96,24 @@ const markdownComponents = {
   hr: () => <hr className="border-line my-10" />,
 };
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ token?: string }>;
+}) {
   const { slug } = await params;
+  const { token } = await searchParams;
+  const access = await requirePaidKit(token);
+  if (!access.ok || !token) {
+    return (
+      <Section>
+        <Eyebrow>Express Kit</Eyebrow>
+        <KitLocked reason={access.ok ? "Missing order token." : access.reason} />
+      </Section>
+    );
+  }
   const page = getKitPage(slug);
   if (!page) notFound();
 
@@ -98,7 +125,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <>
       <Section className="pb-0">
-        <Link href="/kit" className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-ink-muted hover:text-signal mb-7 transition">
+        <Link href={kitHref(token)} className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-ink-muted hover:text-signal mb-7 transition">
           ← All kit pages
         </Link>
         <Eyebrow>{page.icon} · Express Kit</Eyebrow>
@@ -127,7 +154,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div className="grid md:grid-cols-2 gap-4 max-w-4xl">
           {prev ? (
             <Link
-              href={`/kit/${prev.slug}`}
+              href={kitHref(token, prev.slug)}
               className="rounded-2xl border border-line bg-paper-warm p-6 hover:border-ink transition group"
             >
               <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">← Previous</p>
@@ -136,7 +163,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           ) : <span />}
           {next && (
             <Link
-              href={`/kit/${next.slug}`}
+              href={kitHref(token, next.slug)}
               className="rounded-2xl border border-line bg-paper-warm p-6 hover:border-ink transition group text-right"
             >
               <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">Next →</p>

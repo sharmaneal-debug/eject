@@ -19,7 +19,7 @@ export function PricingTable() {
 
  <div className="grid md:grid-cols-2 gap-5">
  {tiers.map((t) => {
- const accent = t.id === "concierge"; // Concierge featured (premium upsell)
+ const accent = t.id === "done_for_you";
  return (
  <div
  key={t.id}
@@ -66,10 +66,10 @@ export function PricingTable() {
  <div className="mt-10 max-w-3xl text-sm text-ink-muted leading-relaxed">
  <p className="mb-2"><span className="font-medium text-ink">What&apos;s the real difference?</span></p>
  <p>
- <strong className="text-ink">Express ($49):</strong> our system rebuilds your site automatically. You download a folder with everything, follow a 10-minute deploy guide, and you&apos;re live. Best if you don&apos;t mind clicking through a couple of setup steps yourself.
+ <strong className="text-ink">{siteConfig.pricing.express.name} (${siteConfig.pricing.express.price}):</strong> {siteConfig.pricing.express.blurb}
  </p>
  <p className="mt-2">
- <strong className="text-ink">Concierge ($299):</strong> a real person hand-polishes the rebuild, deploys it for you, moves your domain, and gives you a finished website. Best if you don&apos;t want to do anything.
+ <strong className="text-ink">{siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price}):</strong> {siteConfig.pricing.concierge.blurb}
  </p>
  </div>
  </Section>

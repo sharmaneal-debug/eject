@@ -46,24 +46,89 @@ pnpm build
 
 ## Migration tooling
 
-Three scripts. See `scripts/README.md` for full usage.
+See `scripts/README.md` for full usage.
 
 ```sh
 pnpm crawl https://example.com           # Playwright snapshot → data/snapshots/<host>/
 pnpm rebuild data/snapshots/<host>/      # Claude → Next.js project in out/<host>/
-pnpm audit https://prospect.com          # platform + Lighthouse + cost estimate
-pnpm editor ./out/<host>/                # chat-driven editor CLI prototype
+pnpm site-audit https://prospect.com     # platform + Lighthouse + cost estimate
+pnpm editor ./out/<host>/                # optional CLI editor (needs ANTHROPIC_API_KEY)
+pnpm orders                              # list orders, scores, cost-to-serve
+pnpm deliver <orderId>                   # write the customer repo (no model call)
 ```
 
 ## Pricing
 
-| Tier | Price | What ships |
+Checkout reads `lib/pricing.ts`. Simple sites only: up to about 10 pages, 1 form. Past that is a refer-out or a priced add-on.
+
+| Offer | Price | What ships |
 |---|---|---|
-| DIY Guided | $49 | URL → repo + deploy guide |
-| Done-with-You | $299 | We migrate, you launch on a 30-min Zoom |
-| Done-for-You | $1,499 | Hand-off, wired, editor pre-trained |
-| Editor — Hobby | $79/mo | Up to 50 chat-edits/mo + preview deploys |
-| Editor — Pro | $149/mo | Unlimited edits + monthly Lighthouse/SEO report |
+| Automated | $99 one-time | Automated migration of a simple site. The customer edits afterwards by chatting with their own agent (`AGENTS.md`). |
+| Done for you | $199 one-time | The same cap, done by hand. 2 revision rounds and a 30-minute handoff. |
+
+There is no editor subscription. Stripe stays in test mode.
+
+## How to run end to end locally in test mode
+
+No card and no live key. The mock path never talks to Stripe.
+
+```sh
+pnpm install
+pnpm test
+EJECT_STRIPE_MODE=mock pnpm dev
+```
+
+1. Open `http://localhost:3000/checkout?tier=automated` (or `tier=done_for_you`).
+2. The mock page posts to `/api/checkout/mock-complete`. That marks the order paid and issues a `tok_` access token. Nothing is charged.
+3. Open the intake link from the success page and submit a public `https` URL (not localhost).
+4. The order is scored: eligibility, migration-time estimate, and cost-to-serve. Eligible simple sites get a repo under `out/orders/<orderId>/` with `AGENTS.md`, `EDITING.md`, and `scripts/chat-edit.mjs`.
+5. `pnpm orders` lists the order. `pnpm deliver <orderId>` writes that repo again. Add `--rebuild` only when `ANTHROPIC_API_KEY` is set; otherwise the model is not called.
+6. The kit (`/kit?token=…`) opens after the score says the site is eligible.
+
+To use Stripe's own test checkout instead of the mock:
+
+```sh
+# test secret only — sk_test_… — never sk_live_
+pnpm setup-stripe
+```
+
+Put the printed names in `.env.local` (gitignored). Required names, values stay out of git:
+
+- `STRIPE_SECRET_KEY` (`sk_test_` or `rk_test_` only)
+- `STRIPE_WEBHOOK_SECRET`
+- `STRIPE_PRICE_AUTOMATED` (legacy fallback: `STRIPE_PRICE_EXPRESS`)
+- `STRIPE_PRICE_DONE_FOR_YOU` (legacy fallback: `STRIPE_PRICE_CONCIERGE`)
+
+Without those price ids, test checkout still starts: the session uses inline `price_data` at the offer amount. Forward webhooks with the Stripe CLI to `POST /api/stripe/webhook`. Live-mode events are rejected. The success page also reconciles the Checkout Session, so a local run works if the webhook is not forwarded.
+
+`EJECT_STRIPE_MODE=mock` skips Stripe entirely.
+
+### Order store
+
+`ORDERS_STORE` selects `file` (default), `kv`, `blob`, or `postgres`.
+
+| Name | Used when |
+|---|---|
+| `ORDERS_DIR` | File store directory. Default `data/orders` (gitignored). |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Vercel KV / Upstash. Alternate pair: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`. |
+| `BLOB_READ_WRITE_TOKEN` | One private JSON document. |
+| `POSTGRES_URL` or `DATABASE_URL` | Tables created on first use. |
+
+On Vercel, the file store falls back to `/tmp` and is not durable. Set KV, Blob, or Postgres before real orders.
+
+### Other env names
+
+| Name | Role |
+|---|---|
+| `RESEND_API_KEY` | Send mail. If unset, send is skipped. |
+| `RESEND_FROM` | Required to actually send. If unset, send is skipped. There is no `onboarding@resend.dev` fallback. |
+| `LEAD_NOTIFICATION_TO` | Internal paid-order notice. Defaults to the site contact address. |
+| `LEADS_WEBHOOK_URL` | Optional extra POST. Leads are always appended to the order store. |
+| `OPS_ACCESS_TOKEN` | Gates `/ops`. |
+| `ANTHROPIC_API_KEY` | Optional. Enables `pnpm rebuild`, `pnpm editor`, and `pnpm deliver --rebuild`. |
+| `NEXT_PUBLIC_SITE_URL` | Absolute origin used in emails when the request host is unavailable. |
+
+Still needs a secret or a decision before this takes a real test payment in a deployed environment: a Stripe test account and webhook secret (or stay on mock); a verified `RESEND_FROM`; a durable order store on Vercel. The app does not issue Stripe refunds. Ineligible sites are marked `refund_recommended` or `refer_out` / `add_on` for a person to handle. Marketing pages outside checkout (blog, how-it-works, FAQ, migrate) may still mention older prices; checkout, the pricing config, and delivery use $99 and $199.
 
 ## Marketing playbooks (in `docs/`)
 

@@ -24,9 +24,9 @@ import path from "node:path";
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { execSync } from "node:child_process";
+import { EDITABLE_FILE_PATTERNS, EDITOR_SYSTEM_PROMPT, isEditablePath } from "../lib/editor-guide";
 
-const EDITABLE_GLOBS = [/^app\/.*\.(tsx|mdx|md|json)$/, /^content\/.*\.(md|mdx|json)$/, /^components\/.*\.tsx$/];
-
+const EDITABLE_GLOBS = EDITABLE_FILE_PATTERNS;
 const SYSTEM_PROMPT = `You are Eject's chat editor. The user is a non-technical owner of a Next.js marketing site. They will ask for content edits in plain English ("change the hero headline to X", "add a testimonial here").
 
 You have these tools available:
@@ -34,15 +34,7 @@ You have these tools available:
   - write_file(path, contents)
   - list_files(prefix)
 
-Constraints:
-  - Only modify files matching: app/**/*.{tsx,mdx,md,json}, content/**/*.{md,mdx,json}, components/**/*.tsx
-  - Never modify package.json, tailwind.config.ts, next.config.mjs, .env, .github
-  - Never invent new files unless explicitly asked
-  - Preserve TypeScript correctness; never delete imports that are still in use
-  - Make the smallest change that satisfies the request
-  - When uncertain, read the file first, then propose
-
-After making changes, summarize what you did in one sentence so the user can verify.`;
+${EDITOR_SYSTEM_PROMPT}`;
 
 async function listEditableFiles(root: string, prefix = ""): Promise<string[]> {
   const dir = path.join(root, prefix);
@@ -66,7 +58,7 @@ async function listEditableFiles(root: string, prefix = ""): Promise<string[]> {
 }
 
 function isEditable(rel: string) {
-  return EDITABLE_GLOBS.some((re) => re.test(rel));
+  return isEditablePath(rel);
 }
 
 async function run() {

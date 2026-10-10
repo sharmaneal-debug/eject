@@ -10,16 +10,21 @@
     "typecheck": "tsc --noEmit",
     "crawl": "tsx scripts/crawl.ts",
     "rebuild": "tsx scripts/rebuild.ts",
-    "audit": "tsx scripts/audit.ts",
+    "site-audit": "tsx scripts/audit.ts",
     "editor": "tsx scripts/editor.ts",
-    "setup-stripe": "tsx scripts/setup-stripe.ts"
+    "orders": "tsx scripts/orders.ts",
+    "deliver": "tsx scripts/deliver.ts",
+    "setup-stripe": "tsx scripts/setup-stripe.ts",
+    "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.1",
+    "@vercel/blob": "^2.8.1",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.460.0",
     "next": "^15.5.15",
+    "pg": "^8.23.1",
     "playwright": "^1.49.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -31,6 +36,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.5",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "autoprefixer": "^10.4.20",

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: `The agreement between you and ${siteConfig.legalEntity.name} when you use Eject.`,
 };
 
-const LAST_UPDATED = "May 3, 2026";
+const LAST_UPDATED = "October 10, 2026";
 
 export default function Page() {
   return (
@@ -34,10 +34,10 @@ export default function Page() {
           <p>Eject offers two tiers:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong className="text-ink">Express ($49)</strong> &mdash; an automated rebuild of your existing website (Webflow, Framer, Wix, or Squarespace) into a self-hosted Next.js codebase. You receive a preview link, the source files, and an AI editing kit (instructions for using ChatGPT, Claude, or similar tools to edit your site).
+              <strong className="text-ink">{siteConfig.pricing.express.name} (${siteConfig.pricing.express.price})</strong> &mdash; a one-time automated migration of a simple site (marketing, portfolio, or landing page; up to about 10 pages and 1 form). You receive source files, hosting instructions, and an editing guide (AGENTS.md) so you can edit the site by chatting with your own agent. A preview link is not created automatically.
             </li>
             <li>
-              <strong className="text-ink">Concierge ($299)</strong> &mdash; the same output, but a human at {siteConfig.legalEntity.name} hand-polishes the rebuild, deploys it for you, and moves your domain over. Delivery within 7 days of payment.
+              <strong className="text-ink">{siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price})</strong> &mdash; the same simple-site cap, done by hand at {siteConfig.legalEntity.name}. Included: 2 revision rounds and a 30-minute handoff. Anything beyond that cap is a refer-out or a priced add-on. You still edit the finished site by chatting with your own agent.
             </li>
           </ul>
           <p>

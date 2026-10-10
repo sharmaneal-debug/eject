@@ -27,7 +27,7 @@ Use the same Resend API key you already use for VedasAI, or create a new key tag
    RESEND_API_KEY=re_…
    RESEND_FROM=Eject <hi@ejectfrom.com>
    ```
-   Leave `RESEND_FROM` blank until `ejectfrom.com` shows ✓ in Resend Domains. Until then, mail sends from `onboarding@resend.dev` with `Reply-To: hi@ejectfrom.com`.
+   Leave `RESEND_FROM` blank until `ejectfrom.com` shows ✓ in Resend Domains. Until `RESEND_FROM` is set, Eject skips the send. It does not fall back to `onboarding@resend.dev`.
 
 ## 3. Forward `hi@ejectfrom.com` → `neal@laniakea.design` (free)
 

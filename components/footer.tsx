@@ -20,6 +20,8 @@ export function Footer() {
           <ul className="space-y-2 text-ink-muted">
             <li><Link className="hover:text-signal" href="/how-it-works">How it works</Link></li>
             <li><Link className="hover:text-signal" href="/pricing">Pricing</Link></li>
+            <li><Link className="hover:text-signal" href="/demo">Demo</Link></li>
+            <li><Link className="hover:text-signal" href="/preview">Preview</Link></li>
             <li><Link className="hover:text-signal" href="/calculator">Cost calculator</Link></li>
             <li><Link className="hover:text-signal" href="/">Scan my site</Link></li>
           </ul>
@@ -37,6 +39,7 @@ export function Footer() {
           <ul className="space-y-2 text-ink-muted">
             <li><Link className="hover:text-signal" href="/privacy">Privacy</Link></li>
             <li><Link className="hover:text-signal" href="/terms">Terms</Link></li>
+            <li><Link className="hover:text-signal" href="/refunds">Refunds</Link></li>
           </ul>
         </div>
       </div>

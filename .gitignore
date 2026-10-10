@@ -8,6 +8,7 @@ out
 .DS_Store
 *.log
 data/snapshots
+data/orders
 data/audits
 data/prospects
 data/sends

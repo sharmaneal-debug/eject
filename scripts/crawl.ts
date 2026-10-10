@@ -191,6 +191,9 @@ async function crawl(opts: CrawlOptions) {
     userAgent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 EjectCrawler/0.1",
   });
+  // esbuild keepNames injects __name into page.evaluate callbacks. A string
+  // (not a function) so this init script is not itself rewritten.
+  await context.addInitScript("globalThis.__name = (target) => target;");
   const page = await context.newPage();
 
   const visited = new Set<string>();
@@ -261,8 +264,15 @@ async function crawl(opts: CrawlOptions) {
   console.log(`\nNext: pnpm rebuild ${opts.out}`);
 }
 
-const opts = parseArgs(process.argv.slice(2));
-if (!existsSync(path.dirname(opts.out))) {
-  await mkdir(path.dirname(opts.out), { recursive: true });
+async function main() {
+  const opts = parseArgs(process.argv.slice(2));
+  if (!existsSync(path.dirname(opts.out))) {
+    await mkdir(path.dirname(opts.out), { recursive: true });
+  }
+  await crawl(opts);
 }
-await crawl(opts);
+
+main().catch((err) => {
+  console.error(err instanceof Error ? err.message : err);
+  process.exit(1);
+});

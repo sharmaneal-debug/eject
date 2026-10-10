@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe";
-import { sendEmail, expressKickoffEmail, conciergeKickoffEmail, sendPaidLeadNotification } from "@/lib/email";
-import { logLead } from "@/lib/leads";
+import { reconcileSession } from "@/lib/fulfillment";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
-// Called by /checkout/success after the user lands post-payment.
-// Verifies the session is paid, then sends the appropriate kickoff email.
-// Idempotent: Stripe webhooks would be more robust for production, but this
-// keeps the moving pieces minimal for launch.
+function maskEmail(email: string) {
+  const [local, domain] = email.split("@");
+  if (!domain) return email;
+  return `${local.slice(0, 2)}***@${domain}`;
+}
 
 export async function POST(req: Request) {
   let body: { sessionId?: string };
@@ -21,74 +20,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "missing sessionId" }, { status: 400 });
   }
 
-  const stripe = getStripe();
-  if (!stripe) {
-    return NextResponse.json({ ok: false, error: "stripe not configured" }, { status: 503 });
-  }
-
-  let session;
   try {
-    session = await stripe.checkout.sessions.retrieve(body.sessionId);
+    const order = await reconcileSession(body.sessionId);
+    if (!order) {
+      return NextResponse.json({ ok: false, error: "session not paid yet" }, { status: 402 });
+    }
+    return NextResponse.json({
+      ok: true,
+      sent: Boolean(order.kickoffSentAt),
+      error: order.kickoffSkipReason,
+      tier: order.tier,
+      email: order.email ? maskEmail(order.email) : undefined,
+      token: order.token,
+    });
   } catch (err) {
-    return NextResponse.json({ ok: false, error: (err as Error).message }, { status: 404 });
+    const message = err instanceof Error ? err.message : "finalize failed";
+    const status = message.includes("live mode") ? 400 : 404;
+    return NextResponse.json({ ok: false, error: message }, { status });
   }
-
-  if (session.payment_status !== "paid") {
-    return NextResponse.json({ ok: false, error: "session not paid yet" }, { status: 402 });
-  }
-
-  const tier = (session.metadata?.tier ?? "express") as "express" | "concierge";
-  const siteUrl = session.metadata?.siteUrl || "your site";
-  const email = session.customer_email || session.customer_details?.email;
-  const name = session.customer_details?.name || "";
-
-  if (!email) {
-    return NextResponse.json({ ok: true, sent: false, reason: "no customer email" });
-  }
-
-  const tpl = tier === "concierge" ? conciergeKickoffEmail({ name, siteUrl }) : expressKickoffEmail({ name, siteUrl });
-
-  const result = await sendEmail({ to: email, ...tpl, customerName: name });
-
-  // Notify Neal directly. Real-time database alternative to Apps Script:
-  // every paid customer lands in his Laniakea inbox with reply-to set to
-  // the customer so he can reply straight from his inbox.
-  await sendPaidLeadNotification({
-    name,
-    email,
-    tier,
-    siteUrl,
-    amount: typeof session.amount_total === "number" ? session.amount_total / 100 : 0,
-    stripeSessionId: session.id,
-  });
-
-  // Log paid customer to the lead store.
-  await logLead({
-    event: "checkout_paid",
-    data: {
-      tier,
-      siteUrl,
-      email,
-      name,
-      stripeSessionId: session.id,
-      amountPaid: typeof session.amount_total === "number" ? session.amount_total / 100 : null,
-      currency: session.currency,
-      kickoffEmailSent: result.ok,
-      kickoffEmailError: result.error ?? null,
-    },
-  });
-
-  return NextResponse.json({
-    ok: true,
-    sent: result.ok,
-    error: result.error,
-    tier,
-    email: maskEmail(email),
-  });
-}
-
-function maskEmail(e: string) {
-  const [local, domain] = e.split("@");
-  if (!domain) return e;
-  return `${local.slice(0, 2)}***@${domain}`;
 }

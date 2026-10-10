@@ -31,10 +31,10 @@ export function ScanResults({ data }: { data: ScanData }) {
  }
  })();
 
- // Eject 3-year cost when going through Express tier (cheapest path).
- // Domain renewal is paid to your registrar either way. Same on both
- // sides. So we don't count it. Hosting + AI editor are genuinely $0.
- const ejectExpress3yr = siteConfig.pricing.express.price;
+ // One-time automated price. Domain renewal is paid either way, so it is not added.
+ const automated = siteConfig.pricing.express;
+ const doneForYou = siteConfig.pricing.concierge;
+ const ejectExpress3yr = automated.price;
 
  return (
  <section
@@ -82,13 +82,13 @@ export function ScanResults({ data }: { data: ScanData }) {
  <div className="text-3xl text-ink/30 hidden md:block">→</div>
  <div>
  <p className="text-xs font-mono uppercase tracking-widest text-signal mb-2">
- Same site, on Eject Express
+ Same site, on {automated.name}
  </p>
  <p className="text-4xl md:text-5xl h-display tracking-tightest text-signal">
  ${ejectExpress3yr.toLocaleString()}
  </p>
  <p className="text-xs text-ink-muted mt-1 font-mono">
- $49 once. Run the playbook in an afternoon. No more bills.
+ ${automated.price} once. Then you edit it by chatting with your own agent.
  </p>
  </div>
  </div>
@@ -111,25 +111,25 @@ export function ScanResults({ data }: { data: ScanData }) {
  </p>
  <div className="grid md:grid-cols-2 gap-px bg-line rounded-2xl overflow-hidden border border-line">
  <Path
- badge="Express · $49"
- title="Get the playbook. Rebuild your site yourself, with AI doing the work."
+ badge={`${automated.name} · $${automated.price}`}
+ title="Automated migration of a simple site. You edit it afterwards by chatting with your own agent."
  steps={[
- "Pay $49",
- "Get a step-by-step playbook + AI prompts customized to your site",
- "Paste prompts into ChatGPT, Claude, or Cursor (free tiers all work)",
- "AI rebuilds your site, page by page. ~1 afternoon, hands-on",
- "Deploy on free hosting with the included 10-min guide",
+ `Pay $${automated.price}`,
+ "We score the site. Simple marketing, portfolio, and landing pages only.",
+ "You get the repo, hosting steps, and AGENTS.md.",
+ "Open the folder in Cursor, Claude, or ChatGPT and ask for the change.",
+ "A preview link is not created automatically.",
  ]}
  />
  <Path
- badge="Concierge · $299"
- title="Don't want to run the playbook yourself? We do every step for you."
+ badge={`${doneForYou.name} · $${doneForYou.price}`}
+ title="We do the migration by hand, inside a fixed simple-site cap."
  steps={[
- "Pay $299",
- "We run the playbook on our infrastructure",
- "We deploy on free hosting in your name and move your domain",
- "You get a preview link to review",
- "Live in 7 days, one round of revisions included",
+ `Pay $${doneForYou.price}`,
+ "Up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff.",
+ "Anything past that cap is a refer-out or a priced add-on.",
+ "You still edit the finished site by chatting with your own agent.",
+ "AGENTS.md and the editing playbook ship in the repo.",
  ]}
  dark
  />

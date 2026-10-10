@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { siteConfig } from "@/lib/site";
 import { ScanResults, type ScanData } from "./scan-results";
 
 export function Hero() {
@@ -102,7 +103,7 @@ export function Hero() {
  </form>
 
  <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-ink-muted font-mono uppercase tracking-widest">
- <span>· From $49 one-time</span>
+ <span>· From ${siteConfig.pricing.express.price} one-time</span>
  <span>· Preview before you pay</span>
  <span>· No subscription, ever</span>
  </div>

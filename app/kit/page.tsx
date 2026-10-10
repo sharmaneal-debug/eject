@@ -1,19 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section, Eyebrow } from "@/components/section";
+import { KitLocked } from "@/components/kit-locked";
 import { listKitPages } from "@/lib/kit";
+import { kitHref, requirePaidKit } from "@/lib/kit-access";
 import { siteConfig } from "@/lib/site";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export const metadata: Metadata = {
   title: "Express Kit",
-  description: "The kit you get when you pay for Eject Express. Playbook, AI prompts, deploy guide, editing kit.",
+  description: "The kit you get when a simple-site order is eligible.",
+  robots: { index: false, follow: false },
 };
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ session?: string; site?: string }>;
+  searchParams: Promise<{ token?: string }>;
 }) {
+  const { token } = await searchParams;
+  const access = await requirePaidKit(token);
+  if (!access.ok || !token) {
+    return (
+      <Section>
+        <Eyebrow>Express Kit</Eyebrow>
+        <KitLocked reason={access.ok ? "Missing order token." : access.reason} />
+      </Section>
+    );
+  }
   const pages = listKitPages();
   return (
     <>
@@ -36,7 +52,7 @@ export default function Page({
           {pages.map((p) => (
             <Link
               key={p.slug}
-              href={`/kit/${p.slug}`}
+              href={kitHref(token, p.slug)}
               className="rounded-2xl border border-line bg-white p-7 hover:border-ink transition group"
             >
               <div className="flex items-baseline gap-3 mb-3">
