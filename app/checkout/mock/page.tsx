@@ -46,7 +46,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
         ) : (
           <form action="/api/checkout/mock-complete" method="post">
             <input type="hidden" name="orderId" value={order.id} />
-            <button type="submit" className="rounded-xl bg-ink text-paper px-5 py-3 text-sm font-medium hover:bg-signal transition">
+            <button type="submit" className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-ink px-5 text-base font-medium text-paper hover:bg-signal">
               Mark paid · no charge
             </button>
           </form>
