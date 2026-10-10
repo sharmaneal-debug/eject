@@ -2,9 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/section";
 import { LEGAL_UPDATED } from "@/lib/legal";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Disclaimers", description: "What Eject does not promise." };
+export const metadata: Metadata = pageMetadata({
+  title: "Disclaimers",
+  description: "What Eject does not promise.",
+  path: "/disclaimers",
+});
 
 const lines = [
   ["Look", "We do not promise a pixel match."],

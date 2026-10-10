@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/section";
 import { LEGAL_UPDATED } from "@/lib/legal";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms of Service",
   description: `Terms for Eject, operated by ${siteConfig.legalEntity.name}.`,
-};
+  path: "/terms",
+});
 
 const lines = [
   ["The service", "We move a simple public site onto files you host."],

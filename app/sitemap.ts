@@ -1,40 +1,6 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/site";
-import { listPosts } from "@/lib/posts";
-import { listKitPages } from "@/lib/kit";
+import { sitemapEntries } from "@/lib/sitemap-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
- const base = siteConfig.url;
- const now = new Date();
- const staticPaths = [
- "",
- "/pricing",
- "/book",
- "/contact",
- "/disclaimers",
- "/unsubscribe",
- "/how-it-works",
- "/calculator",
- "/renewal-watch",
- "/refunds",
- "/blog",
- "/kit",
- "/about",
- "/migrate",
- "/migrate/webflow",
- "/migrate/framer",
- "/migrate/wix",
- "/migrate/squarespace",
- "/privacy",
- "/terms",
- ];
- const posts = listPosts().map((p) => `/blog/${p.slug}`);
- const kit = listKitPages().map((p) => `/kit/${p.slug}`);
-
- return [...staticPaths, ...posts, ...kit].map((path) => ({
- url: `${base}${path}`,
- lastModified: now,
- changeFrequency: "weekly",
- priority: path === "" ? 1 : path.startsWith("/blog") ? 0.8 : 0.7,
- }));
+  return sitemapEntries();
 }

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { bookingEmbeddable, bookingUrl, supportEmail } from "@/lib/support";
+import { pageMetadata } from "@/lib/seo";
 import { BookForm } from "./book-form";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Custom pricing",
   description: "We handle the migration for you, step by step.",
-};
+  path: "/book",
+});
 
 export default function Page() {
   const calendar = bookingUrl();

@@ -4,16 +4,18 @@ import { Section, Eyebrow } from "@/components/section";
 import { KitLocked } from "@/components/kit-locked";
 import { listKitPages } from "@/lib/kit";
 import { kitHref, requirePaidKit } from "@/lib/kit-access";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Editing kit",
   description: "The kit you get when a simple-site order is eligible.",
-  robots: { index: false, follow: false },
-};
+  path: "/kit",
+  index: false,
+});
 
 export default async function Page({
   searchParams,

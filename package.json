@@ -15,7 +15,8 @@
     "editor": "tsx scripts/editor.ts",
     "orders": "tsx scripts/orders.ts",
     "deliver": "tsx scripts/deliver.ts",
-    "setup-stripe": "tsx scripts/setup-stripe.ts"
+    "setup-stripe": "tsx scripts/setup-stripe.ts",
+    "indexnow": "tsx scripts/indexnow.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

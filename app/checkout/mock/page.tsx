@@ -4,15 +4,18 @@ import { notFound } from "next/navigation";
 import { Section, Eyebrow } from "@/components/section";
 import { isMockStripe } from "@/lib/checkout";
 import { getOrderStore } from "@/lib/orders";
+import { pageMetadata } from "@/lib/seo";
 import { tierConfig } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Mock checkout",
-  robots: { index: false, follow: false },
-};
+  description: "Mock checkout.",
+  path: "/checkout/mock",
+  index: false,
+});
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ order?: string }> }) {
   if (!isMockStripe()) notFound();

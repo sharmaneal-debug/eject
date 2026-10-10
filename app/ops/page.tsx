@@ -5,14 +5,17 @@ import { headers } from "next/headers";
 import { Section, Eyebrow } from "@/components/section";
 import { getOrderStore } from "@/lib/orders";
 import { OpsPaymentLink } from "@/components/ops-payment-link";
+import { pageMetadata } from "@/lib/seo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Orders",
-  robots: { index: false, follow: false },
-};
+  description: "Orders",
+  path: "/ops",
+  index: false,
+});
 
 function authorized(presented: string | null | undefined): boolean {
   const expected = process.env.OPS_ACCESS_TOKEN;

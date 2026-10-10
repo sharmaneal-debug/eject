@@ -4,15 +4,18 @@ import { Section, Eyebrow } from "@/components/section";
 import { PaidIntakeForm } from "@/components/paid-intake-form";
 import { ScoreReport } from "@/components/score-report";
 import { getOrderStore } from "@/lib/orders";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Site intake",
-  robots: { index: false, follow: false },
-};
+  description: "Site intake.",
+  path: "/intake",
+  index: false,
+});
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ token?: string }> }) {
   const { token } = await searchParams;

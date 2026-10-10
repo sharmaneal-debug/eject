@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section, Eyebrow } from "@/components/section";
+import { pageMetadata } from "@/lib/seo";
 import { supportEmail } from "@/lib/support";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Unsubscribe",
   description: "Stop renewal reminder emails.",
-  robots: { index: false, follow: false },
-};
+  path: "/unsubscribe",
+  index: false,
+});
 
 export default function Page() {
   const email = supportEmail();

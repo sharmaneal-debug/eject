@@ -5,15 +5,17 @@ import { redirect } from "next/navigation";
 import { siteConfig } from "@/lib/site";
 import { Section, Eyebrow } from "@/components/section";
 import { createCheckoutSession, type CheckoutResult } from "@/lib/checkout";
+import { pageMetadata } from "@/lib/seo";
 import { normalizeTier, tierConfig, type Tier } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Checkout",
   description: "One payment for a simple-site migration. Stripe test mode, or a local mock checkout.",
-};
+  path: "/checkout",
+});
 
 async function requestOrigin(): Promise<string> {
   const headerList = await headers();

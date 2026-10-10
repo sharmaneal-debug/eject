@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/section";
 
-export const metadata: Metadata = { title: "Demo", description: "The $99 move is the product." };
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Demo",
+  description: "The $99 move is the product.",
+  path: "/demo",
+});
 
 export default function Page() {
   return (

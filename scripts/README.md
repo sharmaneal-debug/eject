@@ -54,6 +54,10 @@ Writes `out/orders/<orderId>/` from the stored delivery packet (README, AGENTS.m
 
 `pnpm deliver <orderId> --rebuild` also runs `pnpm crawl` and `pnpm rebuild` when `ANTHROPIC_API_KEY` is set. Without that key it writes the snapshot and stops.
 
+## `pnpm indexnow`
+
+Submits the public sitemap URLs to IndexNow. Set `INDEXNOW_KEY` in the environment. The same value is served at `/<key>.txt`. The key is not printed.
+
 ## `pnpm setup-stripe`
 
 Create-or-lookup Stripe **test mode** products for the $99 automated price and the unpublished custom amount. Refuses live keys. Prints `ENV=price_id` lines. Does not write `.env`.

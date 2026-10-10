@@ -8,6 +8,7 @@ import { getKitPage, kitSlugs, listKitPages } from "@/lib/kit";
 import { kitHref, requirePaidKit } from "@/lib/kit-access";
 import { KitLocked } from "@/components/kit-locked";
 import { Section, Eyebrow } from "@/components/section";
+import { pageMetadata } from "@/lib/seo";
 
 export async function generateStaticParams() {
   return kitSlugs().map((slug) => ({ slug }));
@@ -26,14 +27,17 @@ export async function generateMetadata({
   const { slug } = await params;
   const { token } = await searchParams;
   const access = await requirePaidKit(token);
-  if (!access.ok) return { title: "Editing kit", robots: { index: false, follow: false } };
+  if (!access.ok) {
+    return pageMetadata({ title: "Editing kit", description: "Editing kit", path: `/kit/${slug}`, index: false });
+  }
   const p = getKitPage(slug);
-  if (!p) return { robots: { index: false, follow: false } };
-  return {
+  if (!p) return pageMetadata({ title: "Editing kit", description: "Editing kit", path: `/kit/${slug}`, index: false });
+  return pageMetadata({
     title: `${p.title} · Editing kit`,
     description: p.description,
-    robots: { index: false, follow: false },
-  };
+    path: `/kit/${slug}`,
+    index: false,
+  });
 }
 
 const markdownComponents = {

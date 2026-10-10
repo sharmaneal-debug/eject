@@ -2,9 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/section";
 import { LEGAL_UPDATED } from "@/lib/legal";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Refunds", description: "Email us for a refund. A person sends it." };
+export const metadata: Metadata = pageMetadata({
+  title: "Refunds",
+  description: "Email us for a refund. A person sends it.",
+  path: "/refunds",
+});
 
 export default function Page() {
   return (

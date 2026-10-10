@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FinalizeOnLoad } from "@/components/finalize-on-load";
 import { reconcileSession } from "@/lib/fulfillment";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Payment received",
   description: "What you get, and the next three steps.",
-  robots: { index: false, follow: false },
-};
+  path: "/checkout/success",
+  index: false,
+});
 
 const got = [
   { title: "Files you own", icon: FilesIcon },

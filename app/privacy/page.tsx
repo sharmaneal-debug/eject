@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/section";
 import { LEGAL_UPDATED } from "@/lib/legal";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
   description: `Privacy for Eject, operated by ${siteConfig.legalEntity.name}.`,
-};
+  path: "/privacy",
+});
 
 const lines = [
   ["Collect", "The URL you scan, and the email you send."],

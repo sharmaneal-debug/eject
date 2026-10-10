@@ -10,6 +10,7 @@ import { CostCalculator } from "@/components/cost-calculator";
 import { CustomPricingLink } from "@/components/custom-pricing-link";
 import { JsonLd } from "@/components/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export async function generateStaticParams() {
@@ -24,19 +25,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const p = getPost(slug);
   if (!p) return {};
-  const ogImageUrl = `${siteConfig.url}/og?title=${encodeURIComponent(p.title)}&subtitle=${encodeURIComponent(p.description)}&eyebrow=${encodeURIComponent(p.tags?.[0] ?? "Article")}`;
-  return {
+  return pageMetadata({
     title: p.title,
     description: p.description,
-    alternates: { canonical: p.canonical },
-    openGraph: {
-      title: p.title,
-      description: p.description,
-      type: "article",
-      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: p.title }],
-    },
-    twitter: { card: "summary_large_image", title: p.title, description: p.description, images: [ogImageUrl] },
-  };
+    path: `/blog/${slug}`,
+    canonical: p.canonical || `/blog/${slug}`,
+    type: "article",
+  });
 }
 
 function formatDate(d: string) {
@@ -127,7 +122,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             description: post.description,
             slug: post.slug,
             date: post.date,
-            author: post.author,
             ogImage: post.ogImage,
           }),
           breadcrumbSchema([

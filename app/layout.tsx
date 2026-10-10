@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { AnalyticsGate } from "@/components/analytics-gate";
 import { CookieBanner } from "@/components/cookie-banner";
 import "./globals.css";
+import { ogImagePath, siteVerification } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
-const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const shareImage = ogImagePath(siteConfig.tagline, siteConfig.description);
 
 export const metadata: Metadata = {
  metadataBase: new URL(siteConfig.url),
@@ -15,20 +16,20 @@ export const metadata: Metadata = {
  template: `%s · ${siteConfig.name}`,
  },
  description: siteConfig.description,
- verification: googleVerification ? { google: googleVerification } : undefined,
+ verification: siteVerification(),
  openGraph: {
  title: siteConfig.tagline,
  description: siteConfig.description,
  url: siteConfig.url,
  siteName: siteConfig.name,
  type: "website",
- images: [{ url: `${siteConfig.url}/og`, width: 1200, height: 630, alt: siteConfig.tagline }],
+ images: [{ url: shareImage, width: 1200, height: 630, alt: siteConfig.tagline }],
  },
  twitter: {
  card: "summary_large_image",
  title: siteConfig.tagline,
  description: siteConfig.description,
- images: [`${siteConfig.url}/og`],
+ images: [shareImage],
  },
  robots: { index: true, follow: true },
  icons: {

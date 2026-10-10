@@ -7,16 +7,12 @@ export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: siteConfig.name,
+    name: siteConfig.legalEntity.name,
+    alternateName: siteConfig.name,
     url: siteConfig.url,
     logo: `${siteConfig.url}/icon.svg`,
     description: siteConfig.description,
-    email: siteConfig.email,
-    sameAs: [`https://twitter.com/${siteConfig.twitter.replace(/^@/, "")}`].filter(Boolean),
-    parentOrganization: {
-      "@type": "Organization",
-      name: siteConfig.legalEntity.name,
-    },
+    email: siteConfig.legalEntity.contactEmail,
   };
 }
 
@@ -28,34 +24,38 @@ export function websiteSchema() {
     url: siteConfig.url,
     description: siteConfig.description,
     publisher: { "@type": "Organization", name: siteConfig.legalEntity.name },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: { "@type": "EntryPoint", urlTemplate: `${siteConfig.url}/blog?q={search_term_string}` },
-      "query-input": "required name=search_term_string",
+  };
+}
+
+export function productSchema() {
+  const offer = siteConfig.pricing.express;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${offer.name} site move`,
+    description: siteConfig.description,
+    brand: { "@type": "Brand", name: siteConfig.name },
+    offers: {
+      "@type": "Offer",
+      name: offer.name,
+      description: offer.blurb,
+      price: offer.price,
+      priceCurrency: "USD",
+      url: `${siteConfig.url}/pricing`,
+      availability: "https://schema.org/InStock",
     },
   };
 }
 
-export function serviceSchema() {
+export function faqSchema(items: { q: string; a: string }[]) {
   return {
     "@context": "https://schema.org",
-    "@type": "Service",
-    serviceType: "Website migration",
-    name: "Eject. Move a simple site for $99.",
-    description: siteConfig.description,
-    provider: { "@type": "Organization", name: siteConfig.legalEntity.name, url: siteConfig.url },
-    areaServed: "Worldwide",
-    offers: [
-      {
-        "@type": "Offer",
-        name: siteConfig.pricing.express.name,
-        description: siteConfig.pricing.express.blurb,
-        price: siteConfig.pricing.express.price,
-        priceCurrency: "USD",
-        url: `${siteConfig.url}/checkout?tier=express`,
-        availability: "https://schema.org/InStock",
-      },
-    ],
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   };
 }
 
@@ -64,7 +64,6 @@ export function articleSchema(post: {
   description: string;
   slug: string;
   date: string;
-  author?: string;
   ogImage?: string;
 }) {
   const url = `${siteConfig.url}/blog/${post.slug}`;
@@ -75,7 +74,7 @@ export function articleSchema(post: {
     description: post.description,
     datePublished: post.date,
     dateModified: post.date,
-    author: { "@type": "Organization", name: post.author || siteConfig.name },
+    author: { "@type": "Organization", name: siteConfig.name },
     publisher: {
       "@type": "Organization",
       name: siteConfig.legalEntity.name,
