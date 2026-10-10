@@ -63,9 +63,9 @@ export function BookForm({ bookingUrl, embed, support }: { bookingUrl: string | 
         <Field label="Renewal date, if you know it" name="renewalDate" type="date" />
         <label className="block text-sm">
           <span className="font-medium">What you want</span>
-          <textarea name="note" required rows={4} className="mt-1 w-full rounded-lg border border-line bg-paper px-3 py-2.5" placeholder="A simple marketing site, about N pages. I want to leave before renewal." />
+          <textarea name="note" required rows={2} className="mt-1 min-h-11 w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-base" placeholder="Simple site. About N pages." />
         </label>
-        <button type="submit" disabled={pending} className="rounded-xl bg-ink text-paper px-5 py-3 text-sm font-medium hover:bg-signal disabled:opacity-50">
+        <button type="submit" disabled={pending} className="inline-flex min-h-12 items-center rounded-xl bg-ink px-5 text-sm font-medium text-paper hover:bg-signal disabled:opacity-50">
           {pending ? "Checking the site…" : "Check the site and continue"}
         </button>
       </form>
@@ -119,7 +119,7 @@ function Field({
   return (
     <label className="block text-sm">
       <span className="font-medium">{label}</span>
-      <input name={name} type={type} required={required} placeholder={placeholder} className="mt-1 w-full rounded-lg border border-line bg-paper px-3 py-2.5" />
+      <input name={name} type={type} required={required} placeholder={placeholder} className="mt-1 min-h-11 w-full rounded-lg border border-line bg-paper px-3 text-base" />
     </label>
   );
 }

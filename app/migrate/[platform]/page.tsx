@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 import type { PlatformId } from "@/lib/pricing/platforms";
 import { siteConfig } from "@/lib/site";
 
-const offerLine = `Automated move: $${siteConfig.pricing.express.price}. Custom work has no public price.`;
+const offerLine = `Automated $${siteConfig.pricing.express.price}. Done for you $${siteConfig.pricing.concierge.price}.`;
 
 const data: Record<
   PlatformId,

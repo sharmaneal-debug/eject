@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const lines = [
   ["The service", "We move a simple public site onto files you host."],
-  ["Price", `The automated move is $${siteConfig.pricing.express.price}. Custom work has no public price.`],
+  ["Price", `Automated is $${siteConfig.pricing.express.price}. Done for you is $${siteConfig.pricing.concierge.price}. Simple sites, about ${siteConfig.pricing.concierge.cap.pages} pages.`],
   ["Your part", "You need rights to the content. Domain and DNS stay yours."],
   ["Refunds", "Email us. A person sends any refund."],
   ["Ownership", "You own the files we deliver."],

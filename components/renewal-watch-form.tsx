@@ -12,11 +12,19 @@ import { trackEvent } from "./track-event";
 
 type Interval = "month" | "year" | "";
 
-export function RenewalWatchForm() {
+export function RenewalWatchForm({
+  initialPlatform = "framer",
+  initialPlanId,
+  initialDate = "",
+}: {
+  initialPlatform?: PlatformId;
+  initialPlanId?: string;
+  initialDate?: string;
+}) {
   const [email, setEmail] = useState("");
-  const [platformId, setPlatformId] = useState<PlatformId>("framer");
-  const [planId, setPlanId] = useState(defaultPlanId("framer"));
-  const [renewalDate, setRenewalDate] = useState("");
+  const [platformId, setPlatformId] = useState<PlatformId>(initialPlatform);
+  const [planId, setPlanId] = useState(initialPlanId ?? defaultPlanId(initialPlatform));
+  const [renewalDate, setRenewalDate] = useState(initialDate);
   const [amount, setAmount] = useState("");
   const [interval, setInterval] = useState<Interval>("");
   const [emailText, setEmailText] = useState("");
@@ -117,13 +125,9 @@ export function RenewalWatchForm() {
       <div className="rounded-2xl border border-line bg-white p-8 md:p-10">
         <p className="font-mono text-xs uppercase tracking-widest text-signal mb-3">Watching</p>
         <h2 className="h-section text-3xl mb-3">We&apos;ll remind you before it renews.</h2>
-        <p className="text-ink-soft leading-relaxed mb-4">
-          {done.persisted
-            ? "The subscription is stored."
-            : "Saved only in this server process. Durable storage isn't configured, so set the blob token before relying on reminders."}{" "}
-          {done.emailSent
-            ? "A confirmation email is on its way."
-            : "Email didn't send. Resend isn't configured, so this was a safe no-op."}
+        <p className="text-ink-soft mb-4">
+          {done.persisted ? "Saved." : "Saved for this server process only."}{" "}
+          {done.emailSent ? "Confirmation email sent." : "Email did not send."}
         </p>
         <Link href={done.unsubscribePath} className="text-sm text-accent hover:text-signal">
           Unsubscribe link
@@ -159,7 +163,7 @@ export function RenewalWatchForm() {
                 setPlanId(defaultPlanId(p.id));
               }}
               className={cn(
-                "rounded-lg border px-3 py-2 text-sm font-medium",
+                "min-h-11 rounded-lg border px-3 text-sm font-medium",
                 platformId === p.id ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink",
               )}
             >
@@ -269,48 +273,39 @@ export function RenewalWatchForm() {
         <div className="rounded-2xl border border-line bg-paper-warm p-6 md:p-8">
           <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-3">One year, this plan</p>
           {savings.annualPlatformUsd == null ? (
-            <p className="text-ink-soft leading-relaxed">{savings.unavailableReason}</p>
+            <p className="text-sm text-ink-soft">{savings.unavailableReason}</p>
           ) : (
             <>
-              <p className="text-4xl h-display text-signal mb-2">{formatUsd(savings.savingsVsSelfHostedUsd ?? 0)}</p>
-              <p className="text-sm text-ink-soft leading-relaxed">
-                {formatUsd(savings.annualPlatformUsd)} on {platform.name}
-                {savings.usingCustomCharge ? " (from the amount you entered)" : " at the checked list price"} versus{" "}
-                {formatUsd(savings.annualSelfHostedUsd)} to self-host the static site. {siteConfig.pricing.express.name} is an extra{" "}
-                {formatUsd(siteConfig.pricing.express.price)} once, so the first-year difference after that fee is{" "}
-                {formatUsd(savings.netAfterEjectUsd ?? 0)}.
+              <p className="text-lg">
+                {platform.name} {plan.name} {formatUsd(savings.annualPlatformUsd)}/yr vs Eject about {formatUsd(savings.annualSelfHostedUsd)}/yr
+              </p>
+              <p className="mt-2 text-3xl font-semibold tabular-nums text-signal">
+                {formatUsd(savings.savingsVsSelfHostedUsd ?? 0)}/yr
               </p>
             </>
           )}
-          <p className="text-xs text-ink-muted mt-4 leading-relaxed">
+          <p className="mt-4 text-xs text-ink-muted">
             Checked {plan.lastChecked}.{" "}
             <a className="text-accent hover:text-signal" href={plan.sourceUrl} target="_blank" rel="noreferrer">
-              Verify the price
+              Source
             </a>
-            . {plan.fitsSimpleSite ? "This plan can be a simple site." : "This plan is usually outside our scope."}
+            . {plan.fitsSimpleSite ? "Can be a simple site." : "Usually outside a 10-page site."}
           </p>
         </div>
 
         <div className="rounded-2xl border border-line bg-white p-6 md:p-8">
           <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-3">Move-by plan</p>
           {!movePlan ? (
-            <p className="text-sm text-ink-soft">Add a renewal date to see the 90, 60, and 30 day marks.</p>
+            <p className="text-sm text-ink-soft">Add a renewal date.</p>
           ) : (
-            <>
-              <p className="text-sm text-ink-soft mb-4 leading-relaxed">{movePlan.summary}</p>
-              <ol className="space-y-4">
-                {movePlan.steps.map((step) => (
-                  <li key={step.id} className={cn(step.passed && "opacity-50")}>
-                    <p className="text-xs font-mono uppercase tracking-widest text-signal">
-                      {step.date}
-                      {step.passed ? " · passed" : ""}
-                    </p>
-                    <p className="font-medium">{step.title}</p>
-                    <p className="text-sm text-ink-soft leading-relaxed">{step.detail}</p>
-                  </li>
-                ))}
-              </ol>
-            </>
+            <ol className="space-y-3">
+              {movePlan.steps.map((step) => (
+                <li key={step.id} className={cn("flex gap-3", step.passed && "opacity-50")}>
+                  <p className="w-28 shrink-0 text-xs text-ink-muted">{step.date}</p>
+                  <p className="font-medium">{step.title}</p>
+                </li>
+              ))}
+            </ol>
           )}
         </div>
       </div>

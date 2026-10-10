@@ -16,8 +16,24 @@ html, body {
 
 .h-display {
   letter-spacing: -0.04em;
-  line-height: 0.95;
+  line-height: 1.02;
   font-weight: 600;
+}
+
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary::after {
+  content: "+";
+  margin-left: auto;
+  color: #5a5a66;
+  font-weight: 400;
+}
+details[open] summary::after {
+  content: "–";
 }
 
 .h-section {

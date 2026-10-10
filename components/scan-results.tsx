@@ -148,7 +148,7 @@ export function ScanResults({ data }: { data: ScanData }) {
  </p>
  </CheckoutLink>
  <p className="text-sm text-ink-muted self-center">
- <a className="underline-offset-4 hover:underline" href="/book">Contact us or book a call for custom pricing</a>
+ <a className="underline-offset-4 hover:underline" href="/book">Book a call</a>
  </p>
  </div>
  </>

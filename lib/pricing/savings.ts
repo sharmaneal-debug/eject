@@ -66,7 +66,7 @@ export function calculateSavings(input: SavingsInput): SavingsResult {
   const ejectOneTimeUsd = roundMoney(input.ejectOneTimeUsd ?? 0);
   const platform = getPlatform(input.platformId);
   const plan = getPlan(input.platformId, input.planId) ?? null;
-  const sources = [
+  const sources: { label: string; url: string; lastChecked: string }[] = [
     {
       label: "Self-hosted static hosting",
       url: SELF_HOSTED.sourceUrl,

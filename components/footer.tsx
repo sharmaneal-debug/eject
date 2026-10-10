@@ -1,58 +1,30 @@
 import Link from "next/link";
-import { siteConfig } from "@/lib/site";
 import { LEGAL_UPDATED } from "@/lib/legal";
-import { CustomPricingLink } from "./custom-pricing-link";
-import { EjectMark } from "./eject-mark";
+import { siteConfig } from "@/lib/site";
+
+const links = [
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
+  { href: "/refunds", label: "Refunds" },
+  { href: "/disclaimers", label: "Disclaimers" },
+  { href: "/contact", label: "Contact" },
+  { href: "/unsubscribe", label: "Unsubscribe" },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-line/70 bg-paper">
-      <div className="max-w-content mx-auto px-6 py-12 grid gap-8 md:grid-cols-4 text-sm">
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-ink text-paper">
-              <EjectMark size={14} />
-            </span>
-            <span className="font-semibold">{siteConfig.name}</span>
-          </div>
-          <p className="text-ink-muted leading-relaxed max-w-xs">{siteConfig.shortTagline}</p>
-        </div>
-        <div>
-          <p className="font-medium mb-3">Service</p>
-          <ul className="space-y-2 text-ink-muted">
-            <li><Link className="hover:text-signal" href="/how-it-works">How it works</Link></li>
-            <li><Link className="hover:text-signal" href="/pricing">Pricing</Link></li>
-            <li><Link className="hover:text-signal" href="/demo">Demo</Link></li>
-            <li><Link className="hover:text-signal" href="/preview">Preview</Link></li>
-            <li><Link className="hover:text-signal" href="/calculator">Cost calculator</Link></li>
-            <li><Link className="hover:text-signal" href="/renewal-watch">Renewal watch</Link></li>
-            <li><Link className="hover:text-signal" href="/">Scan my site</Link></li>
-          </ul>
-        </div>
-        <div>
-          <p className="font-medium mb-3">Company</p>
-          <ul className="space-y-2 text-ink-muted">
-            <li><Link className="hover:text-signal" href="/blog">Blog</Link></li>
-            <li><Link className="hover:text-signal" href="/about">About</Link></li>
-            <li><Link className="hover:text-signal" href="/contact">Contact</Link></li>
-            <li><CustomPricingLink className="text-sm text-ink-muted hover:text-signal" /></li>
-            <li><a className="hover:text-signal" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></li>
-          </ul>
-        </div>
-        <div>
-          <p className="font-medium mb-3">Legal</p>
-          <ul className="space-y-2 text-ink-muted">
-            <li><Link className="hover:text-signal" href="/privacy">Privacy</Link></li>
-            <li><Link className="hover:text-signal" href="/terms">Terms</Link></li>
-            <li><Link className="hover:text-signal" href="/refunds">Refunds</Link></li>
-            <li><Link className="hover:text-signal" href="/disclaimers">Disclaimers</Link></li>
-            <li><Link className="hover:text-signal" href="/unsubscribe">Unsubscribe</Link></li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-line/70 py-5 px-6 text-center text-xs text-ink-muted">
-        © {new Date().getFullYear()} {siteConfig.legalEntity.name}. Operated by {siteConfig.legalEntity.name}.{" "}
-        Last updated: {LEGAL_UPDATED}. Not affiliated with Webflow, Framer, Wix, or Squarespace.
+    <footer className="border-t border-line/70">
+      <div className="mx-auto flex max-w-content flex-col gap-4 px-6 py-8 md:flex-row md:items-center md:justify-between">
+        <p className="text-xs leading-relaxed text-ink-muted">
+          © {new Date().getFullYear()} {siteConfig.legalEntity.name}. Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.
+        </p>
+        <nav className="flex flex-wrap gap-x-1 gap-y-1">
+          {links.map((link) => (
+            <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center px-2 text-sm text-ink-soft hover:text-ink">
+              {link.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </footer>
   );

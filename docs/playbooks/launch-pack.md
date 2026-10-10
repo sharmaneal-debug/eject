@@ -13,7 +13,7 @@ A complete kit for the public launch of **Eject**: a productized service that mi
 
 **One-line:** *Eject from Webflow. Own your site. Pay $5 a year.*
 
-**Pricing:** Automated $99 once. Custom work has no public price. We handle the migration for you, step by step.
+**Pricing:** Automated $99 once. Done for you is $199. We handle the migration for you, step by step.
 
 ---
 
@@ -32,7 +32,7 @@ A complete kit for the public launch of **Eject**: a productized service that mi
 
 Hi HN — I built Eject because last October Framer rolled out a pricing change that broke client contracts mid-quote. The r/Framer thread complaining about it hit 113 upvotes in a day. Webflow did the same thing in late 2024 with their Workspace overhaul. Every few quarters, a hosted page-builder hikes its bill, the upgrade gets bundled into the editor you already pay for, and there is no opt-out short of rebuilding from scratch.
 
-Eject does that rebuild for you. We crawl your live site, regenerate it as a clean Next.js codebase with Tailwind and shadcn/ui, hand you the GitHub repo, and deploy it to Cloudflare Pages. One public price: Automated is $99 for a simple site. We handle the migration for you, step by step, when you want that (about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff). Custom work has no public price. After that you edit by chatting with your own agent. Hosting on Cloudflare's free tier can be $0, the domain is ~$5/yr, and there is no monthly subscription from us.
+Eject does that rebuild for you. We crawl your live site, regenerate it as a clean Next.js codebase with Tailwind and shadcn/ui, hand you the GitHub repo, and deploy it to Cloudflare Pages. One public price: Automated is $99 for a simple site. We handle the migration for you, step by step, when you want that (about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff). Done for you is $199. After that you edit by chatting with your own agent. Hosting on Cloudflare's free tier can be $0, the domain is ~$5/yr, and there is no monthly subscription from us.
 
 The technically interesting bit is that bare Next.js is the wrong product for the people who need this most. Marketers and founders won't open a PR to change a hero headline. So the wedge isn't the migration — it's a chat-driven editor that sits on the repo. You type "make the headline bigger and add a testimonial from Sarah at Acme," it writes the diff, runs a preview build, and ships on confirm. The model is constrained to a small whitelist of operations (text edits, image swaps, section reordering, component prop tweaks) so it can't melt your routing or ruin your Tailwind config. That part is $79–$149/mo and is what makes this not just another static-export tool.
 
@@ -82,7 +82,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 - **Chat editor**: tell it "swap the hero image and update the testimonial" — it writes the diff, builds a preview, ships on confirm.
 - **You own the code**: GitHub repo, MIT-style license to your own work, fork us and walk away anytime.
 - **Hosting that doesn't gouge you**: Cloudflare Pages free tier covers the vast majority of marketing sites. Real cost: the domain.
-- **Two offers**: Automated $99, custom work (no public price). You edit afterward by chatting with your own agent. There is no editor subscription.
+- **Two offers**: Automated $99, Done for you $199. You edit afterward by chatting with your own agent. There is no editor subscription.
 
 ### Maker comment (pin first)
 
@@ -150,7 +150,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 
 > Paste your live URL. Eject crawls it, rebuilds it as a clean Next.js + Tailwind + shadcn/ui project, and hands you the GitHub repo deployed on Cloudflare Pages.
 >
-> Two offers: Automated $99, custom work (no public price). No retainer and no editor subscription.
+> Two offers: Automated $99, Done for you $199. No retainer and no editor subscription.
 
 ### Tweet 3 — The migration in action (gif/video slot)
 
@@ -254,7 +254,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 >
 > The part I'm most proud of is the chat editor. Bare Next.js is the wrong product for someone who isn't a developer — they need to be able to say "swap the hero image and update the testimonial from Sarah" and have it work. So we built that. Constrained, safe, every change behind a preview URL with one-click rollback.
 >
-> Two offers — Automated $99 and custom work (no public price). Built for founders and operators who are tired of paying rent on a homepage they wrote themselves.
+> Two offers — Automated $99 and Done for you $199. Built for founders and operators who are tired of paying rent on a homepage they wrote themselves.
 >
 > If that's you, I'd love to migrate your site this week. Comment "eject" or DM me.
 

@@ -168,8 +168,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <article className="max-w-[680px]">
           <aside className="rounded-xl border border-line bg-paper-warm p-5 mb-10 text-sm text-ink-soft leading-relaxed">
             <p className="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Offer, October 2026</p>
-            Automated move: ${siteConfig.pricing.express.price}.{" "}
-            <Link href="/book" className="text-accent hover:text-signal">Contact us or book a call for custom pricing</Link>.
+            Automated ${siteConfig.pricing.express.price}. Done for you ${siteConfig.pricing.concierge.price}.{" "}
+            <Link href="/book" className="text-accent hover:text-signal">Book a call</Link>.
           </aside>
           {segments.map((seg, i) => (
             <div key={i}>

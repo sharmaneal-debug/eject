@@ -22,7 +22,7 @@ const STEP_COPY: { id: MoveStep["id"]; daysBefore: number; title: string; detail
     id: "60",
     daysBefore: 60,
     title: "Start the move",
-    detail: `Automated move: $${siteConfig.pricing.express.price}. Custom work has no public price.`,
+    detail: `Automated $${siteConfig.pricing.express.price}. Done for you $${siteConfig.pricing.concierge.price}.`,
   },
   {
     id: "30",

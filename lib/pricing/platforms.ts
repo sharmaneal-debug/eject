@@ -8,6 +8,8 @@
 // status "needs-verification" means we do not have a number we are willing
 // to show. There are no guessed prices in this file.
 
+import { ongoingCost, ongoingYearlyUsd } from "./ongoing";
+
 export const PRICING_LAST_CHECKED = "2026-10-10";
 
 export type PlatformId = "webflow" | "framer" | "wix" | "squarespace";
@@ -258,13 +260,14 @@ export const PLATFORMS: PlatformPricing[] = [
 ];
 
 export const SELF_HOSTED = {
-  label: "Self-hosted static site",
-  annualUsd: 0,
+  label: "Eject yearly cost",
+  domainUsdPerYear: ongoingCost.domainUsdPerYear,
+  hostingUsdPerYear: ongoingCost.hostingUsdPerYear,
+  annualUsd: ongoingYearlyUsd(),
   status: "verified" as const,
-  sourceUrl: "https://developers.cloudflare.com/pages/functions/pricing/",
-  lastChecked: PRICING_LAST_CHECKED,
-  assumption:
-    "Cloudflare's Pages docs say requests to static assets are free and unlimited on the free plan (page last updated Sep 8, 2026; checked Oct 10, 2026). That is the comparison for a simple marketing, portfolio, or landing site served as static files. Pages Functions and Workers requests are a separate quota and are not included. Domain registration is excluded because you pay a registrar either way.",
+  sourceUrl: ongoingCost.hostingSourceUrl,
+  lastChecked: ongoingCost.hostingLastChecked,
+  assumption: `About $${ongoingCost.domainUsdPerYear}/yr is a domain assumption. Hosting is $${ongoingCost.hostingUsdPerYear}/yr for Cloudflare Pages static assets (docs checked ${ongoingCost.hostingLastChecked}).`,
 };
 
 export const PLATFORM_IDS = PLATFORMS.map((p) => p.id);

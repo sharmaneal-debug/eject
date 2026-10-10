@@ -1,3 +1,4 @@
+import { ongoingCost } from "./pricing/ongoing";
 import { simpleSiteScope } from "./pricing";
 
 /**
@@ -39,11 +40,11 @@ export const costConstants = {
   computeUsdPerPage: 0.03,
   computeUsdPerAsset: 0.002,
   tokensUsdPerPage: 0.12,
-  hostingUsdFlat: 0,
+  hostingUsdFlat: ongoingCost.hostingUsdPerYear,
   humanUsdPerHour: 75,
   stripePercent: 0.029,
   stripeFixedUsd: 0.3,
-  domainUsdPerYear: 15,
+  domainUsdPerYear: ongoingCost.domainUsdPerYear,
 
   // Free scan compares a typical platform bill with the automated offer price.
   scanComparisonYears: 3,

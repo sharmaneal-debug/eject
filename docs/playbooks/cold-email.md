@@ -1,7 +1,7 @@
 # Cold Email Playbook
 
 **Pitch:** Eject from Webflow. Own your site. Pay $5 a year.
-**Offers:** Automated $99. Custom work has no public price. Amounts live in `lib/site.ts`. No editor subscription.
+**Offers:** Automated $99. Done for you is $199. Amounts live in `lib/site.ts`. No editor subscription.
 **Stack we ship:** Next.js + Cloudflare Pages (free tier) + optional AI editor
 **ICP:** solo agency owners + indie founders paying $19–$80/mo on Framer/Webflow/Wix
 
@@ -236,7 +236,7 @@ No pitch deck, no sales call. Just the audit.
 
 After you watch it, two options:
 - **Automated ($99)** — an automated migration of a simple site. You review it, then you edit by chatting with your own agent
-- **custom work (no public price)** — we do that move by hand, inside a cap of about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff
+- **Done for you $199** — we do that move by hand, inside a cap of about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff
 
 Or none of the above. Watching the Loom doesn't commit you to anything.
 

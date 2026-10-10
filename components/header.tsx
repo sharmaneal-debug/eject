@@ -4,32 +4,31 @@ import { EjectMark } from "./eject-mark";
 
 const links = [
   { href: "/pricing", label: "Pricing" },
-  { href: "/calculator", label: "Calculator" },
-  { href: "/blog", label: "Blog" },
+  { href: "/how-it-works", label: "How it works" },
 ];
 
 export function Header() {
   return (
-    <header className="border-b border-line/70 bg-paper/80 backdrop-blur sticky top-0 z-30">
-      <div className="max-w-content mx-auto flex items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2 group">
+    <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/90 backdrop-blur">
+      <div className="mx-auto flex max-w-content items-center justify-between px-6 py-3">
+        <Link href="/" className="flex min-h-11 items-center gap-2">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-ink text-paper">
             <EjectMark size={16} />
           </span>
-          <span className="font-semibold tracking-tight text-lg">{siteConfig.name}</span>
+          <span className="text-lg font-semibold tracking-tight">{siteConfig.name}</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-7 text-sm text-ink-soft">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="hover:text-signal transition">
-              {l.label}
+        <nav className="hidden items-center gap-7 text-sm text-ink-soft md:flex">
+          {links.map((link) => (
+            <Link key={link.href} href={link.href} className="hover:text-ink">
+              {link.label}
             </Link>
           ))}
         </nav>
         <Link
           href="/checkout?tier=express"
-          className="rounded-md bg-ink text-paper px-4 py-2 text-sm font-medium hover:bg-signal transition"
+          className="inline-flex min-h-11 items-center rounded-lg bg-ink px-4 text-sm font-medium text-paper hover:bg-signal"
         >
-          Buy for $99
+          Buy now
         </Link>
       </div>
     </header>

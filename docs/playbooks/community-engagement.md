@@ -220,7 +220,7 @@ Building Eject: a productized service that migrates non-technical site owners of
 
 Pitch: "Eject from Webflow. Own your site. Pay $5/year."
 
-Two offers: Automated $99, custom work (no public price). You edit afterward by chatting with your own agent.
+Two offers: Automated $99, Done for you $199. You edit afterward by chatting with your own agent.
 
 Day 1.
 ```

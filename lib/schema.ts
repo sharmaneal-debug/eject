@@ -55,6 +55,15 @@ export function serviceSchema() {
         url: `${siteConfig.url}/checkout?tier=express`,
         availability: "https://schema.org/InStock",
       },
+      {
+        "@type": "Offer",
+        name: siteConfig.pricing.concierge.name,
+        description: siteConfig.pricing.concierge.blurb,
+        price: siteConfig.pricing.concierge.price,
+        priceCurrency: "USD",
+        url: `${siteConfig.url}/book`,
+        availability: "https://schema.org/InStock",
+      },
     ],
   };
 }

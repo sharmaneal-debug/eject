@@ -1,18 +1,21 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { siteConfig } from "../lib/site";
+import { ongoingYearlyUsd } from "../lib/pricing/ongoing";
 import { PLATFORMS, SELF_HOSTED } from "../lib/pricing/platforms";
 import { annualFromListPrice, annualFromRenewalCharge, calculateSavings } from "../lib/pricing/savings";
 import { buildMovePlan } from "../lib/renewal/move-plan";
 
 describe("eject offer prices", () => {
-  it("reads Automated $99 from the shared config and keeps custom work unpriced in copy", () => {
+  it("reads Automated $99 and Done for you $199 from the shared config", () => {
     assert.equal(siteConfig.pricing.express.id, "express");
     assert.equal(siteConfig.pricing.express.name, "Automated");
     assert.equal(siteConfig.pricing.express.price, 99);
+    assert.equal(siteConfig.pricing.express.cta, "Buy now");
     assert.equal(siteConfig.pricing.concierge.id, "concierge");
-    assert.equal(siteConfig.pricing.concierge.name, "Custom");
-    assert.equal(siteConfig.pricing.concierge.blurb.includes("$"), false);
+    assert.equal(siteConfig.pricing.concierge.name, "Done for you");
+    assert.equal(siteConfig.pricing.concierge.price, 199);
+    assert.equal(siteConfig.pricing.concierge.cta, "Book a call");
     assert.equal(siteConfig.pricing.concierge.blurb.toLowerCase().includes("neal"), false);
     assert.equal(siteConfig.pricing.concierge.cap.pages, 10);
     assert.equal(siteConfig.pricing.concierge.cap.forms, 1);
@@ -23,7 +26,8 @@ describe("eject offer prices", () => {
 
 describe("platform price file", () => {
   it("has a source URL and a checked date on every plan, and no guessed zeroes", () => {
-    assert.equal(SELF_HOSTED.annualUsd, 0);
+    assert.equal(SELF_HOSTED.annualUsd, ongoingYearlyUsd());
+    assert.equal(SELF_HOSTED.annualUsd, SELF_HOSTED.domainUsdPerYear + SELF_HOSTED.hostingUsdPerYear);
     assert.match(SELF_HOSTED.sourceUrl, /^https:\/\//);
     assert.match(SELF_HOSTED.lastChecked, /^\d{4}-\d{2}-\d{2}$/);
 
@@ -58,9 +62,9 @@ describe("calculateSavings", () => {
     assert.equal(result.priceStatus, "verified");
     assert.equal(result.annualPlatformUsd, 120);
     assert.equal(result.platformTotalUsd, 360);
-    assert.equal(result.selfHostedTotalUsd, 0);
-    assert.equal(result.savingsVsSelfHostedUsd, 360);
-    assert.equal(result.netAfterEjectUsd, 311);
+    assert.equal(result.selfHostedTotalUsd, ongoingYearlyUsd() * 3);
+    assert.equal(result.savingsVsSelfHostedUsd, 360 - ongoingYearlyUsd() * 3);
+    assert.equal(result.netAfterEjectUsd, 360 - ongoingYearlyUsd() * 3 - 49);
     assert.equal(annualFromListPrice(result.plan!, "yearly"), 120);
   });
 
@@ -75,6 +79,13 @@ describe("calculateSavings", () => {
     assert.equal(result.savingsVsSelfHostedUsd, null);
     assert.equal(result.priceStatus, "needs-verification");
     assert.match(result.unavailableReason ?? "", /month-to-month/i);
+  });
+
+  it("compares Framer Pro yearly list price with the ongoing config", () => {
+    const result = calculateSavings({ platformId: "framer", planId: "pro", billing: "yearly", years: 1 });
+    assert.equal(result.annualPlatformUsd, 360);
+    assert.equal(result.annualSelfHostedUsd, ongoingYearlyUsd());
+    assert.equal(result.savingsVsSelfHostedUsd, 360 - ongoingYearlyUsd());
   });
 
   it("uses Webflow Basic yearly and month-to-month figures that were both published", () => {

@@ -296,7 +296,7 @@ For most companies between 50 and 500 employees with a marketing site that's the
 
 ### Will I save money even after the migration cost?
 
-For a simple site, Automated is **$99**. Custom work has no public price. We handle the migration for you, step by step. We don't treat a blended "$170" average as your price. Use the calculator, which cites the plan you are actually on. After the move you edit by chatting with your own AI.
+For a simple site, Automated is **$99**. Done for you is **$199**. We handle the migration for you, step by step. We don't treat a blended "$170" average as your price. Use the calculator, which cites the plan you are actually on. After the move you edit by chatting with your own AI.
 
 ### What's the absolute cheapest way to leave Webflow?
 
