@@ -4,6 +4,7 @@ import { timingSafeEqual } from "node:crypto";
 import { headers } from "next/headers";
 import { Section, Eyebrow } from "@/components/section";
 import { getOrderStore } from "@/lib/orders";
+import { OpsPaymentLink } from "@/components/ops-payment-link";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -78,6 +79,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ k
         </table>
       </div>
       <p className="text-xs text-ink-muted mt-6">{leads.length} recent lead events stored alongside orders.</p>
+      <OpsPaymentLink opsKey={key ?? ""} />
     </Section>
   );
 }

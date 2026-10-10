@@ -32,6 +32,8 @@ export function Footer() {
           <ul className="space-y-2 text-ink-muted">
             <li><Link className="hover:text-signal" href="/blog">Blog</Link></li>
             <li><Link className="hover:text-signal" href="/about">About</Link></li>
+            <li><Link className="hover:text-signal" href="/contact">Contact</Link></li>
+            <li><Link className="hover:text-signal" href="/book">Book a call</Link></li>
             <li><a className="hover:text-signal" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></li>
           </ul>
         </div>
@@ -41,13 +43,14 @@ export function Footer() {
             <li><Link className="hover:text-signal" href="/privacy">Privacy</Link></li>
             <li><Link className="hover:text-signal" href="/terms">Terms</Link></li>
             <li><Link className="hover:text-signal" href="/refunds">Refunds</Link></li>
+            <li><Link className="hover:text-signal" href="/disclaimers">Disclaimers</Link></li>
+            <li><Link className="hover:text-signal" href="/unsubscribe">Unsubscribe</Link></li>
           </ul>
         </div>
       </div>
       <div className="border-t border-line/70 py-5 px-6 text-center text-xs text-ink-muted">
-        © {new Date().getFullYear()} {siteConfig.legalEntity.name}.{" "}
-        Eject is a service of {siteConfig.legalEntity.name}.{" "}
-        Not affiliated with Webflow, Framer, Wix, or Squarespace. We just help you leave.
+        © {new Date().getFullYear()} {siteConfig.legalEntity.name}. Operated by {siteConfig.legalEntity.name}.{" "}
+        Not affiliated with Webflow, Framer, Wix, or Squarespace.
       </div>
     </footer>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { AnalyticsGate } from "@/components/analytics-gate";
+import { CookieBanner } from "@/components/cookie-banner";
 import "./globals.css";
 import { siteConfig } from "@/lib/site";
 import { Header } from "@/components/header";
@@ -44,8 +44,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
  <Header />
  <main className="flex-1">{children}</main>
  <Footer />
- <Analytics />
- <SpeedInsights />
+ <CookieBanner />
+ <AnalyticsGate />
  </body>
  </html>
  );

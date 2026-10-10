@@ -51,7 +51,7 @@ export const siteConfig = {
       name: "Done for you",
       price: doneForYouPrice,
       blurb:
-        "We do the move by hand for a simple site: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond that, we refer out or quote an add-on.",
+        `Not a buy-now button. Book a call. Neal and a colleague do the move by hand for a simple site: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. You pay $${doneForYouPrice} after the call if we take the work. Beyond the cap, we refer out or quote an add-on.`,
       cap: {
         pages: 10,
         forms: 1,
@@ -66,7 +66,7 @@ export const siteConfig = {
         "Help deploying on a free host in an account you control",
         "Beyond the cap, we refer out or quote a priced add-on",
       ],
-      cta: `Start for $${doneForYouPrice}`,
+      cta: "Book a call",
     },
   },
 } as const;

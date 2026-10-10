@@ -36,10 +36,10 @@ export default function Page() {
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong className="text-ink">{siteConfig.pricing.express.name} (${siteConfig.pricing.express.price})</strong> &mdash; an automated migration of those pages. You review them before DNS changes. We do not show a rebuilt preview before you pay, and we do not extract a CMS. {siteConfig.editing.included}
+              <strong className="text-ink">{siteConfig.pricing.express.name} (${siteConfig.pricing.express.price})</strong>. You buy this on the spot. It is an automated migration of those pages. You review them before DNS changes. We do not show a rebuilt preview before you pay, and we do not extract a CMS. {siteConfig.editing.included}
             </li>
             <li>
-              <strong className="text-ink">{siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price})</strong> &mdash; a person at {siteConfig.legalEntity.name} does the move by hand: up to about {siteConfig.pricing.concierge.cap.pages} pages, {siteConfig.pricing.concierge.cap.forms} form, {siteConfig.pricing.concierge.cap.revisionRounds} revision rounds, and a {siteConfig.pricing.concierge.cap.handoffMinutes}-minute handoff. Beyond that we refer out or quote an add-on. You review the pages before DNS changes. {siteConfig.editing.included}
+              <strong className="text-ink">{siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price})</strong>. This is not a buy-now checkout. You book a call. Neal and a colleague at {siteConfig.legalEntity.name} do the move by hand. There is no contractor. The cap is about {siteConfig.pricing.concierge.cap.pages} pages, {siteConfig.pricing.concierge.cap.forms} form, {siteConfig.pricing.concierge.cap.revisionRounds} revision rounds, and a {siteConfig.pricing.concierge.cap.handoffMinutes}-minute handoff. Beyond that we refer out or quote an add-on. You pay after the call, with a payment link, if we take the work. {siteConfig.editing.included}
             </li>
           </ul>
           <p>
@@ -57,16 +57,16 @@ export default function Page() {
 
           <h2 className="h-section text-2xl text-ink mt-10">3. Payment</h2>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Both tiers are paid up front, in full, in US dollars, via Stripe. We do not store your card.</li>
+            <li>{siteConfig.pricing.express.name} is paid up front through Stripe Checkout. {siteConfig.pricing.concierge.name} is paid after the call, through a payment link we send. Both are in US dollars. We do not store your card. Stripe may email a receipt. We also email an order confirmation.</li>
             <li>Prices are listed at <Link className="text-accent hover:text-signal" href="/pricing">/pricing</Link> and are subject to change at any time. The price you paid is the price for your order; future price changes do not retroactively apply.</li>
             <li>Sales tax may be added based on your billing location.</li>
           </ul>
 
           <h2 className="h-section text-2xl text-ink mt-10">4. Refunds</h2>
           <p>
-            <strong className="text-ink">14-day refund, no arguments.</strong> Within 14 days of receiving your migration (the moment we email you the kit, the preview link, or the final files, whichever comes first), if you&apos;re not satisfied with the result, email{" "}
+            Within 14 days of receiving the kit or the handoff files, email{" "}
             <a className="text-accent hover:text-signal" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>{" "}
-            and we&apos;ll refund 100% of what you paid. No phone call, no survey, no justification required.
+            and a person will refund what you paid for that order. The app does not call Stripe by itself. Details are on the refunds page.
           </p>
           <p>
             Refunds process within 5 business days. The funds appear back on your card within 3–10 business days after that, depending on your bank. If you initiated a chargeback through your bank instead of contacting us first, we can&apos;t also refund (the chargeback fee makes it a loss for us); email us first and we&apos;ll process the refund the same way.
@@ -115,6 +115,9 @@ export default function Page() {
             <li>Every animation or interactive element will be 1:1 with the original</li>
             <li>A CMS, store, or member area will be migrated (those are out of scope)</li>
             <li>Search rankings or PageSpeed scores will stay the same or improve</li>
+            <li>The new pages will match the old site pixel for pixel. Fonts, motion, and third-party embeds often differ</li>
+            <li>Copying the old site is allowed just because it is public. You must have the right to the text, images, and brand. Platform terms still apply to content that stays on that platform</li>
+            <li>We will change your DNS. You own the domain and you point it when you are ready</li>
             <li>Cloudflare, Vercel, or any other third-party will be available 100% of the time</li>
           </ul>
           <p>
@@ -134,7 +137,7 @@ export default function Page() {
 
           <h2 className="h-section text-2xl text-ink mt-10">11. Governing law &amp; disputes</h2>
           <p>
-            These Terms are governed by the laws of the United States and the state of {siteConfig.legalEntity.name}&apos;s registration. Disputes will be resolved through binding individual arbitration, except that either party may bring small-claims court actions. You waive participation in class actions.
+            The company name in this repository is {siteConfig.legalEntity.name}. This repository does not contain a formation certificate, so the governing state is not stated here. A lawyer needs to confirm the entity, the state, and whether disputes go to court or arbitration. Until that review, do not treat this paragraph as a choice of law.
           </p>
 
           <h2 className="h-section text-2xl text-ink mt-10">12. Changes</h2>

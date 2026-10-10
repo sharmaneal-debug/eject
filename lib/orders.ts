@@ -44,14 +44,26 @@ export type LeadRecord = {
   ts?: string;
 };
 
+export type OrderChannel = "self_serve" | "operator";
+
+export type OrderEmailLog = {
+  confirmation?: string;
+  intake?: string;
+  delivery?: string;
+  refund?: string;
+};
+
 export type Order = {
   id: string;
   token?: string;
   tier: Tier;
+  /** Automated is self-serve. Done for you payment links are created from the operator view. */
+  channel: OrderChannel;
   status: OrderStatus;
   email?: string;
   name?: string;
   siteUrl?: string;
+  emails?: OrderEmailLog;
   stripeSessionId?: string;
   amountCents: number;
   currency: string;
@@ -68,6 +80,7 @@ export type Order = {
 
 export type NewOrder = {
   tier: Tier;
+  channel?: OrderChannel;
   siteUrl?: string;
   email?: string;
   name?: string;
@@ -75,6 +88,20 @@ export type NewOrder = {
   amountCents: number;
   currency: string;
 };
+
+export function buildPendingOrder(input: NewOrder): Order {
+  return {
+    ...input,
+    channel: input.channel ?? "self_serve",
+    id: newOrderId(),
+    status: "pending",
+    livemode: false,
+    createdAt: new Date().toISOString(),
+    siteUrl: input.siteUrl?.slice(0, 500) || undefined,
+    email: input.email?.slice(0, 200) || undefined,
+    name: input.name?.slice(0, 200) || undefined,
+  };
+}
 
 export type OrderStore = {
   kind: StoreKind;
@@ -146,16 +173,7 @@ function createMemoryApi(load: () => Promise<Db>, save: (db: Db) => Promise<void
     async create(input) {
       return lock(async () => {
         const db = await load();
-        const order: Order = {
-          ...input,
-          id: newOrderId(),
-          status: "pending",
-          livemode: false,
-          createdAt: new Date().toISOString(),
-          siteUrl: input.siteUrl?.slice(0, 500) || undefined,
-          email: input.email?.slice(0, 200) || undefined,
-          name: input.name?.slice(0, 200) || undefined,
-        };
+        const order = buildPendingOrder(input);
         db.orders.push(order);
         await save(db);
         return order;
@@ -283,13 +301,7 @@ function kvStore(env: Env, plan: { kind: StoreKind; durable: boolean; label: str
     label: plan.label,
     create(input) {
       return lock(async () => {
-        const order: Order = {
-          ...input,
-          id: newOrderId(),
-          status: "pending",
-          livemode: false,
-          createdAt: new Date().toISOString(),
-        };
+        const order = buildPendingOrder(input);
         await index(order);
         return order;
       });
@@ -416,13 +428,7 @@ function postgresStore(env: Env, plan: { kind: StoreKind; durable: boolean; labe
     durable: plan.durable,
     label: plan.label,
     async create(input) {
-      const order: Order = {
-        ...input,
-        id: newOrderId(),
-        status: "pending",
-        livemode: false,
-        createdAt: new Date().toISOString(),
-      };
+      const order = buildPendingOrder(input);
       await withClient((client) => client.query("INSERT INTO eject_orders (id, payload) VALUES ($1, $2::jsonb)", [order.id, JSON.stringify(order)]));
       return order;
     },

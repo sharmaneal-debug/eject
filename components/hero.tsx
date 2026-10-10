@@ -57,7 +57,7 @@ export function Hero() {
  </h1>
 
  <p className="mt-6 text-lg md:text-xl text-ink-soft max-w-2xl leading-relaxed">
- {siteConfig.editing.lead} {siteConfig.editing.included} {siteConfig.pricing.express.name} is ${siteConfig.pricing.express.price}: an automated migration of a simple marketing, portfolio, or landing site, which you review before DNS. {siteConfig.pricing.concierge.name} is ${siteConfig.pricing.concierge.price}: we do that move by hand, inside a small cap. The scan names the platform. It is not a preview before you pay.
+ {siteConfig.editing.lead} {siteConfig.editing.included} {siteConfig.pricing.express.name} is ${siteConfig.pricing.express.price}: an automated migration of a simple marketing, portfolio, or landing site, which you review before DNS. {siteConfig.pricing.concierge.name} is ${siteConfig.pricing.concierge.price} after a call, not a buy-now button. The scan names the platform. It is not a preview before you pay.
  </p>
 
  <form

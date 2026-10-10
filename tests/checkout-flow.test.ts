@@ -93,10 +93,18 @@ test("mock checkout, intake, and kit gate", async () => {
     assert.equal(stored?.tier, "automated");
     assert.match(automated.url, /\/checkout\/mock\?order=/);
 
-    const done = await createCheckoutSession({ tier: "done_for_you", origin: "http://localhost:3000" });
+    const publicDone = await createCheckoutSession({ tier: "done_for_you", origin: "http://localhost:3000" });
+    assert.equal(publicDone.kind, "unavailable");
+    const done = await createCheckoutSession({
+      tier: "done_for_you",
+      origin: "http://localhost:3000",
+      channel: "operator",
+    });
     assert.equal(done.kind, "redirect");
     if (done.kind === "redirect") {
-      assert.equal((await getOrderStore().get(done.orderId))?.amountCents, 19900);
+      const paidByLink = await getOrderStore().get(done.orderId);
+      assert.equal(paidByLink?.amountCents, 19900);
+      assert.equal(paidByLink?.channel, "operator");
     }
 
     const response = await mockComplete(

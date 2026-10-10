@@ -24,6 +24,12 @@ export async function POST(req: Request) {
   if (!tier) {
     return NextResponse.json({ ok: false, error: "invalid tier" }, { status: 400 });
   }
+  if (tier === "done_for_you") {
+    return NextResponse.json(
+      { ok: false, error: "Done for you is booked on a call, then paid from a link we send.", book: "/book" },
+      { status: 409 },
+    );
+  }
 
   const origin = req.headers.get("origin") ?? siteConfig.url;
   const result = await createCheckoutSession({

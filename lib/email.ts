@@ -151,7 +151,7 @@ export function expressKickoffEmail(opts: { name: string; siteUrl: string; intak
   : `Reply with the site URL if we don't already have ${opts.siteUrl}.`;
  const text = `Hi ${opts.name || "there"},
 
-Your $${offer.price} ${offer.name} payment came through. You will edit the site by chatting with your own agent. Here is what actually happens next:
+Your $${offer.price} ${offer.name} payment came through. Stripe may also email a receipt. You will edit the site by chatting with your own agent. Here is what actually happens next:
 
 1. ${next}
 2. We crawl the public pages and score complexity: page count, assets, animation and JS weight, CMS, forms, commerce, and platform.
@@ -164,13 +164,13 @@ Reply to this email if a step is unclear.
 
 Thanks,
 The Eject team
-hi@ejectfrom.com
+${supportLine()}
 ${siteConfig.url}
 `;
  const html = `<!doctype html>
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
  <p style="font-size: 18px;">Hi ${escape(opts.name) || "there"},</p>
- <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. You will edit the site by chatting with your own agent.</p>
+ <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. Stripe may also email a receipt. You will edit the site by chatting with your own agent.</p>
  <ol style="padding-left: 20px;">
  <li>${opts.intakeUrl ? `Submit the site for scoring: <a href="${escape(opts.intakeUrl)}">${escape(opts.intakeUrl)}</a>` : `Reply with the site URL for ${escape(opts.siteUrl)}.`}</li>
  <li>We crawl public pages and score complexity. Simple marketing, portfolio, and landing pages can continue.</li>
@@ -181,7 +181,7 @@ ${siteConfig.url}
  <p style="color: #5A5A66; font-size: 14px; margin-top: 32px;">
     Thanks,<br/>
     The Eject team<br/>
-    <a href="mailto:hi@ejectfrom.com" style="color: #0066FF;">hi@ejectfrom.com</a> · <a href="${siteConfig.url}" style="color: #0066FF;">ejectfrom.com</a>
+    <a href="mailto:${escape(supportLine())}" style="color: #0066FF;">${escape(supportLine())}</a> · <a href="${siteConfig.url}" style="color: #0066FF;">ejectfrom.com</a>
  </p>
 </body></html>`;
 
@@ -208,13 +208,13 @@ Reply with anything you want preserved or changed.
 
 Thanks,
 The Eject team
-hi@ejectfrom.com
+${supportLine()}
 ${siteConfig.url}
 `;
  const html = `<!doctype html>
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
  <p style="font-size: 18px;">Hi ${escape(opts.name) || "there"},</p>
- <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. A person hand-polishes a simple site. You edit it afterwards with your own agent.</p>
+ <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. Stripe may also email a receipt. A person hand-polishes a simple site. You edit it afterwards with your own agent.</p>
  <ol style="padding-left: 20px;">
  <li>${opts.intakeUrl ? `Submit the site for scoring: <a href="${escape(opts.intakeUrl)}">${escape(opts.intakeUrl)}</a>` : `We confirm <code>${escape(opts.siteUrl)}</code> with you.`}</li>
  <li>Simple marketing, portfolio, and landing pages can continue. Anything else is refunded or referred out.</li>
@@ -225,11 +225,71 @@ ${siteConfig.url}
  <p style="color: #5A5A66; font-size: 14px; margin-top: 32px;">
     Thanks,<br/>
     The Eject team<br/>
-    <a href="mailto:hi@ejectfrom.com" style="color: #0066FF;">hi@ejectfrom.com</a> · <a href="${siteConfig.url}" style="color: #0066FF;">ejectfrom.com</a>
+    <a href="mailto:${escape(supportLine())}" style="color: #0066FF;">${escape(supportLine())}</a> · <a href="${siteConfig.url}" style="color: #0066FF;">ejectfrom.com</a>
  </p>
 </body></html>`;
 
  return { subject, text, html };
+}
+
+export function intakeReceivedEmail(opts: { name: string; siteUrl: string; eligible: boolean }) {
+  const subject = opts.eligible
+    ? `We received ${opts.siteUrl} and it looks like a simple site`
+    : `We received ${opts.siteUrl}. It is outside the simple-site cap`;
+  const text = `Hi ${opts.name || "there"},
+
+We received ${opts.siteUrl} and finished the complexity score.
+
+${opts.eligible
+    ? "The result is ELIGIBLE. Simple marketing, portfolio, and landing pages can continue. A preview link is not created automatically. You will get hosting notes and editor instructions."
+    : "The result is NOT ELIGIBLE. We do not migrate stores, heavy CMS sites, member areas, or sites past the cap. Email us if you want a refund. A person sends it. The app does not refund the card by itself."}
+
+Thanks,
+The Eject team
+${supportLine()}
+`;
+  return { subject, text, html: paragraphHtml(text) };
+}
+
+export function deliveryEmail(opts: { name: string; siteUrl: string; kitUrl?: string }) {
+  const subject = `Your Eject handoff for ${opts.siteUrl} is ready to review`;
+  const text = `Hi ${opts.name || "there"},
+
+The handoff for ${opts.siteUrl} is ready. It includes a content snapshot, hosting notes, and editor instructions (AGENTS.md). You edit the site by chatting with your own agent.
+
+${opts.kitUrl ? `Kit: ${opts.kitUrl}` : "Open the kit link from your order email."}
+
+We do not promise the new pages will match the old site pixel for pixel. You own the code we hand you. DNS and the domain stay your job until you decide to point them.
+
+Thanks,
+The Eject team
+${supportLine()}
+`;
+  return { subject, text, html: paragraphHtml(text) };
+}
+
+export function refundFollowupEmail(opts: { name: string; siteUrl: string }) {
+  const subject = `Refund follow-up for ${opts.siteUrl || "your order"}`;
+  const text = `Hi ${opts.name || "there"},
+
+We marked ${opts.siteUrl || "your order"} for a person to review. If the site is outside the simple-site scope, or you are inside the 14-day window on the refunds page, email ${supportLine()} and a person will refund the original payment method.
+
+This email does not move money. Stripe is not called from this message.
+
+Thanks,
+The Eject team
+${supportLine()}
+`;
+  return { subject, text, html: paragraphHtml(text) };
+}
+
+function supportLine(): string {
+  return process.env.SUPPORT_EMAIL?.trim() || siteConfig.email;
+}
+
+function paragraphHtml(text: string): string {
+  const body = escape(text).replace(/\n/g, "<br/>");
+  return `<!doctype html><html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">${body}</body></html>`;
 }
 
 function escape(s: string) {

@@ -54,7 +54,8 @@ export default function Page() {
           <ul className="list-disc pl-6 space-y-2">
             <li>Provide the service you paid for (an automated simple-site migration, or a hand move inside the cap, plus the editing guide) and send renewal reminders you asked for</li>
             <li>Send transactional emails (order mail, renewal reminders, support replies)</li>
-            <li>Understand which pages people use, with privacy-friendly analytics that does not follow you across other sites</li>
+            <li>Understand which pages people use, only if you allow analytics in the cookie notice. Until then we do not load that analytics</li>
+            <li>If a paid rebuild uses an AI vendor, the public pages you asked us to migrate may be sent to that vendor to draft files. We do not sell that content. We do not use it to train a model we own</li>
             <li>Comply with legal obligations (tax reporting, fraud prevention, responding to lawful requests)</li>
           </ul>
           <p>

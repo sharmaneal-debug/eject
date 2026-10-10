@@ -30,11 +30,22 @@ function sameOrigin(a: string, b: string): boolean {
   }
 }
 
+function looksLikePage(url: string): boolean {
+  try {
+    const pathName = new URL(url).pathname;
+    return !/\.(xml|pdf|zip|png|jpe?g|gif|webp|svg|css|js|mp4|mp3|woff2?|ico)$/i.test(pathName);
+  } catch {
+    return false;
+  }
+}
+
 function linksFrom(html: string, pageUrl: string): string[] {
   const found = new Set<string>();
   for (const match of html.matchAll(/href=["']([^"'#]+)["']/gi)) {
     const next = resolveHttp(pageUrl, match[1] ?? "");
-    if (next && sameOrigin(pageUrl, next)) found.add(next.split("?")[0]!.replace(/\/$/, "") || next);
+    if (next && sameOrigin(pageUrl, next) && looksLikePage(next)) {
+      found.add(next.split("?")[0]!.replace(/\/$/, "") || next);
+    }
   }
   return Array.from(found);
 }
@@ -86,7 +97,8 @@ async function countSitemap(
         const childText = await readCapped(childResponse, costConstants.htmlByteCap);
         return Math.min(childText.match(/<loc>/gi)?.length ?? 0, 999);
       }
-      const count = text.match(/<loc>/gi)?.length ?? 0;
+      const locs = [...text.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((match) => match[1] ?? "");
+      const count = locs.filter((loc) => looksLikePage(loc)).length;
       if (count) return Math.min(count, 999);
     } catch {
       /* try the next sitemap candidate */
@@ -141,9 +153,11 @@ export async function crawlSite(rawUrl: string, deps: CrawlDeps = {}): Promise<C
         fetchImpl: deps.fetchImpl,
       });
       if (!response.ok) continue;
+      const type = response.headers.get("content-type") ?? "";
+      if (/xml|json|pdf|image|javascript|css/i.test(type) && !/html/i.test(type)) continue;
       const finalUrl = response.url || next;
       const html = await readCapped(response, costConstants.htmlByteCap);
-      if (!html) continue;
+      if (!html || !/<html|<!doctype html/i.test(html.slice(0, 800))) continue;
       pages.push({ url: finalUrl, html, bytes: html.length });
       for (const link of linksFrom(html, finalUrl)) {
         if (!seen.has(link.replace(/\/$/, ""))) queue.push(link);

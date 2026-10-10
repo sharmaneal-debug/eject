@@ -31,6 +31,7 @@ export default async function Page({
 }) {
   const sp = await searchParams;
   const tier: Tier = normalizeTier(sp.tier) ?? "automated";
+  if (tier === "done_for_you") redirect("/book");
   const cfg = tierConfig(tier);
 
   let result: CheckoutResult;

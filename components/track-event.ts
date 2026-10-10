@@ -2,7 +2,7 @@
 
 import { track } from "@vercel/analytics";
 
-export type FunnelEvent = "scan" | "checkout_click" | "renewal_watch_signup" | "lead_captured";
+export type FunnelEvent = "scan" | "checkout_click" | "book_click" | "renewal_watch_signup" | "lead_captured";
 
 export function trackEvent(name: FunnelEvent, props?: Record<string, string | number | boolean | null>) {
   try {

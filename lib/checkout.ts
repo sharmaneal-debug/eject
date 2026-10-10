@@ -17,7 +17,16 @@ export async function createCheckoutSession(input: {
   siteUrl?: string;
   email?: string;
   name?: string;
+  /** Done for you is not a public checkout. Only the operator view may pass "operator". */
+  channel?: "self_serve" | "operator";
 }): Promise<CheckoutResult> {
+  const channel = input.channel ?? "self_serve";
+  if (input.tier === "done_for_you" && channel !== "operator") {
+    return {
+      kind: "unavailable",
+      reason: "Done for you starts with a call. Use the booking page. A payment link is sent after the call.",
+    };
+  }
   const cfg = tierConfig(input.tier);
   const store = getOrderStore();
   const order = await store.create({
@@ -25,6 +34,7 @@ export async function createCheckoutSession(input: {
     siteUrl: input.siteUrl,
     email: input.email,
     name: input.name,
+    channel,
     testMode: isMockStripe() ? "mock" : "stripe_test",
     amountCents: cfg.price * 100,
     currency: "usd",
@@ -83,6 +93,7 @@ export async function createCheckoutSession(input: {
         orderId: order.id,
       },
       payment_intent_data: {
+        receipt_email: input.email || undefined,
         metadata: {
           tier: input.tier,
           siteUrl: (input.siteUrl ?? "").slice(0, 500),

@@ -5,6 +5,7 @@ import { EjectMark } from "./eject-mark";
 const links = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/book", label: "Book a call" },
   { href: "/calculator", label: "Calculator" },
   { href: "/renewal-watch", label: "Renewal watch" },
   { href: "/blog", label: "Blog" },

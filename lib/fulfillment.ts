@@ -5,7 +5,7 @@ import { getOrderStore, newOrderToken, type Order } from "./orders";
 import { SsrfError } from "./ssrf";
 import { getStripe, normalizeTier, tierConfig, type Tier } from "./stripe";
 import { isMockSessionId } from "./checkout";
-import { expressKickoffEmail, conciergeKickoffEmail, sendEmail, sendPaidLeadNotification } from "./email";
+import { conciergeKickoffEmail, deliveryEmail, expressKickoffEmail, intakeReceivedEmail, refundFollowupEmail, sendEmail, sendPaidLeadNotification } from "./email";
 import { logLead } from "./leads";
 import { siteConfig } from "./site";
 
@@ -205,5 +205,38 @@ export async function runPaidIntake(
     delivery,
     status: eligible ? (repoDir ? "delivered" : "queued") : "refund_recommended",
   });
+  await sendOrderMail(updated, "intake", intakeReceivedEmail({
+    name: updated.name || "",
+    siteUrl: snapshot.finalUrl,
+    eligible,
+  }));
+  if (eligible && updated.token) {
+    await sendOrderMail(updated, "delivery", deliveryEmail({
+      name: updated.name || "",
+      siteUrl: snapshot.finalUrl,
+      kitUrl: `${publicOrigin()}/kit?token=${encodeURIComponent(updated.token)}`,
+    }));
+  }
+  if (!eligible) {
+    await sendOrderMail(updated, "refund", refundFollowupEmail({
+      name: updated.name || "",
+      siteUrl: snapshot.finalUrl,
+    }));
+  }
   return { ok: true, order: updated };
+}
+
+async function sendOrderMail(
+  order: Order,
+  kind: "intake" | "delivery" | "refund",
+  message: { subject: string; text: string; html: string },
+): Promise<void> {
+  if (!order.email || order.emails?.[kind]) return;
+  const result = await sendEmail({ to: order.email, subject: message.subject, text: message.text, html: message.html });
+  await getOrderStore().update(order.id, {
+    emails: {
+      ...order.emails,
+      [kind]: result.ok ? new Date().toISOString() : result.skipped ? "skipped" : "failed",
+    },
+  });
 }

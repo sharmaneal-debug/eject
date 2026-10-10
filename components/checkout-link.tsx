@@ -12,8 +12,9 @@ export function CheckoutLink({
   className?: string;
   children: React.ReactNode;
 }) {
+  const href = tier === "concierge" ? "/book" : `/checkout?tier=${tier}`;
   return (
-    <Link href={`/checkout?tier=${tier}`} className={className} onClick={() => trackEvent("checkout_click", { tier })}>
+    <Link href={href} className={className} onClick={() => trackEvent(tier === "concierge" ? "book_click" : "checkout_click", { tier })}>
       {children}
     </Link>
   );

@@ -26,6 +26,7 @@ test("delivery repo includes the editing guide and a working lightweight editor"
     id: "ord_delivery_test",
     token: "tok_delivery",
     tier: "automated",
+    channel: "self_serve",
     status: "paid",
     amountCents: 9900,
     currency: "usd",
