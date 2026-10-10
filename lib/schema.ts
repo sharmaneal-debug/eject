@@ -41,9 +41,9 @@ export function serviceSchema() {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Website migration",
-    name: "Eject — migrate your site off Webflow, Framer, Wix, Squarespace",
+    name: "Eject — move a simple site, then edit it by chatting",
     description:
-      "Eject rebuilds your no-code site as a self-hosted Next.js codebase you own. Free hosting, edit by chatting with AI.",
+      "After the move, you edit a simple marketing, portfolio, or landing site by chatting with your own AI. Automated is an automated migration you review before DNS. Done for you is the same kind of site, done by hand inside a page cap. Not a CMS extraction, not a store migration, and not a preview before you pay.",
     provider: { "@type": "Organization", name: siteConfig.legalEntity.name, url: siteConfig.url },
     areaServed: "Worldwide",
     offers: [

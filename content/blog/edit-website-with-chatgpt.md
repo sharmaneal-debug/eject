@@ -417,9 +417,9 @@ No, if you start with ChatGPT or Claude in your browser. Yes (one app), if you g
 
 ### What about my CMS?
 
-Depends on which CMS. If you've been using Webflow's CMS for a blog, we migrate that content into markdown files in your repo (or into a free tier of [Sanity](https://www.sanity.io/) if you have lots of editors). After migration, "publishing a blog post" is exactly the prompt we showed in [example #4](#prompts). Describe what you want, the AI writes the markdown, you push.
+Eject does not migrate a CMS. If the site is a handful of static pages, you can keep new copy in markdown and edit it with a chatbot. A Webflow CMS, Sanity project, or any real content model is a different job, and we refer it out.
 
-If you have something more complex (referenced collections, complex relationships, dynamic queries), we have a longer migration path that keeps a hosted CMS layer. We'll tell you upfront which path applies to your site.
+If you have referenced collections or dynamic queries, that is outside Eject. Hire someone who will own that content model. We will not invent a longer CMS path and then fail to deliver it.
 
 ### What about my forms?
 
@@ -448,7 +448,7 @@ Three ways in:
 | Option | What it costs | What you get |
 |---|---|---|
 | **Scan your site** | **Free** | Drop your URL into our scanner. We'll tell you, in 60 seconds, whether your site is a good fit for migration, what we'd estimate the migration to cost, and what the 36-month savings look like. No commitment, no signup. |
-| **Start a migration** | **$49–$1,499 one-time** | Pick a tier (DIY, Done-with-You, or Done-for-You). We move your site from Webflow / Wix / Squarespace / Framer to a Next.js codebase. After that, your hosting is $0/month and your editing is via chat. |
+| **Start a migration** | **$99 or $199 one-time** | Automated ($99) is an automated migration of a simple site, reviewed before DNS. Done for you ($199) is that move by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. After that you edit by chatting with your own AI. The editing guide is included. Simple sites only. |
 | **Talk to a human** | **Free 20-min call** | If you've read this far and still aren't sure, book a call. We'll look at your site live, tell you honestly whether migration makes sense, and recommend the right tier (or recommend you stay where you are if that's the right answer). |
 
 **[Scan your site →](https://ejectfrom.com/scan)** • **[Start a migration →](https://ejectfrom.com/start)** • **[Book a call →](https://ejectfrom.com/call)**
@@ -491,7 +491,7 @@ The internet has spent ten years convincing you that editing a website is hard. 
  "name": "What happens to my CMS content when I migrate?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "It comes with you. Simple blogs migrate to markdown files in your repo. More complex CMS setups migrate to a hosted CMS layer like Sanity (free tier covers most small businesses). After migration, publishing a blog post is a single chat prompt: describe the post, the AI writes the markdown, you push to GitHub."
+ "text": "Eject does not migrate CMS content. A simple site can keep new copy in markdown. A real CMS stays out of scope."
  }
  },
  {

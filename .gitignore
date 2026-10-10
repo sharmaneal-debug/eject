@@ -13,3 +13,4 @@ data/prospects
 data/sends
 .tsbuildinfo
 next-env.d.ts
+.data

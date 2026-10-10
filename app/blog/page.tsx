@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { listPosts } from "@/lib/posts";
 import { Section, Eyebrow } from "@/components/section";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
  title: "Blog",
- description: "Migration guides, cost teardowns, and honest tradeoffs. No vibes.",
-};
+ description: "Notes on leaving a simple site. Older posts are marked where they describe CMS extraction or prices that have changed.",
+ path: "/blog",
+});
 
 function formatDate(d: string) {
  if (!d) return "";

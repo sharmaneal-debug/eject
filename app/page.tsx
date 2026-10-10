@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/hero";
 import { WhyOwn } from "@/components/why-own";
 import { ChatVsDev } from "@/components/chat-vs-dev";
@@ -11,7 +12,16 @@ import { Faq } from "@/components/faq";
 import { Section, Eyebrow } from "@/components/section";
 import { JsonLd } from "@/components/json-ld";
 import { organizationSchema, websiteSchema, serviceSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
+import { ScopeLimits } from "@/components/scope-limits";
 import Link from "next/link";
+
+export const metadata: Metadata = pageMetadata({
+ title: siteConfig.tagline,
+ description: siteConfig.description,
+ path: "/",
+});
 
 export default function HomePage() {
  return (
@@ -27,10 +37,10 @@ export default function HomePage() {
  <Section>
  <Eyebrow>Cost calculator</Eyebrow>
  <h2 className="h-section text-3xl md:text-5xl max-w-3xl mb-3">
- Plug in your numbers. <span className="text-ink/40">See what you&apos;d save.</span>
+ After you can edit by chatting, <span className="text-ink/40">what does the renewal cost?</span>
  </h2>
  <p className="text-ink-soft max-w-2xl mb-10">
- We default to mid-tier plans because most small businesses are paying more than they realize. Adjust to match yours.
+ The fee buttons default to ${siteConfig.pricing.express.price} ({siteConfig.pricing.express.name}) and ${siteConfig.pricing.concierge.price} ({siteConfig.pricing.concierge.name}). Platform prices are published list prices, with a source link and the date we checked them. Blank means we didn&apos;t find that number.
  </p>
  <CostCalculator />
  </Section>
@@ -38,14 +48,15 @@ export default function HomePage() {
  <PricingTable />
  <SocialProof />
  <Faq />
+ <ScopeLimits />
 
  <Section className="bg-paper-warm">
  <div className="rounded-2xl bg-ink text-paper p-10 md:p-16 text-center">
  <h2 className="h-section text-3xl md:text-5xl max-w-3xl mx-auto mb-5">
- Stop renting your website.
+ Edit the next version by chatting.
  </h2>
  <p className="text-paper/70 max-w-xl mx-auto mb-8">
- Paste your URL at the top. We&apos;ll show you a preview. For free, in seconds.
+ {siteConfig.editing.lead} The scan names the platform and a rough page count. It is not a preview of a rebuilt site.
  </p>
  <Link
  href="/"

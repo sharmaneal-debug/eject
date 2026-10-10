@@ -1,59 +1,49 @@
 import type { Metadata } from "next";
-import { IntakeForm } from "@/components/intake-form";
+import { LeadForm } from "@/components/lead-form";
+import { ScopeLimits } from "@/components/scope-limits";
 import { Section, Eyebrow } from "@/components/section";
+import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
 
-export const runtime = "edge";
+export const metadata: Metadata = pageMetadata({
+  title: "Ask about a simple site",
+  description:
+    "Tell us about a marketing, portfolio, or landing page on Framer, Webflow, Wix, or Squarespace. We reply about fit. We don't record a preview.",
+  path: "/migrate",
+});
 
-export const metadata: Metadata = {
- title: "Start a migration",
- description: "Tell us about your site. We send a free 5-minute Loom audit within 24 hours. No call required.",
-};
-
-export default async function Page({ searchParams }: { searchParams: Promise<{ tier?: string }> }) {
- const sp = await searchParams;
- const tier = (sp.tier === "diy" || sp.tier === "dwy" || sp.tier === "dfy" ? sp.tier : "dwy") as
- | "diy"
- | "dwy"
- | "dfy";
- return (
- <Section>
- <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12">
- <div>
- <Eyebrow>Free Loom audit</Eyebrow>
- <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-5 max-w-2xl">
- Tell us about your site.
- </h1>
- <p className="text-ink-soft leading-relaxed max-w-md mb-8 text-lg">
- We&apos;ll record a 5-minute Loom showing your real Lighthouse score, your real annual cost, and what we&apos;d ship. Within 24 hours. No call required.
- </p>
-
- <div className="space-y-5 max-w-md">
- <div className="flex items-start gap-3">
- <span className="font-mono text-xs text-signal mt-1">01</span>
- <div>
- <p className="font-medium">Your real cost, computed live</p>
- <p className="text-ink-muted text-sm">We total your plan + seats + add-ons + likely overages.</p>
- </div>
- </div>
- <div className="flex items-start gap-3">
- <span className="font-mono text-xs text-signal mt-1">02</span>
- <div>
- <p className="font-medium">A side-by-side preview</p>
- <p className="text-ink-muted text-sm">Your current site next to a rough Next.js rebuild on a preview URL.</p>
- </div>
- </div>
- <div className="flex items-start gap-3">
- <span className="font-mono text-xs text-signal mt-1">03</span>
- <div>
- <p className="font-medium">A clear path forward</p>
- <p className="text-ink-muted text-sm">DIY $49, Done-with-You $299, or Done-for-You $1,499. Or none. Loom doesn&apos;t commit you.</p>
- </div>
- </div>
- </div>
- </div>
-
- <IntakeForm defaultTier={tier} />
- </div>
- </Section>
- );
+export default function Page() {
+  return (
+    <>
+      <Section>
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
+          <div>
+            <Eyebrow>Simple sites</Eyebrow>
+            <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-5 max-w-2xl">
+              Edit by chatting, after the move.
+            </h1>
+            <p className="text-ink-soft leading-relaxed max-w-md mb-8 text-lg">
+              {siteConfig.editing.lead} If it is a marketing page, a portfolio, or a landing page, we&apos;ll say whether {siteConfig.pricing.express.name} (${siteConfig.pricing.express.price}) or {siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price}) applies. If it is a store or a CMS, we&apos;ll say who to hire instead. This form saves a lead. It does not start a crawl, and it does not book a Loom.
+            </p>
+            <ol className="space-y-5 max-w-md text-sm">
+              <li>
+                <p className="font-medium">1. You describe the pages</p>
+                <p className="text-ink-muted">A URL and a sentence. No CMS item count, because we don&apos;t extract one.</p>
+              </li>
+              <li>
+                <p className="font-medium">2. We answer fit</p>
+                <p className="text-ink-muted">In scope, or a referral. We don&apos;t send a rebuilt preview.</p>
+              </li>
+              <li>
+                <p className="font-medium">3. You decide</p>
+                <p className="text-ink-muted">The lead is not an order. Checkout is a separate step, and only for a simple site.</p>
+              </li>
+            </ol>
+          </div>
+          <LeadForm intent="migrate" source="migrate" />
+        </div>
+      </Section>
+      <ScopeLimits compact />
+    </>
+  );
 }

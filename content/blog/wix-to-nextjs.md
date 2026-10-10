@@ -45,7 +45,7 @@ As of 2026, Wix sells four website tiers (Studio is a separate product for agenc
 |---------------|---------|------------------------------------------------|
 | Light | $17/mo | 2 GB storage, light traffic, Wix branding off |
 | Core | $29/mo | Basic store, marketing tools, 50 GB bandwidth |
-| Business | $36/mo | Full e-commerce, advanced marketing, 100 GB |
+| Business | $39/mo | Standard eCommerce and marketing, yearly price paid in full. Checked on Wix's own site, 2026-10-10. |
 | Business Elite | $159/mo | Unlimited stuff, "priority" support |
 
 These are the annual-prepay numbers. Month-to-month is roughly 25 percent more. Most small-business sites are on Core or Business.
@@ -373,7 +373,7 @@ Here's the decision tree.
 - You have 30+ hours over two weeks to spend
 - You're not running a real revenue stream that a one-day outage would damage
 
-If all five are true, DIY is fine. The Eject Express tier ($49) gives you the toolkit and you do the rest.
+If all five are true, and the site is a simple brochure, Automated ($99) runs an automated migration. You review the pages before DNS. After that you edit by chatting with your own AI. The editing guide and agent instructions are included.
 
 ### When you should pay someone (this is most Wix sites)
 
@@ -383,7 +383,7 @@ If all five are true, DIY is fine. The Eject Express tier ($49) gives you the to
 - The site generates real revenue and downtime costs you actual money
 - You've tried before and got stuck on Day 2 staring at HTML soup
 
-If you nodded at any of these, **the Concierge tier exists for you specifically**. It's $299, takes 7 days, and you don't have to touch the manual extraction step. We do the scraping, the rebuild, the redirects, and the cutover. You review and approve.
+If you nodded at any of these, **Done for you ($199) is the hand-done offer**, and only for a simple site: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. You still review before DNS. Beyond that cap we refer out or quote an add-on. We do not extract a CMS, and we do not promise a 7-day delivery.
 
 ### When you should NOT migrate at all (yet)
 
@@ -448,7 +448,7 @@ No. Wix has zero code export. Their [own help center](https://support.wix.com/en
 
 ### Why is Wix migration harder than Webflow or Framer?
 
-Because Wix gives you nothing. [Framer](https://ejectfrom.com/blog/framer-to-nextjs) ships an official static export. [Webflow](https://ejectfrom.com/blog/webflow-to-nextjs) has a CMS API. Wix has neither. Every other platform we cover gives you at least a partial path out. Wix is the only one where the migration starts with scraping your own public website. That's why our timeline is 14 days instead of 7, and why we lean toward recommending the Concierge tier for Wix specifically.
+Wix does not hand you the site as code. Framer does not either. Webflow's static export is not a CMS export, and Eject does not call a CMS API for you. A simple Wix brochure can be rewritten from the live pages. A store or a large blog is out of scope. We don't promise a 7-day or 14-day delivery.
 
 ### Will my SEO survive the migration?
 
@@ -474,11 +474,11 @@ You can. Your old Wix site lives on the free Wix tier as an archive (just on a `
 
 ### How long does the migration actually take?
 
-Solo, evenings + a weekend: **14 days** for a typical small-business site. Add a few days if you have e-commerce or bookings. With our Concierge tier: **7 business days, hands-off**. Express tier (DIY with our toolkit): same 14-day estimate but the toolkit removes about 30 percent of the manual extraction time.
+A simple site on Automated ($99) is an automated migration you review before DNS. Done for you ($199) is the same kind of site, done by hand inside the cap above. We do not promise 7 or 14 days. Stores and bookings are out of scope. After either offer, you edit by chatting with your own AI.
 
 ### How much does it cost?
 
-The migration itself: **$49** (Express, you do the work with our toolkit) or **$299** (Concierge, we do everything in 7 days). After migration, your hosting is **$0/month** on Cloudflare Pages. Compared to Wix's typical $89/month all-in, payback on Concierge is between 4 and 8 months. Express pays back in under 2 months.
+The migration itself: **$99** (Automated, an automated migration of a simple site, reviewed before DNS) or **$199** (Done for you, by hand, inside the cap). After the move, you edit by chatting with your own AI. Hosting for a simple static site can be **$0/month** on Cloudflare Pages. We don't quote a payback month from a typical Wix bill, because that bill depends on the plan you actually have.
 
 ---
 
@@ -486,8 +486,8 @@ The migration itself: **$49** (Express, you do the work with our toolkit) or **$
 
 | Tier | Price | What you get |
 |------|-------|--------------|
-| **Express** | **$49 one-time** | Auto-rebuild kit, the Wix RSS-to-markdown converter, Screaming Frog crawl templates, Next.js starter, Cloudflare deploy guide, paste-in chat editor instructions. You do the work. |
-| **Concierge** | **$299 one-time** | We do everything. Manual content extraction, design rebuild, redirects, cutover. 7-day delivery. You review and approve. Includes 30 days of post-launch support and the chat editor onboarded for your team. |
+| **Automated** | **$99 one-time** | An automated migration of a simple Wix marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included, so you edit by chatting with your own AI. Not a CMS extract and not a preview before you pay. |
+| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 | **Custom** | **Talk to us** | Heavy e-commerce, multi-language, member areas, or sites with 500+ pages. We scope and quote. |
 
 **[Start your migration →](https://ejectfrom.com/start)**
@@ -516,7 +516,7 @@ If you're on a different platform, we have honest playbooks for those too: [Webf
  "name": "Why is Wix migration harder than Webflow or Framer?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Because Wix gives you no structured export. Framer ships an official static export and Webflow has a CMS API. Wix has neither, so every Wix migration begins with manually scraping the public website. That's why the typical timeline is 14 days instead of 7."
+ "text": "Wix does not hand you the site as code. Framer does not either. Eject only helps rewrite a simple brochure, portfolio, or landing page, and it does not promise a 14-day timeline."
  }
  },
  {
@@ -556,7 +556,7 @@ If you're on a different platform, we have honest playbooks for those too: [Webf
  "name": "How long does a Wix-to-Next.js migration take?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Solo with the Express toolkit: about 14 days of evenings and a weekend. With the Concierge tier where we do everything: 7 business days, hands-off."
+ "text": "Automated is a $99 automated migration of a simple site, which you review before DNS. Done for you is $199, done by hand, for about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not promise 7 or 14 days."
  }
  },
  {
@@ -564,7 +564,7 @@ If you're on a different platform, we have honest playbooks for those too: [Webf
  "name": "How much does the migration cost?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Express is $49 one-time and you do the work with our toolkit. Concierge is $299 one-time and we do everything in 7 business days. After migration, hosting is $0 per month on Cloudflare Pages. Compared to Wix's typical $89 monthly cost with apps, Concierge pays back in 4 to 8 months."
+ "text": "Automated is $99 one-time. Done for you is $199 one-time, inside a simple-site cap. After the move you edit by chatting with your own AI. Hosting for a simple static site can be $0 per month on Cloudflare Pages. We do not quote a payback period from a typical Wix bill."
  }
  }
  ]

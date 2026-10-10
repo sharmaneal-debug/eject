@@ -198,4 +198,4 @@ The most common problem: a build error. Read the error log carefully. Usually it
 
 The second most common: DNS not propagating. Wait 30 minutes. Use [whatsmydns.net](https://whatsmydns.net) to check propagation worldwide.
 
-If you get truly stuck and you're an Express customer, email hi@ejectfrom.com. We respond within 24 hours. For Concierge customers, your dedicated thread is open the whole time.
+If you get truly stuck, email hi@ejectfrom.com. We respond within 24 hours. Done-for-you customers can use the same thread through the handoff.

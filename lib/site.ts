@@ -1,55 +1,77 @@
+const automatedPrice = 99;
+const doneForYouPrice = 199;
+
 export const siteConfig = {
- name: "Eject",
- domain: "ejectfrom.com",
- url: "https://ejectfrom.com",
- tagline: "Stop paying $300 a year for your website.",
- shortTagline: "Your website. Yours forever. No more monthly bills.",
- description:
- "Eject hands you a playbook + AI agent prompts to rebuild your Webflow, Framer, Wix, Squarespace, or WordPress site as files you own. Set up free hosting yourself in an afternoon, then edit your site forever by chatting with any AI.",
- email: "hi@ejectfrom.com",
- twitter: "@useeject",
+  name: "Eject",
+  domain: "ejectfrom.com",
+  url: "https://ejectfrom.com",
+  tagline: "Edit your site by chatting.",
+  shortTagline: "Move a simple site once. Then edit it by chatting with your own AI.",
+  description:
+    "After the move, you edit your own site by chatting with your own AI agent. An editing guide and agent instructions are included. Automated is a $99 one-time migration for a simple site. Done for you is $199, done by hand, for simple sites up to about 10 pages.",
+  email: "hi@ejectfrom.com",
+  twitter: "@useeject",
 
- // Legal entity that owns this service. Used in footer copyright, privacy
- // policy, terms of service, refund policy, and Stripe billing descriptors.
- legalEntity: {
- name: "Laniakea LLC",
- short: "Laniakea LLC",
- contactEmail: "hi@ejectfrom.com",
- },
+  // Legal entity that owns this service. Used in footer copyright, privacy
+  // policy, terms of service, refund policy, and Stripe billing descriptors.
+  legalEntity: {
+    name: "Laniakea LLC",
+    short: "Laniakea LLC",
+    contactEmail: "hi@ejectfrom.com",
+  },
 
- // Two tiers. Both are "done for you". The difference is who.
- // Express: paste URL → our system rebuilds → preview link → you approve → yours.
- // Concierge: message us → human handles everything → done in 7 days.
- pricing: {
- express: {
- id: "express",
- name: "Express",
- price: 49,
- blurb: "We send you the playbook + AI prompts. You (or any chatbot you use) rebuild your site in an afternoon.",
- bullets: [
- "A step-by-step playbook customized to your site (every page, every section)",
- "AI agent prompts you paste into ChatGPT, Claude, or Cursor — free tiers all work",
- "A Next.js + Tailwind starter template the AI fills in with your content",
- "10-minute deploy guide for free hosting (Cloudflare, Vercel, Netlify — your pick)",
- "AI editing kit so you can change anything later, just by chatting",
- "30 days of email support if you get stuck anywhere",
- ],
- cta: "Start for $49",
- },
- concierge: {
- id: "concierge",
- name: "Concierge",
- price: 299,
- blurb: "Don't want to run the playbook yourself? We do every step for you. Live in 7 days.",
- bullets: [
- "Just message us. No playbook to follow, no AI prompts to run",
- "A human runs the whole rebuild on our infrastructure",
- "We deploy on a free host in your name and point your domain at it",
- "Live in 7 days, with one round of revisions included",
- "Same AI editing kit handed off to you for ongoing changes",
- "30 days of priority support",
- ],
- cta: "Start for $299",
- },
- },
+  // Lead every surface with this. Both paid offers include the kit.
+  editing: {
+    lead: "After the move, you edit your own site by chatting with your own AI agent.",
+    included: "An editing guide and agent instructions are included.",
+  },
+
+  // Tier ids stay "express" and "concierge" so checkout?tier= and
+  // STRIPE_PRICE_EXPRESS / STRIPE_PRICE_CONCIERGE keep working.
+  // Display names and dollar amounts live only here.
+  pricing: {
+    express: {
+      id: "express" as const,
+      name: "Automated",
+      price: automatedPrice,
+      blurb:
+        "An automated migration of a simple marketing, portfolio, or landing site. You review the pages before DNS. Not a preview before you pay, and not a CMS extract.",
+      bullets: [
+        "An automated migration of a simple site",
+        "You review the pages before anyone points DNS",
+        "An editing guide and agent instructions, so you edit by chatting with your own AI",
+        "A short guide for putting the result on a free static host",
+        "A DNS checklist for when you are ready to switch",
+        "30 days of email support if you get stuck",
+      ],
+      cta: `Start for $${automatedPrice}`,
+    },
+    concierge: {
+      id: "concierge" as const,
+      name: "Done for you",
+      price: doneForYouPrice,
+      blurb:
+        "We do the move by hand for a simple site: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond that, we refer out or quote an add-on.",
+      cap: {
+        pages: 10,
+        forms: 1,
+        revisionRounds: 2,
+        handoffMinutes: 30,
+      },
+      bullets: [
+        "A person moves the pages by hand",
+        "Simple sites only: about 10 pages, 1 form, 2 revision rounds",
+        "A 30-minute handoff when the pages are ready",
+        "The same editing guide and agent instructions, so you edit by chatting afterward",
+        "Help deploying on a free host in an account you control",
+        "Beyond the cap, we refer out or quote a priced add-on",
+      ],
+      cta: `Start for $${doneForYouPrice}`,
+    },
+  },
 } as const;
+
+export function doneForYouCapLabel(): string {
+  const cap = siteConfig.pricing.concierge.cap;
+  return `up to about ${cap.pages} pages, ${cap.forms} form, ${cap.revisionRounds} revision rounds, and a ${cap.handoffMinutes}-minute handoff`;
+}

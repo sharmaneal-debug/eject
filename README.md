@@ -57,13 +57,14 @@ pnpm editor ./out/<host>/                # chat-driven editor CLI prototype
 
 ## Pricing
 
-| Tier | Price | What ships |
-|---|---|---|
-| DIY Guided | $49 | URL → repo + deploy guide |
-| Done-with-You | $299 | We migrate, you launch on a 30-min Zoom |
-| Done-for-You | $1,499 | Hand-off, wired, editor pre-trained |
-| Editor — Hobby | $79/mo | Up to 50 chat-edits/mo + preview deploys |
-| Editor — Pro | $149/mo | Unlimited edits + monthly Lighthouse/SEO report |
+Display names and amounts live in `lib/site.ts`. Checkout tier ids stay `express` and `concierge`.
+
+| Offer | Tier id | Price | What it is |
+|---|---|---|---|
+| Automated | `express` | $99 once | Automated migration of a simple site. You review before DNS. |
+| Done for you | `concierge` | $199 once | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. |
+
+After either offer, the customer edits by chatting with their own AI. An editing guide and agent instructions are included. Simple sites only. There is no monthly editor and no preview before payment.
 
 ## Marketing playbooks (in `docs/`)
 

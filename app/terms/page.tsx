@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: `The agreement between you and ${siteConfig.legalEntity.name} when you use Eject.`,
 };
 
-const LAST_UPDATED = "May 3, 2026";
+const LAST_UPDATED = "October 10, 2026";
 
 export default function Page() {
   return (
@@ -31,17 +31,20 @@ export default function Page() {
           </p>
 
           <h2 className="h-section text-2xl text-ink mt-10">1. The service</h2>
-          <p>Eject offers two tiers:</p>
+          <p>
+            Eject is for simple marketing sites, portfolios, and landing pages on Framer, Webflow, Wix, or Squarespace. It is not a CMS extraction service and not an e-commerce migration.
+          </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong className="text-ink">Express ($49)</strong> &mdash; an automated rebuild of your existing website (Webflow, Framer, Wix, or Squarespace) into a self-hosted Next.js codebase. You receive a preview link, the source files, and an AI editing kit (instructions for using ChatGPT, Claude, or similar tools to edit your site).
+              <strong className="text-ink">{siteConfig.pricing.express.name} (${siteConfig.pricing.express.price})</strong> &mdash; an automated migration of those pages. You review them before DNS changes. We do not show a rebuilt preview before you pay, and we do not extract a CMS. {siteConfig.editing.included}
             </li>
             <li>
-              <strong className="text-ink">Concierge ($299)</strong> &mdash; the same output, but a human at {siteConfig.legalEntity.name} hand-polishes the rebuild, deploys it for you, and moves your domain over. Delivery within 7 days of payment.
+              <strong className="text-ink">{siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price})</strong> &mdash; a person at {siteConfig.legalEntity.name} does the move by hand: up to about {siteConfig.pricing.concierge.cap.pages} pages, {siteConfig.pricing.concierge.cap.forms} form, {siteConfig.pricing.concierge.cap.revisionRounds} revision rounds, and a {siteConfig.pricing.concierge.cap.handoffMinutes}-minute handoff. Beyond that we refer out or quote an add-on. You review the pages before DNS changes. {siteConfig.editing.included}
             </li>
           </ul>
           <p>
-            We reserve the right to refuse or refund any order if the site is outside our scope (e.g., heavy ecommerce, multi-language with translation pipelines, sites with member logins, sites that violate the law).
+            We refuse or refund an order when the site is outside that scope: stores, heavy CMS or large blogs, member logins, multi-language sites, bookings, custom billing, or anything illegal. Refund timing is on the{" "}
+            <Link href="/refunds">refunds page</Link>.
           </p>
 
           <h2 className="h-section text-2xl text-ink mt-10">2. Your responsibilities</h2>
@@ -110,8 +113,8 @@ export default function Page() {
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Every animation or interactive element will be 1:1 with the original</li>
-            <li>Every CMS field will map perfectly across platforms</li>
-            <li>Your search rankings will not change (we set up redirects to minimize this)</li>
+            <li>A CMS, store, or member area will be migrated (those are out of scope)</li>
+            <li>Search rankings or PageSpeed scores will stay the same or improve</li>
             <li>Cloudflare, Vercel, or any other third-party will be available 100% of the time</li>
           </ul>
           <p>
@@ -159,6 +162,7 @@ export default function Page() {
           <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">Companion documents</p>
           <ul className="text-sm space-y-1 text-accent">
             <li><Link className="hover:text-signal" href="/privacy">Privacy Policy</Link></li>
+            <li><Link className="hover:text-signal" href="/refunds">Refunds</Link></li>
           </ul>
         </div>
       </Section>

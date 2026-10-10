@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: `How ${siteConfig.legalEntity.name} collects, uses, and protects your information when you use Eject.`,
 };
 
-const LAST_UPDATED = "May 3, 2026";
+const LAST_UPDATED = "October 10, 2026";
 
 export default function Page() {
   return (
@@ -36,7 +36,13 @@ export default function Page() {
               <strong className="text-ink">Site scan inputs.</strong> The URL you enter into our scanner, plus what we discover about that site (platform, page count, public metadata). The URL is logged so we can improve the scanner; it is not associated with your identity unless you also submit your email.
             </li>
             <li>
-              <strong className="text-ink">Account &amp; checkout details.</strong> Your name, email address, the URL of the site you want migrated, your selected tier (Express or Concierge), and any notes you send us. This is collected through our intake form and through Stripe Checkout when you pay.
+              <strong className="text-ink">Account &amp; checkout details.</strong> Your name, email address, the URL of the site you want migrated, your selected tier ({siteConfig.pricing.express.name} or {siteConfig.pricing.concierge.name}), and any notes you send us. This is collected through our forms and through Stripe Checkout when you pay.
+            </li>
+            <li>
+              <strong className="text-ink">Renewal watch.</strong> If you join renewal reminders, we store your email, platform, plan, renewal date, any amount you gave us, which reminders we have sent, and an unsubscribe token. We email you about that renewal until you unsubscribe or the date passes.
+            </li>
+            <li>
+              <strong className="text-ink">Leads.</strong> If you leave an email on a &ldquo;not a fit&rdquo; form, we store that note. If <span className="font-mono">LEADS_WEBHOOK_URL</span> is set, we also forward it there.
             </li>
             <li>
               <strong className="text-ink">Payment information.</strong> We do not collect or store payment cards ourselves. Stripe processes payments and holds card data subject to its own privacy policy. We receive a tokenized record of the transaction (amount, last four digits, billing country).
@@ -46,9 +52,9 @@ export default function Page() {
           <h2 className="h-section text-2xl text-ink mt-10">2. How we use it</h2>
           <p>We use your information to:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Provide the service you paid for (rebuild your site, send you a preview link, hand off the final files)</li>
-            <li>Send transactional emails (kickoff confirmations, preview-link delivery, support replies)</li>
-            <li>Improve the scanner and rebuilder by reviewing aggregate patterns</li>
+            <li>Provide the service you paid for (an automated simple-site migration, or a hand move inside the cap, plus the editing guide) and send renewal reminders you asked for</li>
+            <li>Send transactional emails (order mail, renewal reminders, support replies)</li>
+            <li>Understand which pages people use, with privacy-friendly analytics that does not follow you across other sites</li>
             <li>Comply with legal obligations (tax reporting, fraud prevention, responding to lawful requests)</li>
           </ul>
           <p>

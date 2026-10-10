@@ -357,19 +357,7 @@ Here's the core objection to leaving Webflow: "but my marketing team can't edit 
 
 True. Until recently.
 
-Eject ships with an AI chat editor that sits on top of your migrated Next.js site. Your marketers describe a change in plain English:
-
-> "Make the hero headline 'Build faster than your competitors' and change the CTA to 'Start free trial'."
-
-The editor:
-
-1. Parses the request, finds the relevant component (`Hero.tsx`)
-2. Generates a code change as a PR
-3. Spins up a preview deploy on Cloudflare Pages (a unique `*.pages.dev` URL)
-4. Shows the marketer the live preview
-5. On approval, merges to main and the change goes live
-
-If something breaks: **one click rolls back** to the previous deploy. Cloudflare Pages keeps every deploy forever; rollback is instant.
+There is no hosted Eject editor. If the pages are already files, a marketer can paste instructions into ChatGPT, Claude, or Cursor, describe the change, and review the diff. You deploy it. Nothing here opens a pull request or rolls a site back on click.
 
 This is the part that didn't exist two years ago. It's why "Webflow vs. Next.js" used to be a real tradeoff, and now isn't. You get the developer-grade output and the marketer-grade workflow. You stop paying $111/month for the privilege of running a Squarespace competitor on training wheels.
 
@@ -401,7 +389,7 @@ For most readers of this post, the number is between $3,200 and $9,800.
 
 ### Can I export my Webflow site?
 
-Partially. Webflow lets you export static HTML/CSS only on a Site Plan, and **the [CMS export is locked behind paid plans](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site)**. The cleanest path is the [CMS API](https://developers.webflow.com/). It gives you full data access and is what we use in the [Eject export tool](https://ejectfrom.com/tools/webflow-export).
+Partially. Webflow lets you export static HTML/CSS only on a Site Plan, and the [CMS export is a separate, limited path](https://help.webflow.com/hc/en-us/articles/33961356147347-Export-your-site). Eject does not ship a CMS export tool and does not call the Webflow CMS API for you. A content-heavy site is outside this service.
 
 ### What happens to my CMS content?
 
@@ -427,11 +415,11 @@ You can. Your Webflow project sits archived on the free Workspace plan. Spin up 
 
 ### How long does the migration actually take?
 
-Solo, evenings + a weekend: **10–14 days**. With our [Done-with-You](#cta) tier: **5 business days**. Done-for-You: **3 business days**, hands-off.
+After the move, you edit by chatting with your own AI. An editing guide and agent instructions are included. We don't sell a 3-day or 5-day done-for-you migration, and we don't promise a fixed number of days.
 
 ### How much does it cost?
 
-The migration itself: $49 (DIY tool), $299 (with our help), or $1,499 (we do everything). After that, your hosting is **$0/month** on Cloudflare Pages, plus whatever your CMS layer costs (free tier on Sanity is generous). Compared to Webflow's $111/mo for a similar setup, payback is between 4 and 14 months depending on tier.
+The current prices are $99 (Automated: an automated migration of a simple site, reviewed before DNS) and $199 (Done for you: by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff). There is no $1,499 tier. Hosting for a simple static site can be $0 on Cloudflare Pages. A CMS layer is outside this service, so don't add a Sanity project to the plan and assume we migrate it. There is no preview before you pay.
 
 ### What about my forms?
 
@@ -443,9 +431,8 @@ Forms become 40 lines of code in a Next.js [route handler](https://nextjs.org/do
 
 | Tier | Price | What you get |
 |------|-------|--------------|
-| **DIY** | **$49 one-time** | The full export toolkit, Webflow → markdown converter, Next.js starter template, Cloudflare deploy guide. You do the work. |
-| **Done-with-You** | **$299 one-time** | Everything above + 5 business days of async Slack support with our migration team + a code review of your final repo before cutover. |
-| **Done-for-You** | **$1,499 one-time** | We migrate the whole site for you. 3 business days. You review and approve. Includes 30 days of post-launch support and the chat editor onboarded for your team. |
+| **Automated** | **$99 one-time** | An automated migration of a simple marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included. Not a CMS converter and not a preview before you pay. |
+| **Done for you** | **$199 one-time** | The same kind of site, done by hand inside the cap. Not a store or a CMS. Beyond the cap, we refer out or quote an add-on. |
 
 **[Start your migration →](https://ejectfrom.com/start)**
 
@@ -463,7 +450,7 @@ Or if you're not sure yet: [run the calculator](#cost-calculator). The number te
  "name": "Can I export my Webflow site?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Partially. Webflow lets you export static HTML and CSS only on a paid Site Plan, and the CMS export is locked behind paid plans. The cleanest path is the Webflow CMS API, which gives full data access. The Eject export tool uses this API to extract everything in one command."
+ "text": "Partially. Webflow can export static HTML and CSS on a paid Site Plan. Eject does not extract the CMS and does not offer an export tool. A content-heavy Webflow site is outside this service."
  }
  },
  {
@@ -471,7 +458,7 @@ Or if you're not sure yet: [run the calculator](#cost-calculator). The number te
  "name": "What happens to my CMS content?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "It comes with you. Every collection, every item, every reference field. The Eject exporter dumps your CMS to JSON or markdown. From there, you import into Sanity, Payload, Notion, or commit the markdown to your repo. Nothing is lost."
+ "text": "Not through Eject. We do not dump Webflow CMS collections. A simple set of static pages can be rewritten. A real CMS should be migrated by someone who scopes the content model, or left where it is."
  }
  },
  {
@@ -503,7 +490,7 @@ Or if you're not sure yet: [run the calculator](#cost-calculator). The number te
  "name": "How long does the migration take?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Solo, evenings plus a weekend: 10 to 14 days. With Eject Done-with-You support: 5 business days. Done-for-You: 3 business days, hands-off."
+ "text": "A handful of static pages can take evenings plus a weekend. Eject does not sell a 3-day or 5-day done-for-you CMS migration."
  }
  },
  {
@@ -511,7 +498,7 @@ Or if you're not sure yet: [run the calculator](#cost-calculator). The number te
  "name": "How much does the migration cost?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "The migration is $49 (DIY tool), $299 (Done-with-You), or $1,499 (Done-for-You). After that, hosting is free on Cloudflare Pages, plus your CMS layer which is typically free on Sanity's starter tier. Compared to Webflow's $111 monthly average, payback is 4 to 14 months."
+ "text": "The migration is $99 for an automated simple-site move you review before DNS, or $199 done by hand inside a cap of about 10 pages. There is no $1,499 tier and no CMS migration. After that you edit by chatting with your own AI. Hosting for a simple static site can be free on Cloudflare Pages."
  }
  },
  {

@@ -1,55 +1,75 @@
 import { Section, Eyebrow } from "./section";
+import { siteConfig, doneForYouCapLabel } from "@/lib/site";
 
-const items = [
- {
- q: "Will my site look different?",
- a: "No. We rebuild it pixel-for-pixel. Same fonts, colors, photos, copy. Your visitors won't notice anything changed. The only thing different is your bill.",
- },
- {
- q: "What about my domain?",
- a: "It comes with you. Same URL, same Google rankings, same email forwarding. Concierge: we move the domain to point at your new host for you. Express: we hand you the DNS records and a guide; the move takes about 5 minutes at your registrar.",
- },
- {
- q: "What if I want to change something later?",
- a: "Open ChatGPT, Claude, or Cursor (free tiers all work) and paste the instructions we send you. Then type what you want changed in plain English. The AI handles it. We're happy to help if you get stuck. For the first 30 days, it's free.",
- },
- {
- q: "Will my SEO stay the same?",
- a: "Yes. And usually it improves. We set up redirects from every old page so Google finds your new site at the right addresses. Sites we've moved typically score 30–50 points higher on Google's PageSpeed test.",
- },
- {
- q: "Where does my new site actually live?",
- a: "On any free static host you want. Cloudflare Pages, Netlify, Vercel, GitHub Pages. All four have free tiers that cover small-business traffic without ever charging. We give you a 10-minute setup guide (Express) or do the setup for you (Concierge). Eject doesn't host anything; the site is on infrastructure you control, in your name. Your only ongoing cost is your domain (~$15/year), which you already pay.",
- },
- {
- q: "What about my contact form?",
- a: "We rebuild it. Submissions go to your email, just like before. Free up to 3,000 a month. Far more than most businesses ever receive.",
- },
- {
- q: "Do you migrate Shopify?",
- a: "Not yet. We migrate marketing sites on Webflow, Framer, Wix, Squarespace, and WordPress. Shopify storefronts are a different beast (live carts, payment flows, inventory) and need a real ecommerce migration, not a marketing-site rebuild. If you're on Shopify, email us and we'll tell you whether your case is a fit.",
- },
- {
- q: "What if I don't like it?",
- a: "If we hand you the migrated site and you're not happy with it within 14 days, full refund. No arguments.",
- },
+const automated = siteConfig.pricing.express;
+const byHand = siteConfig.pricing.concierge;
+
+export const faqItems = [
+  {
+    q: "How do I edit the site after the move?",
+    a: `${siteConfig.editing.lead} ${siteConfig.editing.included} You describe the change in ChatGPT, Claude, or Cursor. You review what the assistant edits. We don't run a hosted editor or bill a monthly seat for one.`,
+  },
+  {
+    q: "Will my site look the same?",
+    a: `${automated.name} ($${automated.price}) runs an automated migration of a simple site, and you review it before DNS. ${byHand.name} ($${byHand.price}) is a person matching the pages that are in scope. We don't promise a pixel-perfect clone.`,
+  },
+  {
+    q: "What sites do you take?",
+    a: `Marketing sites, portfolios, and landing pages on Framer, Webflow, Wix, or Squarespace. ${byHand.name} is capped at ${doneForYouCapLabel()}. Beyond that we refer out or quote an add-on. We don't take stores, member areas, bookings, multi-language sites, web apps, or a heavy CMS.`,
+  },
+  {
+    q: "What is automated, and what does a person review?",
+    a: `${automated.name} is an automated migration. You still review the pages before the domain moves. ${byHand.name} is done by hand inside the cap. Neither offer shows a rebuilt preview before you pay, and neither extracts a CMS.`,
+  },
+  {
+    q: "Do you extract my CMS?",
+    a: "No. If the site is a blog or a collection database, that work is a content migration and we refer it out. A few static pages of copy are in scope. A CMS is not.",
+  },
+  {
+    q: "What about my domain?",
+    a: `The domain stays yours. Both offers include a DNS checklist. We don't flip DNS until you say the new pages are ready.`,
+  },
+  {
+    q: "Will my SEO or PageSpeed score go up?",
+    a: "We don't know, and we won't quote a point gain. The move includes a checklist for redirects and titles. Rankings and PageSpeed can move either way. There is no '30–50 points' claim because we have not measured that.",
+  },
+  {
+    q: "Where does the new site live?",
+    a: "On a host you choose. Cloudflare Pages, Netlify, Vercel, and GitHub Pages all have free tiers that cover a simple static site. Eject does not host it. Your domain renewal is still paid to your registrar.",
+  },
+  {
+    q: "What about my contact form?",
+    a: `${byHand.name} includes one form inside the cap. ${automated.name} includes a simple form that sends to an inbox you control when the source site has one. We don't provision a form vendor for you, and we don't promise a submission quota.`,
+  },
+  {
+    q: "Do you migrate Shopify, WordPress, or stores?",
+    a: "No. Shopify and other carts are commerce projects. WordPress is usually a CMS. Both are outside this service. Email us and we'll say so plainly rather than take the job.",
+  },
+  {
+    q: "Is there a preview before I pay?",
+    a: `No. The free scan only reports the platform and a rough page count. You pay for ${automated.name} or ${byHand.name}, then the work starts. There is no rebuilt preview before payment.`,
+  },
+  {
+    q: "What if I don't like it?",
+    a: "Email us within 14 days of delivery. If the pages aren't what we described for a simple site, we refund the payment. Details are on the refunds page.",
+  },
 ];
 
 export function Faq() {
- return (
- <Section>
- <Eyebrow>FAQ</Eyebrow>
- <h2 className="h-section text-3xl md:text-5xl max-w-3xl mb-12">
- The questions we get most.
- </h2>
- <div className="grid md:grid-cols-2 gap-x-12 gap-y-8 max-w-5xl">
- {items.map((it) => (
- <div key={it.q}>
- <p className="font-semibold text-ink mb-2 text-lg tracking-tight">{it.q}</p>
- <p className="text-ink-soft leading-relaxed">{it.a}</p>
- </div>
- ))}
- </div>
- </Section>
- );
+  return (
+    <Section>
+      <Eyebrow>FAQ</Eyebrow>
+      <h2 className="h-section text-3xl md:text-5xl max-w-3xl mb-12">
+        Edit by chatting. Then the practical questions.
+      </h2>
+      <div className="grid md:grid-cols-2 gap-x-12 gap-y-8 max-w-5xl">
+        {faqItems.map((it) => (
+          <div key={it.q}>
+            <p className="font-semibold text-ink mb-2 text-lg tracking-tight">{it.q}</p>
+            <p className="text-ink-soft leading-relaxed">{it.a}</p>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
 }
