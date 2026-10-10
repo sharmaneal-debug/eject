@@ -30,7 +30,7 @@ export default async function Page({
   const order = sp.session_id ? await reconcileSession(sp.session_id).catch(() => null) : null;
 
   return (
-    <section className="mx-auto max-w-content px-6 py-12 md:py-16">
+    <section className="mx-auto max-w-content min-w-0 px-4 py-10 sm:px-6 md:py-16">
       <div className="max-w-3xl">
         {order ? (
           <>
@@ -38,7 +38,7 @@ export default async function Page({
             <p className="mt-4 text-lg text-ink-soft">Charged ${(order.amountCents / 100).toFixed(2)}.</p>
 
             <h2 className="mb-4 mt-10 text-xs font-medium uppercase tracking-widest text-ink-muted">What you get</h2>
-            <ul className="grid gap-4 sm:grid-cols-3">
+            <ul className="grid gap-4 lg:grid-cols-3">
               {got.map((item) => (
                 <li key={item.title} className="rounded-2xl border border-line bg-white p-5">
                   <item.icon />
@@ -48,7 +48,7 @@ export default async function Page({
             </ul>
 
             <h2 className="mb-4 mt-10 text-xs font-medium uppercase tracking-widest text-ink-muted">What to do next</h2>
-            <ol className="grid gap-3 sm:grid-cols-3">
+            <ol className="grid gap-3 lg:grid-cols-3">
               {next.map((label, index) => (
                 <li key={label} className="rounded-2xl border border-line bg-white p-5">
                   <p className="text-2xl font-semibold tabular-nums">{index + 1}</p>
@@ -60,12 +60,12 @@ export default async function Page({
             {order.token && (
               <Link
                 href={`/intake?token=${encodeURIComponent(order.token)}`}
-                className="mt-8 inline-flex min-h-12 items-center rounded-xl bg-ink px-6 text-sm font-medium text-paper hover:bg-signal"
+                className="mt-8 inline-flex min-h-12 items-center rounded-xl bg-ink px-6 text-base font-medium text-paper hover:bg-signal"
               >
                 Submit the URL
               </Link>
             )}
-            <p className="mt-6 text-sm text-ink-soft">
+            <p className="mt-6 text-base text-ink-soft">
               Questions:{" "}
               <a className="text-accent underline-offset-2 hover:underline" href={`mailto:${siteConfig.email}`}>
                 {siteConfig.email}

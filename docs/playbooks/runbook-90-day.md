@@ -11,7 +11,7 @@ Day-by-day, week-by-week. Each item is a check-box. Estimated time per item in p
 - [ ] **Create the GitHub org + repo.** `Eject/eject` (or under personal account initially). Push the codebase. (15min)
 - [ ] **Set up Cloudflare account + Pages project.** Connect to GitHub. Auto-deploys on push to `main`. (30min)
 - [ ] **Wire DNS.** Cloudflare nameservers + apex + `www` + Pages. (30min)
-- [ ] **Stripe test-mode products** (Automated $99, Done for you $199). `pnpm setup-stripe`. No live keys. (1h)
+- [ ] **Stripe test-mode products** (Automated $99 public, custom work operator-only). `pnpm setup-stripe`. No live keys. (1h)
 - [ ] **Resend account + verified domain.** For form intake + outbound. (30min)
 - [ ] **GitHub App registration** (for the editor's per-customer repo access). Defer to week 6 if time-pressed. (2h)
 - [ ] **Anthropic API key.** Spend cap at $200/mo until validated. (10min)

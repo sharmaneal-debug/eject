@@ -191,7 +191,7 @@ export function conciergeKickoffEmail(opts: { name: string; siteUrl: string; int
  const subject = `${opts.name || "Hi"}, your Eject ${offer.name} payment is in`;
  const text = `Hi ${opts.name || "there"},
 
-Your $${offer.price} ${offer.name} payment came through. We handle the migration for you, step by step.
+Your custom migration payment came through. We handle the migration for you, step by step.
 
 What happens next:
 
@@ -212,7 +212,7 @@ ${siteConfig.url}
  const html = `<!doctype html>
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
  <p style="font-size: 18px;">Hi ${escape(opts.name) || "there"},</p>
- <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. We handle the migration for you, step by step.</p>
+ <p>Your custom migration payment came through. We handle the migration for you, step by step.</p>
  <ol style="padding-left: 20px;">
  <li>${opts.intakeUrl ? `Submit the site for scoring: <a href="${escape(opts.intakeUrl)}">${escape(opts.intakeUrl)}</a>` : `We confirm <code>${escape(opts.siteUrl)}</code> with you.`}</li>
  <li>Simple marketing, portfolio, and landing pages can continue. Anything else is refunded or referred out.</li>

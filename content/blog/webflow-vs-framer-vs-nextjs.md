@@ -397,7 +397,7 @@ Or if you're still on the fence: [run the cost calculator](#cost-calculator). Th
  "name": "What is the difference between Automated and Done for you?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Both include an editing guide so you edit by chatting with your own AI. Automated is 99 dollars: an automated migration of a simple site, which you review before DNS. Done for you is 199 dollars. We handle the migration for you, step by step, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond that we refer out or quote an add-on."
+ "text": "Both include an editing guide so you edit by chatting with your own AI. Automated is 99 dollars: an automated migration of a simple site, which you review before DNS. Custom work has no public price. We handle the migration for you, step by step, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond that we refer out or quote an add-on."
  }
  }
  ]

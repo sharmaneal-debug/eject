@@ -137,9 +137,9 @@ export function RenewalWatchForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
-      <div className="rounded-2xl border border-line bg-white p-6 md:p-8">
-        <label className="block text-sm font-medium mb-2" htmlFor="rw-email">
+    <form onSubmit={onSubmit} className="grid min-w-0 gap-6 lg:grid-cols-2 lg:items-start">
+      <div className="min-w-0 rounded-2xl border border-line bg-white p-4 sm:p-8">
+        <label className="mb-2 block text-base font-medium" htmlFor="rw-email">
           Email for the reminders
         </label>
         <input
@@ -149,11 +149,11 @@ export function RenewalWatchForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
-          className="w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm mb-5 focus:border-ink focus:outline-none"
+          className="mb-5 min-h-11 w-full rounded-lg border border-line bg-paper px-3 text-base focus:border-ink focus:outline-none"
         />
 
-        <p className="text-sm font-medium mb-2">Platform</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
+        <p className="mb-2 text-base font-medium">Platform</p>
+        <div className="mb-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
           {PLATFORMS.map((p) => (
             <button
               type="button"
@@ -163,7 +163,7 @@ export function RenewalWatchForm({
                 setPlanId(defaultPlanId(p.id));
               }}
               className={cn(
-                "min-h-11 rounded-lg border px-3 text-sm font-medium",
+                "min-h-11 rounded-lg border px-3 text-base font-medium",
                 platformId === p.id ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink",
               )}
             >
@@ -172,14 +172,14 @@ export function RenewalWatchForm({
           ))}
         </div>
 
-        <label className="block text-sm font-medium mb-2" htmlFor="rw-plan">
+        <label className="mb-2 block text-base font-medium" htmlFor="rw-plan">
           Plan
         </label>
         <select
           id="rw-plan"
           value={plan.id}
           onChange={(e) => setPlanId(e.target.value)}
-          className="w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm mb-5 focus:border-ink focus:outline-none"
+          className="mb-5 min-h-11 w-full rounded-lg border border-line bg-paper px-3 text-base focus:border-ink focus:outline-none"
         >
           {platform.plans.map((p) => (
             <option key={p.id} value={p.id}>
@@ -188,9 +188,9 @@ export function RenewalWatchForm({
           ))}
         </select>
 
-        <div className="grid sm:grid-cols-2 gap-4 mb-5">
-          <div>
-            <label className="block text-sm font-medium mb-2" htmlFor="rw-date">
+        <div className="mb-5 grid gap-4">
+          <div className="min-w-0">
+            <label className="mb-2 block text-base font-medium" htmlFor="rw-date">
               Renewal date
             </label>
             <input
@@ -199,11 +199,11 @@ export function RenewalWatchForm({
               required
               value={renewalDate}
               onChange={(e) => setRenewalDate(e.target.value)}
-              className="w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm focus:border-ink focus:outline-none"
+              className="min-h-11 w-full min-w-0 rounded-lg border border-line bg-paper px-3 text-base focus:border-ink focus:outline-none"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-2" htmlFor="rw-amount">
+          <div className="min-w-0">
+            <label className="mb-2 block text-base font-medium" htmlFor="rw-amount">
               Invoice amount (optional)
             </label>
             <input
@@ -211,14 +211,14 @@ export function RenewalWatchForm({
               inputMode="decimal"
               value={amount}
               onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
-              placeholder="Use list price if blank"
-              className="w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm focus:border-ink focus:outline-none"
+              placeholder="List price if blank"
+              className="min-h-11 w-full rounded-lg border border-line bg-paper px-3 text-base focus:border-ink focus:outline-none"
             />
           </div>
         </div>
 
-        <p className="text-sm font-medium mb-2">That amount is</p>
-        <div className="grid grid-cols-3 gap-2 mb-5">
+        <p className="mb-2 text-base font-medium">That amount is</p>
+        <div className="mb-5 grid gap-2">
           {(
             [
               ["", "List price"],
@@ -231,7 +231,7 @@ export function RenewalWatchForm({
               key={label}
               onClick={() => setInterval(value)}
               className={cn(
-                "rounded-lg border px-2 py-2 text-sm",
+                "min-h-11 rounded-lg border px-3 text-base",
                 interval === value ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink",
               )}
             >
@@ -240,16 +240,16 @@ export function RenewalWatchForm({
           ))}
         </div>
 
-        <label className="block text-sm font-medium mb-2" htmlFor="rw-paste">
+        <label className="mb-2 block text-base font-medium" htmlFor="rw-paste">
           Or paste the renewal email
         </label>
         <textarea
           id="rw-paste"
           value={emailText}
           onChange={(e) => applyPaste(e.target.value)}
-          rows={7}
-          placeholder={"From: billing@framer.com\nYour Pro plan renews on November 12, 2026.\nAmount due: $360.00 for the year."}
-          className="w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm font-mono focus:border-ink focus:outline-none"
+          rows={4}
+          placeholder="Paste the renewal email"
+          className="w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-base focus:border-ink focus:outline-none"
         />
         {parseNotes.length > 0 && emailText.trim() && (
           <ul className="mt-3 text-xs text-ink-muted space-y-1">
@@ -263,7 +263,7 @@ export function RenewalWatchForm({
         <button
           type="submit"
           disabled={submitting}
-          className="mt-5 w-full rounded-lg bg-ink text-paper px-4 py-3 text-sm font-medium hover:bg-signal transition disabled:opacity-60"
+          className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-ink px-4 text-base font-medium text-paper hover:bg-signal disabled:opacity-60"
         >
           {submitting ? "Saving…" : "Watch this renewal"}
         </button>
@@ -300,9 +300,9 @@ export function RenewalWatchForm({
           ) : (
             <ol className="space-y-3">
               {movePlan.steps.map((step) => (
-                <li key={step.id} className={cn("flex gap-3", step.passed && "opacity-50")}>
-                  <p className="w-28 shrink-0 text-xs text-ink-muted">{step.date}</p>
-                  <p className="font-medium">{step.title}</p>
+                <li key={step.id} className={cn(step.passed && "opacity-50")}>
+                  <p className="text-base text-ink-muted">{step.date}</p>
+                  <p className="text-base font-medium">{step.title}</p>
                 </li>
               ))}
             </ol>

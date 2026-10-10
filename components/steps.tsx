@@ -6,14 +6,14 @@ const steps = [
 
 export function Steps() {
   return (
-    <ol className="grid gap-4 md:grid-cols-3">
+    <ol className="grid gap-4 lg:grid-cols-3">
       {steps.map((step) => (
         <li key={step.title} className="rounded-2xl border border-line bg-white p-6">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-paper-warm text-ink">
             <step.icon />
           </span>
           <p className="mt-4 text-lg font-semibold">{step.title}</p>
-          <p className="mt-1 text-sm text-ink-soft">{step.words}</p>
+          <p className="mt-1 text-base text-ink-soft">{step.words}</p>
         </li>
       ))}
     </ol>

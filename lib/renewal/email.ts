@@ -43,7 +43,7 @@ export async function sendRenewalReminder(opts: {
     opts.slot === "90"
       ? "Confirm the site is only a marketing page, portfolio, or landing page. If it is a store or a large CMS, don't start a move with us."
       : opts.slot === "60"
-        ? `Automated is $${siteConfig.pricing.express.price}. Done for you is $${siteConfig.pricing.concierge.price}.`
+        ? `The automated move is $${siteConfig.pricing.express.price}. Custom work has no public price.`
         : "Turn off auto-renew in the platform's billing settings. Switch DNS only after the new site is on a host you control.";
   const text = `Your ${platform} renewal is in ${opts.daysUntil} days (${when}).
 

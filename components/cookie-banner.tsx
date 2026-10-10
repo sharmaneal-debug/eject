@@ -28,16 +28,19 @@ export function CookieBanner() {
   if (choice !== null) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-3xl rounded-2xl border border-line bg-white p-4 shadow-lg md:left-auto md:right-6">
-      <p className="text-sm text-ink-soft leading-relaxed">
-        Essential storage keeps this choice. Analytics runs only if you allow it. We do not sell personal information. Read the{" "}
-        <Link className="text-accent" href="/privacy">privacy policy</Link>.
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white p-4">
+      <p className="text-base text-ink-soft">
+        This choice stays in your browser.{" "}
+        <Link className="text-accent underline-offset-2 hover:underline" href="/privacy">
+          Privacy
+        </Link>
+        .
       </p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" onClick={() => choose("essential")} className="rounded-lg border border-line px-3 py-2 text-sm">
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        <button type="button" onClick={() => choose("essential")} className="min-h-11 rounded-lg border border-line px-3 text-base">
           Essential only
         </button>
-        <button type="button" onClick={() => choose("analytics")} className="rounded-lg bg-ink text-paper px-3 py-2 text-sm">
+        <button type="button" onClick={() => choose("analytics")} className="min-h-11 rounded-lg bg-ink px-3 text-base text-paper">
           Allow analytics
         </button>
       </div>

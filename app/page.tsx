@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { CostCalculator } from "@/components/cost-calculator";
-import { Faq } from "@/components/faq";
 import { JsonLd } from "@/components/json-ld";
 import { PricingTable } from "@/components/pricing-table";
 import { Steps } from "@/components/steps";
@@ -18,20 +17,19 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={[organizationSchema(), websiteSchema(), serviceSchema()]} />
-      <section className="mx-auto max-w-content px-6 pb-2 pt-12 md:pt-16">
-        <h1 className="h-display max-w-3xl text-4xl sm:text-5xl md:text-6xl">Move a simple site. Keep the files.</h1>
-        <p className="mt-4 max-w-xl text-lg text-ink-soft">Simple sites only. About 10 pages.</p>
+      <section className="mx-auto max-w-content min-w-0 px-4 pb-2 pt-10 sm:px-6 md:pt-16">
+        <h1 className="h-display max-w-3xl text-4xl sm:text-5xl lg:text-6xl">Move a simple site. $99.</h1>
+        <p className="mt-4 text-lg text-ink-soft">You own the files.</p>
       </section>
-      <section className="mx-auto max-w-content px-6 py-8">
+      <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
         <CostCalculator initialPlatform="framer" initialPlanId="pro" />
       </section>
-      <section className="mx-auto max-w-content px-6 py-8 md:py-12">
+      <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
         <Steps />
       </section>
-      <section className="mx-auto max-w-content px-6 py-8 md:py-12">
+      <section className="mx-auto max-w-content min-w-0 px-4 py-6 pb-12 sm:px-6">
         <PricingTable />
       </section>
-      <Faq />
     </>
   );
 }

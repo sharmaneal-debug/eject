@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { createCheckoutSession } from "@/lib/checkout";
+import { operatorDoneForYouUsd } from "@/lib/operator-pricing";
 import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -42,6 +43,6 @@ export async function POST(req: Request) {
     ok: true,
     url: result.url,
     orderId: result.orderId,
-    amount: siteConfig.pricing.concierge.price,
+    amount: operatorDoneForYouUsd,
   });
 }

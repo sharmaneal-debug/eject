@@ -33,7 +33,7 @@ export default async function Page({
   return (
     <>
       <JsonLd data={schema} />
-      <section className="mx-auto max-w-content px-6 py-12 md:py-16">
+      <section className="mx-auto max-w-content min-w-0 px-4 py-10 sm:px-6 md:py-16">
         <h1 className="h-display text-4xl md:text-6xl">Renewal watch</h1>
         <p className="mt-4 text-lg text-ink-soft">Reminders at 90, 60, and 30 days. Simple sites only.</p>
         <div className="mt-8">

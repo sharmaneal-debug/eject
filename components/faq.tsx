@@ -1,11 +1,8 @@
 import Link from "next/link";
-import { siteConfig } from "@/lib/site";
-
-const cap = siteConfig.pricing.concierge.cap;
 
 export const faqItems = [
   { q: "What is $99?", a: "An automated move of a simple site. You own the files." },
-  { q: "What is $199?", a: `Done for you. We handle the move. About ${cap.pages} pages and ${cap.forms} form.` },
+  { q: "Need it done for you?", a: "We handle the migration for you, step by step." },
   { q: "Will it look the same?", a: "We do not promise a pixel match." },
   { q: "What is out of scope?", a: "Stores and large CMS sites." },
   { q: "Domain?", a: "The domain stays yours. DNS changes only when you ask." },
@@ -14,20 +11,20 @@ export const faqItems = [
 
 export function Faq() {
   return (
-    <section className="mx-auto max-w-content px-6 py-12 md:py-16">
-      <h2 className="mb-3 text-xs font-medium uppercase tracking-widest text-ink-muted">FAQ</h2>
+    <section className="mx-auto max-w-content min-w-0 px-4 py-10 sm:px-6 md:py-16">
+      <h2 className="mb-3 text-base font-medium text-ink-muted">FAQ</h2>
       <div className="max-w-xl border-b border-line">
         {faqItems.map((item) => (
           <details key={item.q} className="border-t border-line py-3">
-            <summary className="flex min-h-11 cursor-pointer list-none items-center font-medium [&::-webkit-details-marker]:hidden">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center text-base font-medium [&::-webkit-details-marker]:hidden">
               {item.q}
             </summary>
-            <p className="pb-2 text-sm text-ink-soft">{item.a}</p>
+            <p className="pb-2 text-base text-ink-soft">{item.a}</p>
           </details>
         ))}
       </div>
-      <p className="mt-4 text-sm">
-        <Link href="/blog" className="text-accent underline-offset-2 hover:underline">
+      <p className="mt-4">
+        <Link href="/blog" className="inline-flex min-h-11 items-center text-base text-accent underline-offset-2 hover:underline">
           More on the blog
         </Link>
       </p>

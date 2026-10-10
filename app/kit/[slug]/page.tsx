@@ -75,7 +75,7 @@ const markdownComponents = {
     );
   },
   pre: ({ children }: any) => (
-    <pre className="bg-ink text-paper rounded-xl p-5 overflow-x-auto text-sm leading-relaxed mb-6">
+    <pre className="mb-6 max-w-full overflow-x-clip whitespace-pre-wrap break-words rounded-xl bg-ink p-4 text-base leading-relaxed text-paper">
       {children}
     </pre>
   ),

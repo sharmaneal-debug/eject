@@ -51,7 +51,7 @@ export function BookForm({ bookingUrl, embed, support }: { bookingUrl: string | 
         <Field label="Site URL" name="url" placeholder="https://your-site.com" required />
         <label className="block text-sm">
           <span className="font-medium">Platform</span>
-          <select name="platform" className="mt-1 w-full rounded-lg border border-line bg-paper px-3 py-2.5" defaultValue="">
+          <select name="platform" className="mt-1 min-h-11 w-full rounded-lg border border-line bg-paper px-3 text-base" defaultValue="">
             <option value="">Not sure</option>
             <option>Framer</option>
             <option>Webflow</option>

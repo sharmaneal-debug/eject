@@ -35,20 +35,15 @@ export default async function Page({
     <>
       <Section className="pb-0">
         <Eyebrow>Editing kit</Eyebrow>
-        <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-5 max-w-3xl">
-          Welcome. <span className="text-ink/40">Let&apos;s rebuild your site.</span>
-        </h1>
-        <p className="text-ink-soft text-lg leading-relaxed max-w-2xl">
-          Four documents. A starter template. ~4 hours of focused time. End state: a website you own,
-          on free hosting, editable forever by chatting with any AI.
-        </p>
+        <h1 className="h-display mb-4 max-w-3xl text-4xl">Editing kit</h1>
+        <p className="max-w-2xl text-lg text-ink-soft">Four short guides. You own the files.</p>
       </Section>
 
       <Section>
         <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-6">
           Start with the Playbook. The other three are referenced from inside it.
         </p>
-        <div className="grid md:grid-cols-2 gap-5 max-w-4xl">
+        <div className="grid max-w-4xl gap-4 lg:grid-cols-2">
           {pages.map((p) => (
             <Link
               key={p.slug}
@@ -65,8 +60,8 @@ export default async function Page({
               <h2 className="font-semibold text-xl tracking-tight mb-2 group-hover:text-signal transition">
                 {p.title}
               </h2>
-              <p className="text-ink-soft leading-relaxed text-sm">{p.description}</p>
-              <p className="mt-4 text-sm font-medium text-ink group-hover:text-signal transition">
+              <p className="text-base leading-relaxed text-ink-soft">{p.description}</p>
+              <p className="mt-4 text-base font-medium text-ink group-hover:text-signal">
                 Open <span className="group-hover:translate-x-1 inline-block transition">→</span>
               </p>
             </Link>
@@ -87,11 +82,8 @@ export default async function Page({
             <h2 className="font-semibold text-xl tracking-tight mb-2 group-hover:text-signal transition">
               Next.js + Tailwind Starter
             </h2>
-            <p className="text-ink-soft leading-relaxed text-sm">
-              The starter template the AI fills in with your content. Clone it from GitHub or use it
-              as a reference. MIT license, yours forever.
-            </p>
-            <p className="mt-4 text-sm font-medium text-ink group-hover:text-signal transition">
+            <p className="text-base leading-relaxed text-ink-soft">Starter files on GitHub.</p>
+            <p className="mt-4 text-base font-medium text-ink group-hover:text-signal">
               Clone on GitHub <span className="group-hover:translate-x-1 inline-block transition">↗</span>
             </p>
           </a>
@@ -106,12 +98,11 @@ export default async function Page({
             <h2 className="font-semibold text-xl tracking-tight mb-2 text-paper">
               Email Support
             </h2>
-            <p className="text-paper/70 leading-relaxed text-sm mb-4">
-              Stuck on a step? Reply to your kickoff email or write directly to{" "}
-              <a className="text-signal hover:text-paper" href={`mailto:${siteConfig.email}`}>
+            <p className="mb-4 text-base text-paper/80">
+              Email{" "}
+              <a className="inline-flex min-h-11 items-center text-signal" href={`mailto:${siteConfig.email}`}>
                 {siteConfig.email}
               </a>
-              . A real person responds within 24 hours, for the first 30 days after purchase.
             </p>
           </div>
         </div>

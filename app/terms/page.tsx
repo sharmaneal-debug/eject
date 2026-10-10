@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const lines = [
   ["The service", "We move a simple public site onto files you host."],
-  ["Price", `Automated is $${siteConfig.pricing.express.price}. Done for you is $${siteConfig.pricing.concierge.price}. Simple sites, about ${siteConfig.pricing.concierge.cap.pages} pages.`],
+  ["Price", `The automated move is $${siteConfig.pricing.express.price}. Custom work has no public price.`],
   ["Your part", "You need rights to the content. Domain and DNS stay yours."],
   ["Refunds", "Email us. A person sends any refund."],
   ["Ownership", "You own the files we deliver."],
@@ -29,17 +29,15 @@ export default function Page() {
         {lines.map(([title, line]) => (
           <div key={title} className="border-t border-line py-3">
             <h2 className="text-lg">{title}</h2>
-            <p className="text-sm text-ink-soft">{line}</p>
+            <p className="text-base text-ink-soft">{line}</p>
           </div>
         ))}
-        <p className="text-sm mt-4">
-          <Link className="text-accent" href="/privacy">Privacy</Link>
-          {" · "}
-          <Link className="text-accent" href="/refunds">Refunds</Link>
-          {" · "}
-          <Link className="text-accent" href="/disclaimers">Disclaimers</Link>
+        <p className="mt-4 flex flex-col text-base">
+          <Link className="inline-flex min-h-11 items-center text-accent" href="/privacy">Privacy</Link>
+          <Link className="inline-flex min-h-11 items-center text-accent" href="/refunds">Refunds</Link>
+          <Link className="inline-flex min-h-11 items-center text-accent" href="/disclaimers">Disclaimers</Link>
         </p>
-        <p className="text-xs text-ink-muted mt-4">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
+        <p className="mt-4 text-base text-ink-muted">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
       </div>
     </Section>
   );

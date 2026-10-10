@@ -1,66 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { listPosts } from "@/lib/posts";
-import { Section, Eyebrow } from "@/components/section";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
- title: "Blog",
- description: "Notes on leaving a simple site. Older posts are marked where they describe CMS extraction or prices that have changed.",
- path: "/blog",
+  title: "Blog",
+  description: "Notes on leaving a simple site.",
+  path: "/blog",
 });
 
-function formatDate(d: string) {
- if (!d) return "";
- try {
- return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
- } catch {
- return d;
- }
-}
-
 export default function Page() {
- const posts = listPosts();
- return (
- <>
- <Section className="pb-0">
- <Eyebrow>Blog</Eyebrow>
- <h1 className="h-display text-5xl md:text-7xl tracking-tightest max-w-4xl mb-5">
- Migration guides. <span className="text-ink/40">Cost teardowns.</span>
- </h1>
- <p className="text-ink-soft max-w-2xl text-lg">
- Honest writeups of what we&apos;re shipping and what it costs. No vibes.
- </p>
- </Section>
-
- <Section>
- {posts.length === 0 ? (
- <div className="rounded-2xl border border-line bg-paper-warm p-10 text-center text-ink-muted">
- No posts yet. Soon.
- </div>
- ) : (
- <ul className="divide-y divide-line border-y border-line">
- {posts.map((p) => (
- <li key={p.slug} className="py-8">
- <Link href={`/blog/${p.slug}`} className="group grid md:grid-cols-[160px_1fr] gap-6 items-baseline">
- <p className="text-xs font-mono uppercase tracking-widest text-ink-muted">{formatDate(p.date)}</p>
- <div>
- <h2 className="h-section text-2xl md:text-3xl tracking-tight mb-2 group-hover:text-signal transition">
- {p.title}
- </h2>
- <p className="text-ink-soft max-w-2xl leading-relaxed">{p.description}</p>
- {p.tags?.length ? (
- <p className="mt-3 text-xs font-mono text-ink-muted uppercase tracking-widest">
- {p.tags.slice(0, 3).join(" · ")}
- </p>
- ) : null}
- </div>
- </Link>
- </li>
- ))}
- </ul>
- )}
- </Section>
- </>
- );
+  const posts = listPosts();
+  return (
+    <section className="mx-auto max-w-content min-w-0 px-4 py-10 sm:px-6 md:py-16">
+      <h1 className="h-display text-4xl lg:text-6xl">Blog</h1>
+      <p className="mt-4 text-lg text-ink-soft">Guides for simple sites.</p>
+      <ul className="mt-8 divide-y divide-line border-y border-line">
+        {posts.map((post) => (
+          <li key={post.slug}>
+            <Link href={`/blog/${post.slug}`} className="flex min-h-11 flex-col justify-center py-4">
+              <span className="text-base text-ink-muted">{post.date}</span>
+              <span className="mt-1 text-xl font-semibold">{post.title}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
 }

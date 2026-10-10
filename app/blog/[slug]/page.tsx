@@ -7,6 +7,7 @@ import rehypeSlug from "rehype-slug";
 import { getPost, postSlugs, relatedPosts } from "@/lib/posts";
 import { Section, Eyebrow } from "@/components/section";
 import { CostCalculator } from "@/components/cost-calculator";
+import { CustomPricingLink } from "@/components/custom-pricing-link";
 import { JsonLd } from "@/components/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
 import { siteConfig } from "@/lib/site";
@@ -87,7 +88,7 @@ const markdownComponents = {
     );
   },
   pre: ({ children }: any) => (
-    <pre className="bg-ink text-paper rounded-xl p-5 overflow-x-auto text-sm leading-relaxed mb-6 not-prose">
+    <pre className="mb-6 max-w-full overflow-x-clip whitespace-pre-wrap break-words rounded-xl bg-ink p-4 text-base leading-relaxed text-paper not-prose">
       {children}
     </pre>
   ),
@@ -95,15 +96,15 @@ const markdownComponents = {
     <blockquote className="border-l-4 border-signal pl-5 italic text-ink-soft my-7 py-1">{children}</blockquote>
   ),
   table: ({ children }: any) => (
-    <div className="overflow-x-auto my-7 rounded-xl border border-line">
-      <table className="w-full border-collapse text-sm">{children}</table>
+    <div className="my-7 max-w-full overflow-x-clip rounded-xl border border-line">
+      <table className="w-full table-fixed border-collapse text-base">{children}</table>
     </div>
   ),
   thead: ({ children }: any) => <thead className="bg-paper-warm">{children}</thead>,
   th: ({ children }: any) => (
-    <th className="border-b border-line text-left p-3 font-semibold text-ink whitespace-nowrap">{children}</th>
+    <th className="border-b border-line p-3 text-left align-top font-semibold text-ink">{children}</th>
   ),
-  td: ({ children }: any) => <td className="border-b border-line p-3 text-ink-soft align-top">{children}</td>,
+  td: ({ children }: any) => <td className="border-b border-line p-3 align-top text-base text-ink-soft">{children}</td>,
   tr: ({ children }: any) => <tr className="even:bg-paper-warm/40">{children}</tr>,
   hr: () => <hr className="border-line my-10" />,
 };
@@ -144,7 +145,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           ← All articles
         </Link>
         <Eyebrow>{post.tags?.[0] ?? "Article"}</Eyebrow>
-        <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-5 max-w-4xl">{post.title}</h1>
+        <h1 className="h-display mb-5 max-w-4xl break-words text-3xl sm:text-4xl lg:text-5xl">{post.title}</h1>
         <p className="text-ink-soft max-w-2xl text-lg md:text-xl leading-relaxed">{post.description}</p>
         <div className="mt-7 flex items-center gap-4 text-xs font-mono uppercase tracking-widest text-ink-muted">
           <span>{formatDate(post.date)}</span>
@@ -166,10 +167,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       {/* Article body — narrow column for readability */}
       <Section>
         <article className="max-w-[680px]">
-          <aside className="rounded-xl border border-line bg-paper-warm p-5 mb-10 text-sm text-ink-soft leading-relaxed">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Offer, October 2026</p>
-            Automated ${siteConfig.pricing.express.price}. Done for you ${siteConfig.pricing.concierge.price}.{" "}
-            <Link href="/book" className="text-accent hover:text-signal">Book a call</Link>.
+          <aside className="mb-10 rounded-xl border border-line bg-paper-warm p-4 text-base leading-relaxed text-ink-soft">
+            <p>Automated ${siteConfig.pricing.express.price}.</p>
+            <p className="mt-2">We handle the migration for you, step by step.</p>
+            <CustomPricingLink />
           </aside>
           {segments.map((seg, i) => (
             <div key={i}>
@@ -195,7 +196,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <Section className="border-t border-line pt-16 pb-16">
           <Eyebrow>Keep reading</Eyebrow>
           <h2 className="h-section text-2xl md:text-3xl mb-10">More from the blog</h2>
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid gap-4 lg:grid-cols-3">
             {related.map((r) => (
               <Link
                 key={r.slug}
@@ -208,7 +209,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 <h3 className="font-semibold text-lg tracking-tight mb-2 group-hover:text-signal transition">
                   {r.title}
                 </h3>
-                <p className="text-ink-soft text-sm leading-relaxed line-clamp-3">{r.description}</p>
+                <p className="text-base leading-relaxed text-ink-soft">{r.description}</p>
               </Link>
             ))}
           </div>
@@ -217,7 +218,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
       {/* Final CTA */}
       <Section className="bg-paper-warm">
-        <div className="rounded-2xl bg-ink text-paper p-10 md:p-14">
+        <div className="rounded-2xl bg-ink p-5 text-paper sm:p-8">
           <p className="text-xs font-mono uppercase tracking-widest text-paper/50 mb-3">Ready to migrate?</p>
           <h2 className="h-section text-3xl md:text-4xl mb-4 max-w-2xl">
             Paste your URL. See what we&apos;d build for you.
@@ -227,7 +228,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </p>
           <Link
             href="/"
-            className="inline-flex items-center justify-center rounded-lg bg-signal text-paper px-6 py-3 text-sm font-medium hover:bg-paper hover:text-ink transition"
+            className="inline-flex min-h-12 items-center justify-center rounded-lg bg-signal px-6 text-base font-medium text-paper hover:bg-paper hover:text-ink"
           >
             Scan my site →
           </Link>

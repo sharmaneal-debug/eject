@@ -7,15 +7,16 @@ import { annualFromListPrice, annualFromRenewalCharge, calculateSavings } from "
 import { buildMovePlan } from "../lib/renewal/move-plan";
 
 describe("eject offer prices", () => {
-  it("reads Automated $99 and Done for you $199 from the shared config", () => {
+  it("reads Automated $99 from the shared config and keeps custom work unpriced", () => {
     assert.equal(siteConfig.pricing.express.id, "express");
     assert.equal(siteConfig.pricing.express.name, "Automated");
     assert.equal(siteConfig.pricing.express.price, 99);
     assert.equal(siteConfig.pricing.express.cta, "Buy now");
     assert.equal(siteConfig.pricing.concierge.id, "concierge");
-    assert.equal(siteConfig.pricing.concierge.name, "Done for you");
-    assert.equal(siteConfig.pricing.concierge.price, 199);
-    assert.equal(siteConfig.pricing.concierge.cta, "Book a call");
+    assert.equal(siteConfig.pricing.concierge.name, "Custom");
+    assert.equal("price" in siteConfig.pricing.concierge, false);
+    assert.equal(siteConfig.pricing.concierge.blurb, "We handle the migration for you, step by step.");
+    assert.equal(siteConfig.description.includes("199"), false);
     assert.equal(siteConfig.pricing.concierge.blurb.toLowerCase().includes("neal"), false);
     assert.equal(siteConfig.pricing.concierge.cap.pages, 10);
     assert.equal(siteConfig.pricing.concierge.cap.forms, 1);

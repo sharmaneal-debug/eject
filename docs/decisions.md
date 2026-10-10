@@ -9,7 +9,7 @@ Open architectural decisions to lock down before week 4. Resolve top-down.
 | 3 | GitHub App vs OAuth | **GitHub App** — bypass deploy-key friction, finer scopes | More secure, but 1-2 weeks of marketplace listing setup | open |
 | 4 | Default destination: Cloudflare Pages vs Vercel | **Cloudflare Pages default; Vercel as paid upgrade** | Cloudflare delivers the "$5/yr" headline. Vercel has stronger Next.js DX. | open |
 | 5 | Default CMS layer | **Markdown in repo (default), Sanity (option), Payload (option)** | Markdown = simplest. Don't add a database for trivial sites. | open |
-| 6 | Pricing | **Automated $99** (Buy now) and **Done for you $199** (Book a call). Both prices are public. | Two cards. `/book` is the $199 path. Public checkout of done-for-you stays closed. | decided: 2026-10-10 |
+| 6 | Pricing | **Automated $99** is the only public price. Custom work is the line "We handle the migration for you, step by step." plus a quiet link, with no dollar amount and no card. | Public checkout of custom work stays closed. An operator payment link may use an internal amount that is never rendered. | decided: 2026-10-10 |
 | 7 | Payment timing | Both offers are paid in full at checkout | One payment. No deposit split | decided: 2026-10-10 |
 | 8 | Refund policy | "If you're not editing your new site within 14 days, full refund" | CAC accelerator at low refund-rate cost | open |
 | 9 | Legal: scrape consent | **Customer signs consent in intake form before crawl** | They have right to migrate own site; we have written permission | open |

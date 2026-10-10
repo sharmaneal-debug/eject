@@ -14,18 +14,18 @@ export default function Page() {
       <div className="max-w-xl mt-6">
         <div className="border-t border-line py-3">
           <h2 className="text-lg">Ask</h2>
-          <p className="text-sm text-ink-soft">Email {siteConfig.email} with the site URL.</p>
+          <p className="text-base text-ink-soft">Email {siteConfig.email} with the site URL.</p>
         </div>
         <div className="border-t border-line py-3">
           <h2 className="text-lg">When</h2>
-          <p className="text-sm text-ink-soft">If nothing was delivered, within 14 days of delivery, or the site is out of scope.</p>
+          <p className="text-base text-ink-soft">If nothing was delivered, within 14 days of delivery, or the site is out of scope.</p>
         </div>
         <div className="border-t border-line py-3">
           <h2 className="text-lg">How</h2>
-          <p className="text-sm text-ink-soft">A person sends it. This site does not refund the card.</p>
+          <p className="text-base text-ink-soft">A person sends it. This site does not refund the card.</p>
         </div>
-        <p className="text-sm mt-4"><Link className="text-accent" href="/terms">Terms</Link></p>
-        <p className="text-xs text-ink-muted mt-4">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
+        <p className="mt-4 text-base"><Link className="inline-flex min-h-11 items-center text-accent" href="/terms">Terms</Link></p>
+        <p className="mt-4 text-base text-ink-muted">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
       </div>
     </Section>
   );

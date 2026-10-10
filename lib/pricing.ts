@@ -3,6 +3,7 @@
  * Dollar amounts, names, and the simple-site cap come from lib/site.ts.
  */
 
+import { operatorDoneForYouUsd } from "./operator-pricing";
 import { siteConfig } from "./site";
 
 const automatedDisplay = siteConfig.pricing.express;
@@ -42,7 +43,7 @@ export const automatedOffer: Offer = {
 export const doneForYouOffer: Offer = {
   id: "done_for_you",
   name: doneForYouDisplay.name,
-  price: doneForYouDisplay.price,
+  price: operatorDoneForYouUsd,
   blurb: doneForYouDisplay.blurb,
   bullets: doneForYouDisplay.bullets,
   cta: doneForYouDisplay.cta,

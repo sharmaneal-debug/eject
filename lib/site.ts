@@ -1,19 +1,18 @@
 const automatedPrice = 99;
-const doneForYouPrice = 199;
 
 /**
- * Display copy and prices. Checkout, email, delivery, calculators, and
- * playbooks should read amounts from here. Checkout still accepts the
- * internal ids automated / done_for_you, plus the older express / concierge
- * query values.
+ * Public copy and the only public price. Checkout still accepts the internal
+ * ids automated / done_for_you, plus the older express / concierge query values.
+ * The operator amount for a custom payment link lives in lib/operator-pricing.ts
+ * and is not part of this object.
  */
 export const siteConfig = {
   name: "Eject",
   domain: "ejectfrom.com",
   url: "https://ejectfrom.com",
-  tagline: "Move a simple site. Keep the files.",
-  shortTagline: "Simple sites. About 10 pages.",
-  description: "Simple sites only. About 10 pages. Automated $99. Done for you $199.",
+  tagline: "Move a simple site. $99.",
+  shortTagline: "You own the files.",
+  description: "Move a simple site for $99. You own the files.",
   email: "hi@ejectfrom.com",
   twitter: "@useeject",
 
@@ -39,17 +38,16 @@ export const siteConfig = {
     },
     concierge: {
       id: "concierge" as const,
-      name: "Done for you",
-      price: doneForYouPrice,
-      blurb: "We handle the move.",
+      name: "Custom",
+      blurb: "We handle the migration for you, step by step.",
       cap: {
         pages: 10,
         forms: 1,
         revisionRounds: 2,
         handoffMinutes: 30,
       },
-      bullets: ["About 10 pages", "1 form"],
-      cta: "Book a call",
+      bullets: ["We handle the migration for you, step by step."],
+      cta: "Contact us",
     },
   },
 } as const;

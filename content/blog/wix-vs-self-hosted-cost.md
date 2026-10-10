@@ -61,7 +61,7 @@ Since you pay for a domain either way, set it aside and compare what's left:
 | One-time move | $0 | $0 | $99 | custom pricing |
 | **Total** | **$612** | **$1,044** | **$99** | **custom** |
 
-Moving a Core site with the $99 automated move saves **$945 over three years**, and the move pays for itself in about 4 months. A Light site moved the same way saves $513 over three years. Done for you is $199. If you're comfortable doing it yourself, the gap is bigger. Plug in your own plan with the [renewal savings calculator](/calculator?p=wix).
+Moving a Core site with the $99 automated move saves **$945 over three years**, and the move pays for itself in about 4 months. A Light site moved the same way saves $513 over three years. Custom work has no public price. If you're comfortable doing it yourself, the gap is bigger. Plug in your own plan with the [renewal savings calculator](/calculator?p=wix).
 
 ## The catch: you can't export a Wix site
 

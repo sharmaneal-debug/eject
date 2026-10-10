@@ -26,11 +26,11 @@ export default function Page() {
         {lines.map(([title, line]) => (
           <div key={title} className="border-t border-line py-3">
             <h2 className="text-lg">{title}</h2>
-            <p className="text-sm text-ink-soft">{line}</p>
+            <p className="text-base text-ink-soft">{line}</p>
           </div>
         ))}
-        <p className="text-sm mt-4"><Link className="text-accent" href="/terms">Terms</Link></p>
-        <p className="text-xs text-ink-muted mt-4">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
+        <p className="mt-4 text-base"><Link className="inline-flex min-h-11 items-center text-accent" href="/terms">Terms</Link></p>
+        <p className="mt-4 text-base text-ink-muted">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
       </div>
     </Section>
   );

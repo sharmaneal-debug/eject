@@ -51,18 +51,20 @@ export function IntakeForm({ defaultTier = "express" }: { defaultTier?: Tier }) 
  <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-3">Tier</p>
  <div className="grid grid-cols-2 gap-2">
  {(["express", "concierge"] as Tier[]).map((t) => {
- const offer = t === "express" ? siteConfig.pricing.express : siteConfig.pricing.concierge;
+ const label = t === "express"
+ ? `${siteConfig.pricing.express.name} · $${siteConfig.pricing.express.price}`
+ : siteConfig.pricing.concierge.name;
  return (
  <button
  type="button"
  key={t}
  onClick={() => setTier(t)}
  className={cn(
- "rounded-lg border px-3 py-3 text-sm font-medium transition",
+ "min-h-11 rounded-lg border px-3 py-3 text-base font-medium transition",
  tier === t ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink"
  )}
  >
- {offer.name} · ${offer.price}
+ {label}
  </button>
  );
  })}
