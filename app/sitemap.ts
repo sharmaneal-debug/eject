@@ -6,7 +6,7 @@ import { listKitPages } from "@/lib/kit";
 export default function sitemap(): MetadataRoute.Sitemap {
  const base = siteConfig.url;
  const now = new Date();
- const staticPaths = ["", "/pricing", "/how-it-works", "/calculator", "/blog", "/kit", "/about", "/privacy", "/terms"];
+ const staticPaths = ["", "/pricing", "/how-it-works", "/calculator", "/blog", "/kit", "/about", "/contact", "/privacy", "/terms", "/refunds", "/disclaimers"];
  const posts = listPosts().map((p) => `/blog/${p.slug}`);
  const kit = listKitPages().map((p) => `/kit/${p.slug}`);
 
