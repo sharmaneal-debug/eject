@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 const lines = [
   ["The service", "We help you move a simple public site onto files you can host yourself."],
-  ["Payment", "Checkout may be unavailable. Custom work has no public price."],
+  ["Payment", "Payment is by card through Stripe when checkout is open. Custom work has no public price."],
   ["Your part", "You need rights to the content. Your domain and DNS stay yours."],
-  ["Refunds", "Email us. A person sends any refund. The site does not refund the card."],
+  ["Refunds", "We send refunds to the original payment method within 5 business days of approving your request."],
   ["Ownership", "You own the files we deliver. We keep the Eject brand and this website."],
-  ["Limits", "We do not promise a visual match, a ranking change, or an automatic rebuild."],
+  ["Limits", "We do not promise a visual match or a ranking change."],
   ["Liability", "Liability is capped at what you paid us in the prior 12 months, except where the law forbids a cap."],
-  ["Law", `${siteConfig.legalEntity.name} is the name in this repo. These terms do not name a state.`],
+  ["Who we are", `Eject is operated by ${siteConfig.legalEntity.name}. Contact: ${siteConfig.email}.`],
 ] as const;
 
 export default function Page() {

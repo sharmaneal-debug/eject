@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Refunds",
-  description: "Ask Eject for a refund by email. A person sends it.",
+  description: "Email us to ask for a refund. We send it to the original payment method.",
 };
 
 export default function Page() {
@@ -26,11 +26,11 @@ export default function Page() {
         </div>
         <div className="border-t border-line py-4">
           <h2 className="text-lg text-ink">How</h2>
-          <p className="text-sm text-ink-soft mt-1">A person sends it to the original payment method. This site does not refund the card.</p>
+          <p className="text-sm text-ink-soft mt-1">We send refunds to the original payment method within 5 business days of approving your request.</p>
         </div>
         <div className="border-t border-line py-4">
           <h2 className="text-lg text-ink">Timing</h2>
-          <p className="text-sm text-ink-soft mt-1">We send it within 5 business days. Your bank may take longer to show it.</p>
+          <p className="text-sm text-ink-soft mt-1">Your bank may take longer to show it.</p>
         </div>
         <p className="text-sm mt-6"><Link className="text-accent" href="/terms">Terms</Link></p>
         <p className="text-xs text-ink-muted mt-4">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const lines = [
-  ["Scan", "A scan reads public pages. It does not rebuild the site."],
+  ["Scan", "A scan reads public pages. It does not move the site."],
   ["Payment", "A payment does not, by itself, publish a preview or change DNS."],
   ["Look", "We do not promise a pixel match to the old site."],
   ["Results", "We do not promise a ranking, speed, or sales result."],
