@@ -15,7 +15,7 @@
  * local filesystem with a GitHub App writing PRs.
  *
  * Usage:
- *   ANTHROPIC_API_KEY=sk-... pnpm tsx scripts/editor.ts ./out/example-com
+ *   ANTHROPIC_API_KEY set in the environment, then: pnpm tsx scripts/editor.ts ./out/example-com
  */
 
 import Anthropic from "@anthropic-ai/sdk";
@@ -25,6 +25,7 @@ import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { execSync } from "node:child_process";
 import { EDITABLE_FILE_PATTERNS, EDITOR_SYSTEM_PROMPT, isEditablePath } from "../lib/editor-guide";
+import { resolveAnthropicModel } from "../lib/model";
 
 const EDITABLE_GLOBS = EDITABLE_FILE_PATTERNS;
 const SYSTEM_PROMPT = `You are Eject's chat editor. The user is a non-technical owner of a Next.js marketing site. They will ask for content edits in plain English ("change the hero headline to X", "add a testimonial here").
@@ -93,7 +94,7 @@ async function run() {
     const editableList = await listEditableFiles(root);
 
     const resp = await client.messages.create({
-      model: "claude-sonnet-4-5-20250929",
+      model: resolveAnthropicModel(),
       max_tokens: 4000,
       system: SYSTEM_PROMPT,
       tools: [
@@ -176,7 +177,7 @@ async function run() {
       conversation.push({ role: "user", content: toolResults });
 
       pending = await client.messages.create({
-        model: "claude-sonnet-4-5-20250929",
+        model: resolveAnthropicModel(),
         max_tokens: 4000,
         system: SYSTEM_PROMPT,
         tools: resp.usage ? (resp as any).tools ?? [] : [],
@@ -196,6 +197,7 @@ async function run() {
 }
 
 run().catch((err) => {
-  console.error(err);
+  const message = err instanceof Error ? err.message : "editor failed";
+  console.error(message.replace(/sk-[A-Za-z0-9_-]{8,}/g, "[redacted]"));
   process.exit(1);
 });

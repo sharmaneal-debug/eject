@@ -84,9 +84,12 @@ async function detectAndMeasure(url: string): Promise<Audit> {
   // Lighthouse via Google PageSpeed Insights (free, no API key required for low volume).
   let lighthousePerformance: number | null = null;
   try {
+    // Keyless PSI shares a tiny daily quota and answers 429 most of the time. Set PAGESPEED_API_KEY.
+    const keyParam = process.env.PAGESPEED_API_KEY ? `&key=${encodeURIComponent(process.env.PAGESPEED_API_KEY)}` : "";
     const psi = await fetch(
-      `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=mobile&category=performance`,
+      `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=mobile&category=performance${keyParam}`,
     );
+    if (!psi.ok) console.warn(`  ! PageSpeed API answered ${psi.status}; Lighthouse score left empty${keyParam ? "" : " (no PAGESPEED_API_KEY set)"}`);
     if (psi.ok) {
       const data = (await psi.json()) as { lighthouseResult?: { categories?: { performance?: { score?: number } } } };
       const score = data.lighthouseResult?.categories?.performance?.score;

@@ -102,7 +102,9 @@ function pageSignals(html: string) {
     scripts,
     inlineBytes: inline.reduce((sum, body) => sum + body.length, 0),
     forms: countMatches(html, /<form\b/gi),
-    cmsCollections: countMatches(html, /w-dyn-list|wf-collection-list|collection-list/gi),
+    // Webflow collection lists only. A bare "collection-list" also matches Squarespace's script manifest
+    // ("squarespace-blog-collection-list", ...), which flagged every Squarespace 7.1 site as 9 CMS blocks.
+    cmsCollections: countMatches(html, /\bw-dyn-list\b|wf-collection-list/gi),
     cmsItems: countMatches(html, /w-dyn-item/gi),
     ecommerce: ECOM_SIGNALS.filter((signal) => signal.re.test(html)).map((signal) => signal.id),
     membership: MEMBERSHIP_SIGNALS.filter((signal) => signal.re.test(html)).map((signal) => signal.id),

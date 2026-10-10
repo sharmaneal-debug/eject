@@ -1,6 +1,9 @@
 import { costConstants } from "./cost-constants";
-import { assertPublicHttpUrl, safeFetch, type LookupFn } from "./ssrf";
+import { assertCrawlDocument } from "./crawl-guard";
 import type { CrawlSnapshot } from "./complexity";
+import { extractInternalLinks, isHtmlDocument } from "./page-extract";
+import { loadRobots, RobotsError, type RobotsRules } from "./robots";
+import { assertPublicHttpUrl, safeFetch, type LookupFn } from "./ssrf";
 
 export type CrawlDeps = {
   lookupFn?: LookupFn;
@@ -22,14 +25,6 @@ function resolveHttp(base: string, href: string): string | null {
   }
 }
 
-function sameOrigin(a: string, b: string): boolean {
-  try {
-    return new URL(a).origin === new URL(b).origin;
-  } catch {
-    return false;
-  }
-}
-
 function looksLikePage(url: string): boolean {
   try {
     const pathName = new URL(url).pathname;
@@ -39,15 +34,17 @@ function looksLikePage(url: string): boolean {
   }
 }
 
-function linksFrom(html: string, pageUrl: string): string[] {
-  const found = new Set<string>();
-  for (const match of html.matchAll(/href=["']([^"'#]+)["']/gi)) {
-    const next = resolveHttp(pageUrl, match[1] ?? "");
-    if (next && sameOrigin(pageUrl, next) && looksLikePage(next)) {
-      found.add(next.split("?")[0]!.replace(/\/$/, "") || next);
-    }
-  }
-  return Array.from(found);
+/** Directory prefix of the start URL ("/uploads/demos/x/" -> "/uploads/demos/x"); "" means the whole host. */
+export function crawlScope(startUrl: string): string {
+  const pathName = new URL(startUrl).pathname;
+  const dir = pathName.endsWith("/") ? pathName : pathName.replace(/\/[^/]*$/, "");
+  return dir.replace(/\/$/, "");
+}
+
+function inScope(url: string, scope: string): boolean {
+  if (!scope) return true;
+  const pathName = new URL(url).pathname;
+  return pathName === scope || pathName.startsWith(scope + "/");
 }
 
 function assetUrls(html: string, pageUrl: string): string[] {
@@ -75,6 +72,8 @@ async function readCapped(response: Response, max: number): Promise<string> {
 async function countSitemap(
   origin: string,
   deps: CrawlDeps,
+  robots: RobotsRules,
+  scope: string,
 ): Promise<number> {
   for (const candidate of [`${origin}/sitemap.xml`, `${origin}/sitemap_index.xml`]) {
     try {
@@ -98,7 +97,14 @@ async function countSitemap(
         return Math.min(childText.match(/<loc>/gi)?.length ?? 0, 999);
       }
       const locs = [...text.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((match) => match[1] ?? "");
-      const count = locs.filter((loc) => looksLikePage(loc)).length;
+      const count = locs.filter((loc) => {
+        if (!looksLikePage(loc) || !inScope(loc, scope)) return false;
+        try {
+          return robots.allows(new URL(loc).pathname || "/");
+        } catch {
+          return false;
+        }
+      }).length;
       if (count) return Math.min(count, 999);
     } catch {
       /* try the next sitemap candidate */
@@ -135,8 +141,11 @@ async function sampleBytes(urls: string[], limit: number, deps: CrawlDeps): Prom
 export async function crawlSite(rawUrl: string, deps: CrawlDeps = {}): Promise<CrawlSnapshot> {
   const normalized = /^https?:\/\//i.test(rawUrl.trim()) ? rawUrl.trim() : `https://${rawUrl.trim()}`;
   const start = await assertPublicHttpUrl(normalized, deps.lookupFn);
+  const robots = await loadRobots(start.origin, deps);
+  if (!robots.allows(start.pathname || "/")) throw new RobotsError();
   const now = deps.now ?? Date.now;
   const deadline = now() + costConstants.crawlTotalBudgetMs;
+  const scope = crawlScope(start.toString());
   const queue = [start.toString()];
   const seen = new Set<string>();
   const pages: CrawlSnapshot["pages"] = [];
@@ -147,6 +156,8 @@ export async function crawlSite(rawUrl: string, deps: CrawlDeps = {}): Promise<C
     if (seen.has(key)) continue;
     seen.add(key);
     try {
+      const allowed = await assertCrawlDocument(next, robots, deps.lookupFn);
+      if (allowed.origin !== start.origin) continue;
       const response = await safeFetch(next, {
         timeoutMs: costConstants.crawlPerPageTimeoutMs,
         lookupFn: deps.lookupFn,
@@ -154,15 +165,23 @@ export async function crawlSite(rawUrl: string, deps: CrawlDeps = {}): Promise<C
       });
       if (!response.ok) continue;
       const type = response.headers.get("content-type") ?? "";
-      if (/xml|json|pdf|image|javascript|css/i.test(type) && !/html/i.test(type)) continue;
       const finalUrl = response.url || next;
+      let final: URL;
+      try {
+        final = await assertCrawlDocument(finalUrl, robots, deps.lookupFn);
+      } catch (err) {
+        if (err instanceof RobotsError) continue;
+        throw err;
+      }
+      if (final.origin !== start.origin) continue;
       const html = await readCapped(response, costConstants.htmlByteCap);
-      if (!html || !/<html|<!doctype html/i.test(html.slice(0, 800))) continue;
-      pages.push({ url: finalUrl, html, bytes: html.length });
-      for (const link of linksFrom(html, finalUrl)) {
+      if (!isHtmlDocument(html, type)) continue;
+      pages.push({ url: final.toString(), html, bytes: html.length });
+      for (const link of extractInternalLinks(html, final.toString(), scope)) {
         if (!seen.has(link.replace(/\/$/, ""))) queue.push(link);
       }
-    } catch {
+    } catch (err) {
+      if (err instanceof RobotsError) continue;
       /* skip pages that fail the public-URL check or the network */
     }
   }
@@ -172,7 +191,7 @@ export async function crawlSite(rawUrl: string, deps: CrawlDeps = {}): Promise<C
   }
 
   const origin = new URL(pages[0]!.url).origin;
-  const sitemapPageCount = await countSitemap(origin, deps);
+  const sitemapPageCount = await countSitemap(origin, deps, robots, scope);
   const assets = Array.from(new Set(pages.flatMap((page) => assetUrls(page.html, page.url))));
   const scripts = assets.filter((url) => /\.js(\?|$)/i.test(url) || /\/scripts?\//i.test(url));
   const [scriptSamples, assetSamples] = await Promise.all([

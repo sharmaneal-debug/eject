@@ -41,6 +41,7 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(err instanceof Error ? err.message : err);
-  process.exit(1);
+  const message = err instanceof Error ? err.message : "score failed";
+  console.error(message);
+  process.exit(/couldn't read that website/i.test(message) ? 3 : 1);
 });

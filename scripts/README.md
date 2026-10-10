@@ -4,7 +4,7 @@ Operator scripts: `crawl`, `rebuild`, `site-audit`, `orders`, `deliver`, `editor
 
 ## `pnpm crawl <url>`
 
-Walks every internal link of the URL with Playwright. Captures rendered DOM, meta tags, image / link / font lists, and design tokens (colors, fonts, sizes, radii). Output goes to `data/snapshots/<hostname>/`.
+Walks every internal link of the URL with Playwright. Captures rendered DOM, meta tags, image / link / font lists, and design tokens (colors, fonts, sizes, radii). Output goes to `data/snapshots/<hostname>/`. The start URL is checked before the browser launches (public http(s) only, and robots.txt). A crawl that saves zero pages exits with code 3. `--pages=/a,/b` captures only those paths.
 
 ```
 pnpm crawl https://example.com --max-pages=20
@@ -20,14 +20,14 @@ Outputs:
 Reads a crawler snapshot and uses Claude to regenerate each page as Next.js + Tailwind. Output goes to `out/<hostname>/` and is a runnable Next.js project (with `package.json`, `app/layout.tsx`, `tailwind.config.ts`).
 
 ```
-ANTHROPIC_API_KEY=sk-... pnpm rebuild data/snapshots/example-com
+ANTHROPIC_API_KEY from the environment, then: pnpm rebuild data/snapshots/example-com
 cd out/example-com
 pnpm install
 pnpm dev
 ```
 
 Notes:
-- Defaults to `claude-sonnet-4-5-20250929`. Override with `--model=...`.
+- Model comes from `--model` or `ANTHROPIC_MODEL`. If neither is set, the script uses its current default. The key is read from `ANTHROPIC_API_KEY` and is not printed.
 - Capped at 10 pages per run by default (`--max-pages=...` to override).
 - Each page becomes a standalone TSX file; reusable layout is the operator's responsibility post-rebuild.
 
