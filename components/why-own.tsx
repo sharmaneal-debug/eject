@@ -8,8 +8,8 @@ const benefits = [
  },
  {
  headline: "Nobody can hike your bill.",
- body: "Webflow doubled its prices in 2024. Framer tripled them in 2025. When you own your site, that doesn't matter, because there's no bill to hike. Your only ongoing cost is your domain (~$15 a year), which you already pay.",
- chip: "$0/mo for hosting. Forever.",
+ body: "Hosted builders change plan prices. When the site is files on a host you control, that plan price is no longer your bill. A simple static site can sit on a free host. You still pay your registrar for the domain.",
+ chip: "Static hosting can be $0. Check the host.",
  },
  {
  headline: "If anything goes wrong, you can move in 10 minutes.",
@@ -18,8 +18,8 @@ const benefits = [
  },
  {
  headline: "Your old domain comes with you.",
- body: "Same URL. Same Google rankings. Same email forwarding. Old links keep working because we set up redirects from every old page. Your visitors don't know anything changed.",
- chip: "We handle DNS so you don't have to think about it",
+ body: "The domain stays at your registrar. The move includes a DNS checklist and a reminder to redirect old paths. We don't promise that rankings will hold.",
+ chip: "You point DNS. We don't hold the domain.",
  },
 ];
 

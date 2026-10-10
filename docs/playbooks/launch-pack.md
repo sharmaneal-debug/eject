@@ -13,7 +13,7 @@ A complete kit for the public launch of **Eject**: a productized service that mi
 
 **One-line:** *Eject from Webflow. Own your site. Pay $5 a year.*
 
-**Pricing:** DIY $49 · DwY $299 · DFY $1,499 · Editor MRR $79–$149/mo
+**Pricing:** Automated $99 once · Done for you $199 once. No editor subscription. Amounts live in `lib/site.ts`.
 
 ---
 
@@ -25,20 +25,20 @@ A complete kit for the public launch of **Eject**: a productized service that mi
 
 ### Alternate title variants
 
-1. **Show HN: A $1,499 service that gets you off Webflow forever (hosting cost: $5/yr)**
+1. **Show HN: A $199 service that gets you off Webflow forever (hosting cost: $5/yr)**
 2. **Show HN: Eject – the AI editor that lets non-coders own a Next.js codebase**
 
 ### Body
 
 Hi HN — I built Eject because last October Framer rolled out a pricing change that broke client contracts mid-quote. The r/Framer thread complaining about it hit 113 upvotes in a day. Webflow did the same thing in late 2024 with their Workspace overhaul. Every few quarters, a hosted page-builder hikes its bill, the upgrade gets bundled into the editor you already pay for, and there is no opt-out short of rebuilding from scratch.
 
-Eject does that rebuild for you. We crawl your live site, regenerate it as a clean Next.js codebase with Tailwind and shadcn/ui, hand you the GitHub repo, and deploy it to Cloudflare Pages. Three tiers: $49 if you want to run the CLI yourself, $299 if you want us to set it up alongside you, $1,499 if you want a finished migration and a hand-off call. After that, hosting on Cloudflare's free tier is genuinely $0, the domain is ~$5/yr, and there is no monthly subscription pointed at your homepage.
+Eject does that rebuild for you. We crawl your live site, regenerate it as a clean Next.js codebase with Tailwind and shadcn/ui, hand you the GitHub repo, and deploy it to Cloudflare Pages. Two offers: Automated is $99 for a simple site, Done for you is $199 when we do that move by hand (about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff). After that you edit by chatting with your own agent. Hosting on Cloudflare's free tier can be $0, the domain is ~$5/yr, and there is no monthly subscription from us.
 
 The technically interesting bit is that bare Next.js is the wrong product for the people who need this most. Marketers and founders won't open a PR to change a hero headline. So the wedge isn't the migration — it's a chat-driven editor that sits on the repo. You type "make the headline bigger and add a testimonial from Sarah at Acme," it writes the diff, runs a preview build, and ships on confirm. The model is constrained to a small whitelist of operations (text edits, image swaps, section reordering, component prop tweaks) so it can't melt your routing or ruin your Tailwind config. That part is $79–$149/mo and is what makes this not just another static-export tool.
 
 Honestly, the failure modes are real. Sites that are 80% animation rely on Framer's runtime — we can rebuild the static structure but motion has to be re-authored, and we tell people that on the intake form. CMS-heavy Webflow sites with 200+ collection items need an actual content migration step, not a scrape; we charge extra and it takes longer. And the editor confidently regresses on edge-case Tailwind class collisions about 1 in 30 edits, which is why every change ships behind a preview URL and a one-click rollback. We are not pretending it's magic. The pitch is: own the code, pay platform-tax once, and use a chatbot for the 95% of edits that are boring text changes.
 
-What I'd love feedback on: (1) Is the chat-editor scope right, or should it ship with a visual mode from day one? (2) Pricing — $1,499 DFY feels low for the value but high for the impulse buy; the people who hate Webflow most are the people who don't want to think about it. (3) For people who've migrated off page-builders before, what broke that I'm not anticipating?
+What I'd love feedback on: (1) Is the chat-editor scope right, or should it ship with a visual mode from day one? (2) Pricing — $199 DFY feels low for the value but high for the impulse buy; the people who hate Webflow most are the people who don't want to think about it. (3) For people who've migrated off page-builders before, what broke that I'm not anticipating?
 
 Site: [eject.dev]   |   Demo: [eject.dev/demo]   |   Pricing: [eject.dev/pricing]
 
@@ -82,7 +82,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 - **Chat editor**: tell it "swap the hero image and update the testimonial" — it writes the diff, builds a preview, ships on confirm.
 - **You own the code**: GitHub repo, MIT-style license to your own work, fork us and walk away anytime.
 - **Hosting that doesn't gouge you**: Cloudflare Pages free tier covers the vast majority of marketing sites. Real cost: the domain.
-- **Three tiers, honest pricing**: $49 DIY (CLI), $299 done-with-you, $1,499 done-for-you. Editor is $79–$149/mo if you want it.
+- **Two offers**: Automated $99, Done for you $199. You edit afterward by chatting with your own agent. There is no editor subscription.
 
 ### Maker comment (pin first)
 
@@ -100,7 +100,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 
 **Q2: "What about Webflow CMS items / dynamic content?"**
 
-> CMS-heavy sites are a paid add-on, not the default flow. We migrate up to 50 collection items into a Git-backed markdown collection on the $299 tier, and up to 500 + a Sanity setup on the $1,499 tier. If you have 5,000 blog posts, talk to us — we'll quote it, but it'll be more than $1,499. We're transparent that this isn't a one-click thing for content sites.
+> CMS-heavy sites are a paid add-on, not the default flow. We migrate up to 50 collection items into a Git-backed markdown collection on the $199 tier, and up to 500 + a Sanity setup on the $199 tier. If you have 5,000 blog posts, talk to us — we'll quote it, but it'll be more than $199. We're transparent that this isn't a one-click thing for content sites.
 
 **Q3: "What do I do when the AI editor breaks something?"**
 
@@ -150,7 +150,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 
 > Paste your live URL. Eject crawls it, rebuilds it as a clean Next.js + Tailwind + shadcn/ui project, and hands you the GitHub repo deployed on Cloudflare Pages.
 >
-> Three tiers: $49 DIY, $299 done-with-you, $1,499 done-for-you. No retainer.
+> Two offers: Automated $99, Done for you $199. No retainer and no editor subscription.
 
 ### Tweet 3 — The migration in action (gif/video slot)
 
@@ -188,7 +188,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 > Webflow CMS plan: $23/mo = $276/yr
 > Webflow Business: $39/mo = $468/yr
 >
-> Eject DFY: $1,499 once.
+> Eject DFY: $199 once.
 > Cloudflare Pages: $0.
 > Domain: $5/yr.
 > Editor (optional): $79–$149/mo.
@@ -229,7 +229,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 
 > Eject is live now.
 >
-> $49 DIY · $299 DwY · $1,499 DFY
+> $99 Automated · $199 DwY · $199 DFY
 > Editor $79/mo
 >
 > See a 4-minute migration of your own site, free, no signup: eject.dev/preview
@@ -254,7 +254,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 >
 > The part I'm most proud of is the chat editor. Bare Next.js is the wrong product for someone who isn't a developer — they need to be able to say "swap the hero image and update the testimonial from Sarah" and have it work. So we built that. Constrained, safe, every change behind a preview URL with one-click rollback.
 >
-> Three tiers — $49, $299, $1,499 — and an optional editor at $79–$149 a month. Built for founders and operators who are tired of paying rent on a homepage they wrote themselves.
+> Two offers — Automated $99 and Done for you $199. Built for founders and operators who are tired of paying rent on a homepage they wrote themselves.
 >
 > If that's you, I'd love to migrate your site this week. Comment "eject" or DM me.
 
@@ -268,7 +268,7 @@ The catch with owning your own code is normally that *you* have to maintain it. 
 
 ### Body (~750 words)
 
-I shipped Eject {{N}} weeks ago. It's a productized service that migrates non-technical site owners off Framer/Webflow/Wix onto a self-hosted Next.js codebase, plus an AI chat editor that maintains the codebase. Pricing is $49 DIY, $299 done-with-you, $1,499 done-for-you, with an editor subscription at $79–$149/mo.
+I shipped Eject {{N}} weeks ago. It's a productized service that migrates non-technical site owners off Framer/Webflow/Wix onto a self-hosted Next.js codebase, plus an AI chat editor that maintains the codebase. Pricing is $99 Automated, $199 done-with-you, $199 done-for-you, with an editor subscription at $79–$149/mo.
 
 Here are the actual numbers, in the order I'd want to see them if I were reading this for my own launch.
 
@@ -318,14 +318,14 @@ Here are the actual numbers, in the order I'd want to see them if I were reading
 1. **The HN top-comment with founder objections preempted.** Spent two hours writing it. Drove ~{{hnTopCommentDrivenSignups}} of the {{hnSignupsFromPost}} HN signups by itself.
 2. **Free 4-minute migration preview, no signup required.** Removed the friction between "curious" and "I see what this does." Conversion to email after the preview is {{previewToEmailRate}}%.
 3. **The "your bill last quarter" cold email subject.** Specific to a real pain. Generic AI/migration subject lines did nothing.
-4. **Pricing transparency on the landing page.** No "contact us" tier. Counter-intuitively, the $1,499 tier closes more than the $299 tier — non-technical buyers want it handled.
+4. **Pricing transparency on the landing page.** No "contact us" tier. Counter-intuitively, the $199 tier closes more than the $199 tier — non-technical buyers want it handled.
 
 **What didn't work**
 
 1. **Reddit posts in r/webflow and r/Framer.** Mod-flagged within an hour, even with disclosure. Don't bother — go to the threads where users are already complaining and reply, don't post.
 2. **A paid ads test on Google.** {{googleAdsSpend}} spent, {{googleAdsClicks}} clicks, {{googleAdsConversions}} conversions. CAC was {{googleAdsCAC}} against an LTV that doesn't justify it yet. Killed after week {{googleAdsKilledWeek}}.
 3. **Twitter ads.** {{twitterAdsResult}}. Same story.
-4. **The DIY $49 tier as standalone product.** It exists, but DIYers are the worst converters to the editor — they bought the migration, they don't want help. Pivoting to position $49 mostly as a try-before-DwY upgrade path.
+4. **The Automated $99 tier as standalone product.** It exists, but DIYers are the worst converters to the editor — they bought the migration, they don't want help. Pivoting to position $99 mostly as a try-before-DwY upgrade path.
 5. **A "free migration" lead magnet.** Drove tire-kickers, not buyers. The free *preview* (no GitHub access, just a link to a non-editable Cloudflare Pages deploy) is way better as a wedge.
 
 **What I'd do differently if launching again**
@@ -450,7 +450,7 @@ A fourth, more contrarian, for the Twitter/HN crowd:
 
 ### Elevator pitch (30 sec)
 
-> Eject is a migration service that moves your Framer, Webflow, or Wix site onto a self-hosted Next.js codebase you own. We deploy it to Cloudflare Pages where hosting is free, hand you the GitHub repo, and ship a chat editor so you can actually maintain it without learning Git. $1,499 once, optional $79/mo for the editor, $5/yr for the domain. That's the whole bill.
+> Eject is a migration service that moves your Framer, Webflow, or Wix site onto a self-hosted Next.js codebase you own. We deploy it to Cloudflare Pages where hosting is free, hand you the GitHub repo, and ship a chat editor so you can actually maintain it without learning Git. $199 once, optional $79/mo for the editor, $5/yr for the domain. That's the whole bill.
 
 ### Bumper sticker (5 sec)
 
@@ -458,7 +458,7 @@ A fourth, more contrarian, for the Twitter/HN crowd:
 
 ### Investor / partner one-liner (15 sec)
 
-> The wedge is migration off page-builders. The product is the AI chat editor that keeps non-technical owners from going back. Pricing band ($299–$1,499 productized) is empty in market — agencies start at $1.5K, scrapers stop at $15.
+> The wedge is migration off page-builders. The product is the AI chat editor that keeps non-technical owners from going back. Pricing band ($199–$199 productized) is empty in market — agencies start at $1.5K, scrapers stop at $15.
 
 ---
 

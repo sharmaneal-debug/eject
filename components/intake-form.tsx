@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { siteConfig } from "@/lib/site";
 
-type Tier = "diy" | "dwy" | "dfy";
+type Tier = "express" | "concierge";
 
-export function IntakeForm({ defaultTier = "dwy" }: { defaultTier?: Tier }) {
+export function IntakeForm({ defaultTier = "express" }: { defaultTier?: Tier }) {
  const [tier, setTier] = useState<Tier>(defaultTier);
  const [submitted, setSubmitted] = useState(false);
  const [submitting, setSubmitting] = useState(false);
@@ -48,20 +49,23 @@ export function IntakeForm({ defaultTier = "dwy" }: { defaultTier?: Tier }) {
  <form onSubmit={onSubmit} className="rounded-2xl border border-line bg-white p-7 md:p-10">
  <div className="mb-6">
  <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-3">Tier</p>
- <div className="grid grid-cols-3 gap-2">
- {(["diy", "dwy", "dfy"] as Tier[]).map((t) => (
+ <div className="grid grid-cols-2 gap-2">
+ {(["express", "concierge"] as Tier[]).map((t) => {
+ const offer = t === "express" ? siteConfig.pricing.express : siteConfig.pricing.concierge;
+ return (
  <button
  type="button"
  key={t}
  onClick={() => setTier(t)}
  className={cn(
- "rounded-lg border px-3 py-3 text-sm font-medium transition uppercase",
+ "rounded-lg border px-3 py-3 text-sm font-medium transition",
  tier === t ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink"
  )}
  >
- {t === "diy" ? "DIY · $49" : t === "dwy" ? "Done-with-You · $299" : "Done-for-You · $1,499"}
+ {offer.name} · ${offer.price}
  </button>
- ))}
+ );
+ })}
  </div>
  <input type="hidden" name="tier" value={tier} />
  </div>

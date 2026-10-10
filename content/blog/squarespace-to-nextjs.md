@@ -23,7 +23,7 @@ This post is the long version of that rescue mission. You'll get:
 - [The 36-month cost of staying](#cost-math), with real 2026 plan pricing
 - [What you actually keep when you migrate](#what-you-keep). Design, posts, pages, redirects, SEO
 - [The 14-day playbook](#playbook), where AI does the rebuild work for you
-- [DIY ($49) or hire us ($299)](#diy-or-hire). Honest decision tree, including when not to migrate
+- [Automated ($99) or done by hand ($199)](#diy-or-hire). Simple sites only, including when not to migrate
 - [The chat editor](#chat-editor). Edit your new site by chatting with any AI
 - [An interactive cost calculator](#cost-calculator)
 - [FAQ with proper schema markup](#faq), so this article pulls its weight in search
@@ -164,7 +164,7 @@ What you don't keep: the proprietary Squarespace block markup, the random nested
 
 ### 2. Your blog posts
 
-All of them. WordPress XML import is a real, well-supported format. The Eject Express toolkit ships a script that converts your Squarespace WXR to a directory of clean Markdown files with frontmatter (title, date, slug, tags, cover image). Or you can paste the XML into ChatGPT/Claude and ask for the same thing. Modern models do this perfectly.
+Squarespace's blog export is a WordPress XML file of posts, not the design. Eject does not ship a WXR-to-markdown converter and does not extract a blog CMS. A few static pages are in scope. A large blog is a referral. You can still paste public copy into your own AI if you are doing that work yourself.
 
 ```yaml
 ---
@@ -244,7 +244,7 @@ Save the result in a folder called `/squarespace-archive/`. Treat it like an arc
 
 ### Day 3. Get the playbook (this is where it gets cheap)
 
-If you bought the Eject Express toolkit ($49), you now have:
+If the site is a simple brochure, Automated is $99: an automated migration you review before DNS, plus an editing guide and agent instructions so you edit by chatting with your own AI. The older toolkit list below is a DIY sketch, not a promise that we extract a CMS:
 
 - A converter script that turns your WordPress XML into clean Markdown
 - A Next.js + Tailwind starter template, pre-wired with blog index, blog post, contact form, and SEO infrastructure
@@ -263,7 +263,7 @@ Attach the XML. The AI hands back a folder of `.md` files. Drop them into `conte
 
 ### Day 5. Scaffold the Next.js app
 
-If you're using the Express starter:
+If you are following a DIY starter on your own:
 
 ```bash
 npx create-next-app@latest mysite --example https://github.com/eject-dev/squarespace-starter
@@ -385,55 +385,36 @@ Crawl your new site with Screaming Frog. Compare the report to your pre-cutover 
 
 ---
 
-## DIY-or-hire decision tree
+## Automated or done by hand
 
-Eject ships in two tiers. Both are real options, neither is a sales trick. Honest read of which fits you.
+After either offer, you edit the site by chatting with your own AI. An editing guide and agent instructions are included. Both are for simple marketing, portfolio, and landing pages. There is no preview before you pay, and there is no CMS extract.
 
-### Express tier ($49 one-time)
+### Automated ($99 one-time)
 
-You get:
+We run an automated migration of a simple Squarespace site. You review the pages before DNS. It is not a blog converter and not a store migration.
 
-- The 14-day playbook (the long version of this article, with screenshots)
-- The Squarespace WXR-to-Markdown converter
-- The Next.js + Tailwind starter template (pre-configured with blog, forms, SEO infrastructure)
-- A library of optimized AI prompts (paste-in-ready for ChatGPT, Claude, Gemini, Cursor)
-- Access to the redirect-diff script
-- The chat editor instructions kit (see [next section](#chat-editor))
+**Pick Automated if:**
 
-You then run the migration yourself. The AI does the rebuild work. You're the one pasting AI output into folders, running `npm run dev`, and clicking around to make sure everything works.
+- The site is a brochure, portfolio, or landing page
+- You are willing to review the pages before the domain moves
+- You want to edit afterward by chatting with your own AI
 
-**Pick Express if:**
+### Done for you ($199 one-time)
 
-- Your site is straightforward (marketing pages + blog, maybe a contact form)
-- You're comfortable opening a terminal and running a command (or willing to learn over an afternoon)
-- You enjoy this kind of project, or at least don't dread it
-- Your time is worth less than $300/hour
+A person does that move by hand: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. You still review before DNS. We do not promise 7 days. Beyond the cap we refer out or quote an add-on.
 
-About 90 percent of small-business Squarespace migrations are great fits for Express.
+**Pick Done for you if:**
 
-### Concierge tier ($299 one-time)
-
-We run the playbook for you on our infrastructure. You hand us:
-
-- Your live Squarespace URL
-- A Squarespace export (we'll show you how to grab it)
-- An admin invite to your domain registrar
-
-Within 7 days you get back: a fully migrated Next.js site, deployed to Cloudflare Pages, with redirects, forms wired to your email, blog migrated, and the chat editor onboarded for your team. We do the cutover with you on a 30-minute call. You review and approve.
-
-**Pick Concierge if:**
-
-- The site generates revenue and downtime would actually cost you money
-- You're not going to enjoy a single second of this and you'd rather pay
-- You don't want to learn the command line, even a little
-- You have more money than time and 7 days is fine
+- The site is still a simple site, just inside that cap
+- You want a person to do the move instead of an automated pass
+- You do not need a blog CMS, a store, or a member area moved
 
 ### When you should NOT migrate at all (yet)
 
 Be honest. Squarespace is sometimes the right answer. **Don't migrate if:**
 
 - **You run heavy e-commerce on Commerce Advanced and you're using subscriptions, abandoned cart, advanced shipping rules.** Self-hosted e-commerce is a real project and the Squarespace bill is, frankly, fine for what you're getting. Migrate the marketing site if you want, leave the store on Squarespace, run them on different subdomains.
-- **You operate a busy member area.** Member Areas have weird behaviors that aren't 1:1 portable to the open ecosystem. Doable, but it's a custom project, not the Express tier.
+- **You operate a busy member area.** Member areas are outside this service. That is a custom project, not Automated and not Done for you.
 - **Your site has 5+ non-technical people editing it daily.** The chat editor helps a lot, but in-house Squarespace expertise is sometimes cheaper than retraining.
 - **The site exists, you ignore it, and you're paying $16 on Personal.** The migration savings are real but small. Spend the time on something that matters more.
 
@@ -503,13 +484,13 @@ Yes, if done correctly. Three rules:
 
 Done right, you won't see a ranking drop. Most sites see a small ranking lift because Next.js on Cloudflare's edge is dramatically faster than Squarespace on Core Web Vitals. Squarespace's mobile Lighthouse scores typically run around 60. A clean Next.js site usually scores 95+.
 
-### Do I need to be a developer to use the Express tier?
+### Do I need to be a developer to edit the site after the move?
 
-No. If you can copy text from one window to another, run a command in a terminal (we tell you exactly which command), and paste AI output into a folder, you can complete an Express migration. The AI does the actual code-writing. You're the project manager, not the engineer. Most Express customers have never written code before.
+Editing after the move is a chat with your own AI. Automated is an automated migration of a simple site, which you review before DNS. You do not write that migration by hand. We still don't promise a pixel-perfect clone.
 
 ### Which AI should I use for the rebuild?
 
-Any of them. ChatGPT, Claude, Gemini, Cursor, GitHub Copilot. Free tiers work for almost everything in the playbook. Claude tends to produce the cleanest code. ChatGPT is the most familiar. Gemini is fast and free. Cursor is the best if you've already used it. The Express toolkit ships prompts optimized for each, but the same prompts work across all of them.
+After the move, ChatGPT, Claude, or Cursor. The editing guide and agent instructions are included with both offers. That is how you change a headline. It is not a hosted editor we bill for.
 
 ### What replaces Acuity Scheduling?
 
@@ -517,7 +498,7 @@ Any of them. ChatGPT, Claude, Gemini, Cursor, GitHub Copilot. Free tiers work fo
 
 ### What about my store?
 
-If you're on Commerce Basic with a small product catalog (under ~50 SKUs), [Shopify Lite](https://www.shopify.com/lite) at $9/month embeds checkout into your Next.js site cleanly. For larger catalogs, headless Shopify on Next.js is the path. For Commerce Advanced features (subscriptions, advanced shipping), the math is closer; you might choose to leave the store on Squarespace and migrate only the marketing site. We help you scope this honestly during a Concierge call.
+Stores are outside this service. Leave the shop on Squarespace, or hire a commerce developer. We will not scope a catalog, Shopify embed, or subscription product into either offer.
 
 ### Is Cloudflare Pages really free?
 
@@ -533,9 +514,9 @@ You can. Your Squarespace account stays accessible (Squarespace doesn't delete p
 
 | Tier | Price | What you get |
 |----------|-------|--------------|
-| **Free Scan** | **$0** | Run your domain through our analyzer. Get a personalized report with your 36-month savings estimate, your current Squarespace setup audited, and a tier recommendation. Takes 90 seconds. |
-| **Express** | **$49 one-time** | The full playbook, the WXR-to-Markdown converter, the Next.js + Tailwind starter, the AI prompts library, the redirect-diff script, the chat editor instructions. You run the rebuild yourself with AI doing the work. Most users finish in an afternoon to a long weekend. |
-| **Concierge** | **$299 one-time** | We run the playbook for you on our infrastructure. Finished, deployed Next.js site in 7 days. Includes redirects, forms wired to your email, blog migrated, chat editor onboarded. 30-day post-launch support. |
+| **Free scan** | **$0** | Names the platform and a rough page count. Not a savings audit, not a preview of a rebuilt site, and not a tier recommendation before you look at the pages. |
+| **Automated** | **$99 one-time** | An automated migration of a simple Squarespace marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included. Not a blog converter. |
+| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 
 **[Start your migration →](https://ejectfrom.com/start)**
 
@@ -563,15 +544,15 @@ If you're on a different platform, we have honest playbooks for those too: [Webf
  "name": "Will my SEO survive a Squarespace to Next.js migration?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Yes, if done correctly. Keep every URL identical where possible, 301 redirect anything that has to change, and don't ship until your sitemap covers everything from your saved Squarespace sitemap. Most sites see a small ranking lift because Next.js on Cloudflare's edge is much faster than Squarespace on Core Web Vitals. Squarespace's mobile Lighthouse scores typically run around 60, while a clean Next.js site usually scores 95 or higher."
+ "text": "We don't know, and we won't quote a ranking lift or a Lighthouse score. Keep URLs where you can and add redirects for the ones that change. Rankings and PageSpeed can move either way."
  }
  },
  {
  "@type": "Question",
- "name": "Do I need to be a developer to use the Express tier?",
+ "name": "Do I need to be a developer to edit the site after the move?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "No. If you can copy text from one window to another, run a single command in a terminal, and paste AI output into a folder, you can complete an Express migration. The AI does the actual code-writing. Most Express customers have never written code before."
+ "text": "Editing after the move is a chat with your own AI, using the included agent instructions. Automated is an automated migration of a simple site, which you review before DNS. You do not write that migration by hand. We still don't promise a pixel-perfect clone."
  }
  },
  {
@@ -579,7 +560,7 @@ If you're on a different platform, we have honest playbooks for those too: [Webf
  "name": "Which AI should I use for the rebuild?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Any of them. ChatGPT, Claude, Gemini, Cursor, or GitHub Copilot all work. Free tiers cover almost everything in the playbook. The Express toolkit ships prompts optimized for each, but the same prompts work across all of them."
+ "text": "After the move, ChatGPT, Claude, or Cursor. The editing guide and agent instructions are included with both offers. That is how you change a headline. It is not a hosted editor we bill for."
  }
  },
  {

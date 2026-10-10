@@ -6,10 +6,10 @@ Last updated: 2026-05-03. Numbers are for **test/sandbox usage today**. Re-run w
 
 | Tier | Price | Cash margin | Notes |
 |---|---|---|---|
-| **Express** | $49 | **$45–$47** (≈94%) | Pure cash margin. The bottleneck is Anthropic API. |
-| **Concierge** | $299 | **$285–$289** before labor (≈97%) | Real cost is your time, not cash. |
+| **Automated** | $99 | Cash cost is compute, tokens, and the Stripe fee | Person time is a short review. See `lib/cost-constants.ts`. |
+| **Done for you** | $199 | Cash cost is the same shape, plus about 2 hours of person time | Cap is in `lib/site.ts`. Beyond it, refer out or quote an add-on. |
 
-If Concierge takes ≥3 hours of your time at $100/hr opportunity cost, you're working for ~$30/hr net. Tooling has to drive Concierge to <90 min for it to be worth running personally vs. a contractor.
+If Done for you takes ≥3 hours of your time at $100/hr opportunity cost, you're working for ~$30/hr net. Tooling has to drive Done for you to <90 min for it to be worth running personally vs. a contractor.
 
 The fixed cost to keep Eject alive is **~$2.50/mo** (just the `ejectfrom.com` domain amortized). Everything else is free tier.
 
@@ -23,10 +23,10 @@ Stripe charges **2.9% + $0.30** for US card transactions. No monthly fee. No set
 
 | Tier | Gross | Stripe fee | Net to you |
 |---|---|---|---|
-| Express ($49) | $49.00 | $1.72 | **$47.28** |
-| Concierge ($299) | $299.00 | $8.97 | **$290.03** |
+| Automated ($99) | $99.00 | $3.17 | **$95.83** |
+| Done for you ($199) | $199.00 | $6.07 | **$192.93** |
 
-International cards: +1.5%. Roughly $1.45 more per Concierge sale. Not material.
+International cards: +1.5%. Roughly $1.45 more per Done for you sale. Not material.
 
 ### Anthropic API (the rebuild step)
 
@@ -50,7 +50,7 @@ Multiply by page count to get the total. With prompt caching enabled (we send th
 | Medium (with blog) | 15 | $1.20 |
 | Large (50-page directory) | 50 | $4.00 |
 
-**At $49 Express, even a 50-page site is profitable at ~92% margin.** The tail of giant sites (200+ pages) caps at ~$15 in API cost; below the $49 price by 3x.
+**At $99 Automated, even a 50-page site is profitable at ~92% margin.** The tail of giant sites (200+ pages) caps at ~$15 in API cost; below the $99 price by 3x.
 
 ### PageSpeed / Lighthouse (the audit step)
 
@@ -76,11 +76,11 @@ Cloudflare Pages free tier covers Eject's own marketing site. Free SSL, free CDN
 
 ## Putting it together: per-customer P&L
 
-### Express ($49)
+### Automated ($99)
 
 | Line | Amount |
 |---|---|
-| Revenue | +$49.00 |
+| Revenue | +$99.00 |
 | Stripe fee | -$1.72 |
 | Anthropic API (typical 8-page site) | -$0.65 |
 | Anthropic API (worst-case 50-page site) | -$4.00 |
@@ -89,13 +89,13 @@ Cloudflare Pages free tier covers Eject's own marketing site. Free SSL, free CDN
 | **Net** | **$43.28 to $46.63** |
 | **Margin** | **88% to 95%** |
 
-Your time on Express should be **near zero** — the whole point is that the pipeline is automated (crawl → rebuild → preview link → customer reviews). Ideally you spend 5 minutes per Express customer reviewing the output before sending the preview link.
+Your time on Automated should be **near zero** — the whole point is that the pipeline is automated (crawl → rebuild → preview link → customer reviews). Ideally you spend 5 minutes per Automated customer reviewing the output before sending the preview link.
 
-### Concierge ($299)
+### Done for you ($199)
 
 | Line | Amount |
 |---|---|
-| Revenue | +$299.00 |
+| Revenue | +$199.00 |
 | Stripe fee | -$8.97 |
 | Anthropic API | -$0.65 to -$4.00 |
 | Resend | $0 |
@@ -103,7 +103,7 @@ Your time on Express should be **near zero** — the whole point is that the pip
 | **Cash net** | **$286.03 to $289.38** |
 | **Cash margin** | **96% to 97%** |
 
-But Concierge is hand-polished. Time per customer matters:
+But Done for you is hand-polished. Time per customer matters:
 
 | Hours spent | Implied $/hr at $100/hr opportunity cost |
 |---|---|
@@ -112,7 +112,7 @@ But Concierge is hand-polished. Time per customer matters:
 | 3 hours | $62/hr — meh |
 | 5 hours | $37/hr — you're losing |
 
-Tooling target: keep Concierge **under 2 hours per customer**. The Express pipeline does most of the work; Concierge adds ~30 min of human polish + 30 min of DNS/handoff.
+Tooling target: keep Done for you **under 2 hours per customer**. The Automated pipeline does most of the work; Done for you adds ~30 min of human polish + 30 min of DNS/handoff.
 
 ---
 
@@ -128,7 +128,7 @@ Tooling target: keep Concierge **under 2 hours per customer**. The Express pipel
 | Anthropic API | $0 base; usage-based | $0 base |
 | **Total** | **$2.50** | **$30** |
 
-You break even on the domain after **one Express customer per year**.
+You break even on the domain after **one Automated customer per year**.
 
 ---
 
@@ -136,22 +136,22 @@ You break even on the domain after **one Express customer per year**.
 
 | Scenario | Customers needed |
 |---|---|
-| Cover the $30/yr domain | 1 Express |
-| Pay yourself $1,000/mo | 21–24 Express OR 4 Concierge |
-| Pay yourself $5,000/mo | 105–115 Express OR 20 Concierge (40 hrs/mo) |
-| Pay yourself $10,000/mo | 210–230 Express OR 40 Concierge (80 hrs/mo) |
+| Cover the $30/yr domain | 1 Automated |
+| Pay yourself $1,000/mo | 21–24 Automated OR 4 Done for you |
+| Pay yourself $5,000/mo | 105–115 Automated OR 20 Done for you (40 hrs/mo) |
+| Pay yourself $10,000/mo | 210–230 Automated OR 40 Done for you (80 hrs/mo) |
 
-At 40 Concierge/mo: 80 hours of human work per month for $10K. That's about a 50%-time job at $250/hr effective rate. Reasonable.
+At 40 Done for you/mo: 80 hours of human work per month for $10K. That's about a 50%-time job at $250/hr effective rate. Reasonable.
 
-At 210 Express/mo: ~$0.04 per customer in API cost = $8.40/mo total. Trivial.
+At 210 Automated/mo: ~$0.04 per customer in API cost = $8.40/mo total. Trivial.
 
 ---
 
 ## Where the math could break
 
-1. **Anthropic raises prices.** Sonnet pricing has been stable but subject to change. A 3x price hike still keeps Express at 80% margin. A 10x hike forces a price increase to $99 or moving to a cheaper model (Haiku at $0.80/M input, $4/M output — about 5x cheaper).
+1. **Anthropic raises prices.** Sonnet pricing has been stable but subject to change. A 3x price hike still keeps Automated at 80% margin. A 10x hike forces a price increase to $99 or moving to a cheaper model (Haiku at $0.80/M input, $4/M output — about 5x cheaper).
 
-2. **Sites bigger than expected.** A 200-page programmatic SEO site costs ~$16 in API. Still profitable at $49 but margin drops to 65%. **Mitigation:** add a page-count surcharge ("$49 up to 25 pages, +$1/page after"), or use Haiku for batch rebuilds.
+2. **Sites bigger than expected.** A 200-page programmatic SEO site costs ~$16 in API. Still profitable at $99 but margin drops to 65%. **Mitigation:** add a page-count surcharge ("$99 up to 25 pages, +$1/page after"), or use Haiku for batch rebuilds.
 
 3. **Stripe disputes/refunds.** Stripe charges $15 per disputed chargeback. At our refund-friendly stance (14-day full refund, no questions), the math gets ugly if dispute rate >5%. **Mitigation:** track refund rate; if >10%, tighten the preview-and-approve loop.
 
@@ -163,11 +163,11 @@ At 210 Express/mo: ~$0.04 per customer in API cost = $8.40/mo total. Trivial.
 
 ## Pricing sensitivity
 
-Assuming current cost structure, you could drop Express to **$29** and still maintain 80% margin on typical sites. You could push it to **$79** and still be the cheapest done-for-you tier in the market (Fiverr starts at ~$80, MigrateLab at $1,500+).
+Assuming current cost structure, you could drop Automated to **$29** and still maintain 80% margin on typical sites. You could push it to **$79** and still be the cheapest done-for-you tier in the market (Fiverr starts at ~$80, MigrateLab at $1,500+).
 
-The right move for the first 50 customers: **stay at $49.** It's the impulse-buy threshold, undercuts every alternative, and gets you to revenue + testimonials fast. Raise to $79 once you have 10+ case studies.
+The right move for the first 50 customers: **stay at $99.** It's the impulse-buy threshold, undercuts every alternative, and gets you to revenue + testimonials fast. Raise to $79 once you have 10+ case studies.
 
-For Concierge, **$299 is the floor** for a hand-polished migration with domain transfer. Industry is $1,500–$50K. You could push to $499 once you have proof and stop over-delivering. Don't go below $299; the Stripe fee + your time eats everything.
+For Done for you, **$199 is the floor** for a hand-polished migration with domain transfer. Industry is $1,500–$50K. You could push to $999 once you have proof and stop over-delivering. Don't go below $199; the Stripe fee + your time eats everything.
 
 ---
 
@@ -175,15 +175,15 @@ For Concierge, **$299 is the floor** for a hand-polished migration with domain t
 
 - **Marketing/CAC.** Cold email (Apollo/PublicWWW) is not free. If you do paid ads (Google, Reddit) those are real customer-acquisition costs. Plan: assume CAC of $30–60 per customer in year 1, dropping to $10–20 at scale via SEO and word-of-mouth.
 - **Your time on outbound.** Cold-email playbook in `docs/playbooks/cold-email.md` is hours of work to set up + run weekly. Not counted here.
-- **Ongoing customer support.** Express promises 7 days of email support; Concierge promises 30 days. Most customers won't use much, but a 5% churn-into-support rate at 30 min per ticket adds up. **Plan:** keep an FAQ + screen recordings; customer support stays under 30 min/week until ~50 customers.
+- **Ongoing customer support.** Automated promises 7 days of email support; Done for you promises 30 days. Most customers won't use much, but a 5% churn-into-support rate at 30 min per ticket adds up. **Plan:** keep an FAQ + screen recordings; customer support stays under 30 min/week until ~50 customers.
 
 ---
 
 ## Honest takeaway
 
-**The numbers work.** Even with worst-case assumptions (50-page site, international card, Stripe dispute, Resend Pro), Express margin stays above 80% and Concierge above 95% cash margin. The actual constraint is **your time on Concierge** — the pricing only makes sense if you can hit ≤2 hours per customer.
+**The numbers work.** Even with worst-case assumptions (50-page site, international card, Stripe dispute, Resend Pro), Automated margin stays above 80% and Done for you above 95% cash margin. The actual constraint is **your time on Done for you** — the pricing only makes sense if you can hit ≤2 hours per customer.
 
 If you can't, the right move is either:
-- Raise Concierge to $499–$799 to compensate for the time
-- Hire a contractor at $30–50/hr to handle the manual polish step (you'd net $200/Concierge)
-- Steer customers toward Express more aggressively (it's the high-margin SKU)
+- Raise Done for you to $999–$799 to compensate for the time
+- Hire a contractor at $30–50/hr to handle the manual polish step (you'd net $200/Done for you)
+- Steer customers toward Automated more aggressively (it's the high-margin SKU)

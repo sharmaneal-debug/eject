@@ -26,11 +26,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const { token } = await searchParams;
   const access = await requirePaidKit(token);
-  if (!access.ok) return { title: "Express Kit", robots: { index: false, follow: false } };
+  if (!access.ok) return { title: "Editing kit", robots: { index: false, follow: false } };
   const p = getKitPage(slug);
   if (!p) return { robots: { index: false, follow: false } };
   return {
-    title: `${p.title} · Express Kit`,
+    title: `${p.title} · Editing kit`,
     description: p.description,
     robots: { index: false, follow: false },
   };
@@ -109,7 +109,7 @@ export default async function Page({
   if (!access.ok || !token) {
     return (
       <Section>
-        <Eyebrow>Express Kit</Eyebrow>
+        <Eyebrow>Editing kit</Eyebrow>
         <KitLocked reason={access.ok ? "Missing order token." : access.reason} />
       </Section>
     );
@@ -128,7 +128,7 @@ export default async function Page({
         <Link href={kitHref(token)} className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-ink-muted hover:text-signal mb-7 transition">
           ← All kit pages
         </Link>
-        <Eyebrow>{page.icon} · Express Kit</Eyebrow>
+        <Eyebrow>{page.icon} · Editing kit</Eyebrow>
         <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-5 max-w-4xl">{page.title}</h1>
         <p className="text-ink-soft max-w-2xl text-lg md:text-xl leading-relaxed">{page.description}</p>
         {page.estimatedMinutes !== undefined && page.estimatedMinutes > 0 && (

@@ -8,18 +8,20 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
     "crawl": "tsx scripts/crawl.ts",
     "rebuild": "tsx scripts/rebuild.ts",
     "site-audit": "tsx scripts/audit.ts",
     "editor": "tsx scripts/editor.ts",
     "orders": "tsx scripts/orders.ts",
     "deliver": "tsx scripts/deliver.ts",
-    "setup-stripe": "tsx scripts/setup-stripe.ts",
-    "test": "tsx --test tests/*.test.ts"
+    "setup-stripe": "tsx scripts/setup-stripe.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.1",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.8.1",
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.460.0",

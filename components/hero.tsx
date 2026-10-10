@@ -4,6 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { siteConfig } from "@/lib/site";
 import { ScanResults, type ScanData } from "./scan-results";
+import { trackEvent } from "./track-event";
 
 export function Hero() {
  const [url, setUrl] = useState("");
@@ -28,6 +29,7 @@ export function Hero() {
  setError(json.error || "We couldn't find that website. Check the URL and try again.");
  } else {
  setData(json as ScanData);
+ trackEvent("scan", { platform: String(json.platform ?? "unknown"), ok: true });
  setTimeout(() => {
  const el = document.getElementById("scan-results");
  el?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -50,12 +52,12 @@ export function Hero() {
 
  <div className="max-w-content mx-auto px-6 pt-20 pb-12 md:pt-32 md:pb-16">
  <h1 className="h-display text-5xl md:text-7xl lg:text-[5.5rem] tracking-tightest max-w-5xl">
- Own your website.{" "}
- <span className="text-ink/40">Edit it by chatting.</span>
+ Edit it by chatting.{" "}
+ <span className="text-ink/40">After you own the files.</span>
  </h1>
 
  <p className="mt-6 text-lg md:text-xl text-ink-soft max-w-2xl leading-relaxed">
- Paste your site URL below (Webflow, Framer, Wix, Squarespace, or WordPress). We send you a step-by-step playbook + AI agent prompts that walk you (or any chatbot you use) through rebuilding your site as files you own, on free hosting you set up yourself. No more being locked in. No more paying these platforms every month for something you already designed.
+ {siteConfig.editing.lead} {siteConfig.editing.included} {siteConfig.pricing.express.name} is ${siteConfig.pricing.express.price}: an automated migration of a simple marketing, portfolio, or landing site, which you review before DNS. {siteConfig.pricing.concierge.name} is ${siteConfig.pricing.concierge.price}: we do that move by hand, inside a small cap. The scan names the platform. It is not a preview before you pay.
  </p>
 
  <form
@@ -90,22 +92,22 @@ export function Hero() {
  : "bg-ink text-paper hover:bg-signal disabled:opacity-50"
  )}
  >
- {scanning ? "Scanning…" : "See what we'd build →"}
+ {scanning ? "Scanning…" : "Check this site →"}
  </button>
  </div>
  <p className="mt-3 text-sm text-ink-muted">
  {error ? (
  <span className="text-signal">{error}</span>
  ) : (
- <>Free, instant. No email needed. We&apos;ll show you the cost, the savings, and what we&apos;d ship.</>
+ <>Free scan. No email. No rebuilt preview. We&apos;ll say if a simple-site move is even a fit.</>
  )}
  </p>
  </form>
 
  <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-ink-muted font-mono uppercase tracking-widest">
  <span>· From ${siteConfig.pricing.express.price} one-time</span>
- <span>· Preview before you pay</span>
- <span>· No subscription, ever</span>
+ <span>· Simple sites only</span>
+ <span>· No subscription from us</span>
  </div>
  </div>
  </div>

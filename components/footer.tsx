@@ -23,6 +23,7 @@ export function Footer() {
             <li><Link className="hover:text-signal" href="/demo">Demo</Link></li>
             <li><Link className="hover:text-signal" href="/preview">Preview</Link></li>
             <li><Link className="hover:text-signal" href="/calculator">Cost calculator</Link></li>
+            <li><Link className="hover:text-signal" href="/renewal-watch">Renewal watch</Link></li>
             <li><Link className="hover:text-signal" href="/">Scan my site</Link></li>
           </ul>
         </div>

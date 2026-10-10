@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { siteConfig } from "@/lib/site";
+import { CheckoutLink } from "./checkout-link";
 
 export type ScanData = {
  ok: true;
@@ -19,7 +20,7 @@ export type ScanData = {
  durationMs: number;
 };
 
-const SUPPORTED_PLATFORMS = ["webflow", "framer", "wix", "squarespace", "wordpress"];
+const SUPPORTED_PLATFORMS = ["webflow", "framer", "wix", "squarespace"];
 
 export function ScanResults({ data }: { data: ScanData }) {
  const supported = SUPPORTED_PLATFORMS.includes(data.platform);
@@ -31,10 +32,12 @@ export function ScanResults({ data }: { data: ScanData }) {
  }
  })();
 
- // One-time automated price. Domain renewal is paid either way, so it is not added.
+ // Three-year figure uses the automated offer. Domain renewal is paid to
+ // the registrar either way, so it is not counted. A simple static host
+ // can be $0 after that.
+ const ejectExpress3yr = siteConfig.pricing.express.price;
  const automated = siteConfig.pricing.express;
- const doneForYou = siteConfig.pricing.concierge;
- const ejectExpress3yr = automated.price;
+ const byHand = siteConfig.pricing.concierge;
 
  return (
  <section
@@ -55,11 +58,11 @@ export function ScanResults({ data }: { data: ScanData }) {
  {data.title && <p className="text-ink-soft text-lg mb-10 max-w-2xl">{data.title}</p>}
 
  <div className="grid md:grid-cols-3 gap-4 md:gap-5 mb-10">
- <Stat label="Your platform" value={data.platformLabel} sub={supported ? "We migrate this." : "We don't migrate this yet. See below."} />
+ <Stat label="Your platform" value={data.platformLabel} sub={supported ? "Simple sites on this platform only." : "Outside the simple-site scope."} />
  <Stat
  label="Pages we found"
  value={data.pageCount > 0 ? data.pageCount.toString() : ""}
- sub={data.pageCount > 0 ? "From your sitemap" : "We'll discover them when we crawl"}
+ sub={data.pageCount > 0 ? "From the public sitemap" : "The scan didn't find a sitemap"}
  />
  <Stat
  label="What you're paying"
@@ -82,13 +85,13 @@ export function ScanResults({ data }: { data: ScanData }) {
  <div className="text-3xl text-ink/30 hidden md:block">→</div>
  <div>
  <p className="text-xs font-mono uppercase tracking-widest text-signal mb-2">
- Same site, on {automated.name}
+ Same site, {automated.name}
  </p>
  <p className="text-4xl md:text-5xl h-display tracking-tightest text-signal">
  ${ejectExpress3yr.toLocaleString()}
  </p>
  <p className="text-xs text-ink-muted mt-1 font-mono">
- ${automated.price} once. Then you edit it by chatting with your own agent.
+ {`$${automated.price} once. Then you edit by chatting with your own AI. Hosting after that is your host's bill, often $0 for a static site.`}
  </p>
  </div>
  </div>
@@ -112,24 +115,24 @@ export function ScanResults({ data }: { data: ScanData }) {
  <div className="grid md:grid-cols-2 gap-px bg-line rounded-2xl overflow-hidden border border-line">
  <Path
  badge={`${automated.name} · $${automated.price}`}
- title="Automated migration of a simple site. You edit it afterwards by chatting with your own agent."
+ title="An automated migration of a simple site. You review it, then you edit by chatting."
  steps={[
  `Pay $${automated.price}`,
- "We score the site. Simple marketing, portfolio, and landing pages only.",
- "You get the repo, hosting steps, and AGENTS.md.",
- "Open the folder in Cursor, Claude, or ChatGPT and ask for the change.",
- "A preview link is not created automatically.",
+ "We run an automated migration of the in-scope pages",
+ "You review the pages before anyone points DNS",
+ "Editing guide and agent instructions are included",
+ "There is no rebuilt preview before you pay",
  ]}
  />
  <Path
- badge={`${doneForYou.name} · $${doneForYou.price}`}
- title="We do the migration by hand, inside a fixed simple-site cap."
+ badge={`${byHand.name} · $${byHand.price}`}
+ title="We do the move by hand, inside a cap. Then you edit by chatting."
  steps={[
- `Pay $${doneForYou.price}`,
- "Up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff.",
- "Anything past that cap is a refer-out or a priced add-on.",
- "You still edit the finished site by chatting with your own agent.",
- "AGENTS.md and the editing playbook ship in the repo.",
+ `Pay $${byHand.price}`,
+ `About ${byHand.cap.pages} pages, ${byHand.cap.forms} form, ${byHand.cap.revisionRounds} revision rounds`,
+ `A ${byHand.cap.handoffMinutes}-minute handoff`,
+ "Same editing guide and agent instructions",
+ "Beyond the cap, we refer out or quote an add-on",
  ]}
  dark
  />
@@ -137,8 +140,8 @@ export function ScanResults({ data }: { data: ScanData }) {
  </div>
 
  <div className="grid md:grid-cols-2 gap-4">
- <Link
- href={`/checkout?tier=express&url=${encodeURIComponent(hostname)}`}
+ <CheckoutLink
+ tier="express"
  className="rounded-2xl border-2 border-line bg-white p-7 hover:border-ink transition group"
  >
  <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">{siteConfig.pricing.express.name}</p>
@@ -150,9 +153,9 @@ export function ScanResults({ data }: { data: ScanData }) {
  <p className="text-ink text-sm font-medium">
  {siteConfig.pricing.express.cta} <span className="group-hover:translate-x-1 inline-block transition">→</span>
  </p>
- </Link>
- <Link
- href={`/checkout?tier=concierge&url=${encodeURIComponent(hostname)}`}
+ </CheckoutLink>
+ <CheckoutLink
+ tier="concierge"
  className="rounded-2xl border-2 border-ink bg-ink text-paper p-7 hover:bg-signal hover:border-signal transition group"
  >
  <div className="flex items-baseline justify-between mb-2">
@@ -169,17 +172,17 @@ export function ScanResults({ data }: { data: ScanData }) {
  <p className="text-paper text-sm font-medium">
  {siteConfig.pricing.concierge.cta} <span className="group-hover:translate-x-1 inline-block transition">→</span>
  </p>
- </Link>
+ </CheckoutLink>
  </div>
  </>
  ) : (
  <div className="rounded-2xl border border-line bg-white p-7 md:p-9">
  <p className="text-xs font-mono uppercase tracking-widest text-ink-muted mb-2">Heads up</p>
  <p className="font-medium text-lg mb-2">
- Looks like your site is on {data.platformLabel}. We don&apos;t migrate that yet.
+ Looks like your site is on {data.platformLabel}. That is outside this service.
  </p>
  <p className="text-ink-soft mb-5">
- We currently move sites off Webflow, Framer, Wix, Squarespace, and WordPress. If your site is on something else, drop us a line and we&apos;ll tell you whether it&apos;s a fit.
+ We take simple marketing, portfolio, and landing pages on Webflow, Framer, Wix, or Squarespace. Stores, WordPress, and other CMS or app platforms need a specialist. Email us and we&apos;ll say which.
  </p>
  <Link
  href={`mailto:${siteConfig.email}?subject=My site is on ${data.platformLabel}`}

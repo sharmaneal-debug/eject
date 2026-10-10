@@ -83,7 +83,7 @@ Read down the rows. Anywhere you see a clear winner, the row is calling it. Anyw
 | **Ecommerce** | Native Webflow Ecommerce. Decent for small stores. | Limited native ecommerce. | [Shopify Headless](https://www.shopify.com/) or [Stripe Checkout](https://stripe.com/payments/checkout). More work, more flexible. |
 | **Multi-language** | Native localization on Business plan and up. Solid. | Native localization. Solid. | [`next-intl`](https://next-intl-docs.vercel.app/) or [`next-i18next`](https://github.com/i18next/next-i18next). Robust, free, more setup. |
 | **Learning curve** | Moderate. Designer-friendly, real CSS box model exposed. | Easy. Designer-native. Probably the most intuitive of the three. | Steep without AI. Mild with AI. (This is the change.) |
-| **Time to first launch** | 1–4 weeks for a marketing site | 1–3 weeks for a marketing site | 2 weeks DIY, 7 days with [Eject Concierge](#cta), 1 hour with [Eject Express](#cta) |
+| **Time to first launch** | 1–4 weeks for a marketing site | 1–3 weeks for a marketing site | A simple site: automated migration you review before DNS, or done by hand inside a cap. No fixed-day promise. |
 | **Support** | Webflow University (excellent), forums, tickets on paid plans | Framer Academy, Discord, tickets on paid plans | Stack Overflow, GitHub, Next.js docs, AI explains your own code back to you |
 
 The pattern is loud. **Webflow and Framer are within rounding distance of each other on the things they do well, and within rounding distance of each other on the things they charge for.** Next.js is dramatically cheaper, dramatically more flexible, and finally usable by non-developers thanks to the AI editing layer. The tradeoff used to be "no-code convenience vs control." That tradeoff has narrowed to almost nothing.
@@ -146,7 +146,7 @@ This is the column nobody includes, so we'll spend a little more time on it.
 What Next.js is not the right answer for:
 
 - **You hate this stuff.** Genuinely. If even hearing "GitHub" makes you want to close the tab. Stay on Webflow or Framer. The chat editor is good but it's not magic. You still have a repo. You still have the occasional "the build broke, what do I do" moment. If that sounds like a worse life, the no-code tax is fairly priced for what it gives you.
-- **You're shipping in 24 hours.** Even Eject Express takes an hour, which is more than zero. If you literally need a site live tonight, sign up for Framer. Migrate later.
+- **You're shipping tonight.** Automated is a migration you review before DNS, not a one-hour publish. If the site has to be live tonight, stay on the current host and move later.
 
 The big shift, again, is the chat editor. Two years ago, "Next.js for non-developers" was a punchline. Today it's a workflow. You describe a change in plain English to ChatGPT or Claude or our chat editor, the model writes the code, you preview the deploy, you click approve. Rollback is one click. The skill floor dropped to "person who can write an email."
 
@@ -177,8 +177,8 @@ Here's the part the platforms' marketing pages don't show you. Real numbers, thr
 | Domain | $12/yr | $12/yr | $12/yr |
 | **Monthly run rate (avg)** | **$111** | **$70–$120** | **$0–$5** |
 | **36-month total** | **$3,996** | **$2,520–$4,320** | **$0–$180** |
-| **Migration cost (one-time)** | $0 (already there) | $0 (already there) | $49 (Express) or $299 (Concierge) |
-| **3-year all-in** | **$3,996** | **$2,520–$4,320** | **$49–$479** |
+| **Migration cost (one-time)** | $0 (already there) | $0 (already there) | $99 (Automated) or $199 (Done for you) |
+| **3-year all-in** | **$3,996** | **$2,520–$4,320** | **$99 or $199**, then hosting you choose |
 
 **3-year delta vs Next.js:**
 - Webflow: roughly **$3,500–$3,950 saved**
@@ -233,7 +233,7 @@ The TL;DR:
 4. Deploy to Cloudflare Pages. Set up redirects to keep your URLs identical.
 5. Cut over DNS. Cancel Webflow 24 hours later.
 
-Total time: 14 days DIY, 7 days with Eject Concierge, 1 hour with Eject Express (you handle the deploy).
+After the move, you edit by chatting with your own AI. Automated ($99) is an automated migration of a simple site, reviewed before DNS. Done for you ($199) is hand work inside a cap. We don't promise 14 days, 7 days, or one hour.
 
 ### You're on Framer
 
@@ -241,7 +241,7 @@ Read the full playbook: **[Framer to Next.js: The Honest Migration Guide](/blog/
 
 Key thing to know: Framer doesn't have a code export at all. Eject solves this by rendering your live URL, lifting the HTML, extracting your CMS items by crawling collection pages, and rebuilding as a clean Next.js + Tailwind + Motion codebase. The animations come with you because [framer-motion is open source](https://motion.dev/) and runs identically in Next.js. You install it with `npm install motion` and your springs and scroll triggers are one-liners.
 
-The migration math is similar to Webflow's. Two weeks DIY, a week with Concierge, an hour with Express.
+The offer is the same shape as Webflow's: a simple site, then chat editing. We don't quote two weeks, a week, or an hour.
 
 ### You're on Wix or another builder
 
@@ -280,11 +280,11 @@ It depends on your specific setup, but for typical small B2B sites Framer comes 
 
 ### Can I export my site from Webflow or Framer?
 
-Webflow lets you export static HTML and CSS on paid Site Plans, but the CMS export is gated. The cleanest path is the Webflow CMS API. Framer does not support code export at all. The [Framer help center](https://www.framer.com/help/articles/can-i-export-my-website-to-html-and-self-host-it/) is unusually direct about this. Eject solves the Framer case by rendering the live site and rebuilding it as a Next.js codebase you own.
+Webflow lets you export static HTML and CSS on paid Site Plans, but the CMS export is gated. Framer does not support code export. For a simple page, Automated ($99) runs an automated migration you review before DNS. Done for you ($199) is that move, done by hand inside a cap. We do not extract a CMS.
 
 ### Will Next.js work for non-developers?
 
-Yes, and this is the change that makes the comparison different in 2025 than it was in 2022. The chat editor lets you describe changes in plain English to ChatGPT, Claude, or any AI chatbot. The model reads your repo, generates the code change, spins up a preview deploy, and you click approve. One-click rollback. The Eject Express tier ships with a "Site Editor Instructions" prompt kit you paste into a fresh chat to set this workflow up.
+After the move, you edit by chatting with your own AI. ChatGPT, Claude, or Cursor. You review what the assistant edits. The editing guide and agent instructions are included. Eject does not ship a hosted editor, a preview-before-pay, or one-click rollback.
 
 ### Will my SEO survive a migration?
 
@@ -300,11 +300,11 @@ Yes. The Cloudflare Pages free plan includes unlimited static requests, unlimite
 
 ### How long does a migration actually take?
 
-DIY, evenings plus a weekend: 10 to 14 days. With Eject Express ($49): an automated rebuild plus a Next.js starter and a prompt kit, ready in under an hour, then you deploy at your pace. With Eject Concierge ($299): a human walks the migration end-to-end on our infrastructure, 7 calendar days, hands-off.
+Automated ($99) is an automated migration of a simple site. You review the pages before DNS. It is not a one-hour publish and not a preview before you pay. Done for you ($199) is a person doing that move by hand: about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We don't promise seven days.
 
-### What's the difference between Eject Express and Concierge?
+### What's the difference between Automated and Done for you?
 
-Express is $49. You get a playbook, AI prompts, and a Next.js starter. You run the rebuild yourself with any AI chatbot (ChatGPT, Claude, Cursor, your choice). Concierge is $299. A human runs the playbook for you on our infrastructure. Same output, different amount of your time required.
+Both include an editing guide and agent instructions, so after the move you edit by chatting with your own AI. Automated is $99: an automated migration of a simple marketing, portfolio, or landing site, which you review before DNS. Done for you is $199: a person does that move by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond the cap we refer out or quote an add-on. Neither is a CMS extract or a preview before you pay.
 
 ---
 
@@ -321,9 +321,9 @@ If you're in bucket 4, here's the offer:
 
 | Tier | Price | What you get |
 |---|---|---|
-| **Scan your URL** | **Free** | Drop your Webflow or Framer URL into [ejectfrom.com](https://ejectfrom.com). We crawl your site and show you a preview of your migrated codebase before you pay anything. |
-| **Express** | **$49 one-time** | A playbook, AI prompts, and a Next.js + Tailwind + Motion starter. You run the rebuild yourself with any AI chatbot. Includes the chat editor instructions kit and a deploy guide for Cloudflare Pages. |
-| **Concierge** | **$299 one-time** | A human runs the playbook for you on our infrastructure. 7 calendar days. We rebuild, deploy, set up redirects, verify SEO parity, and onboard your team to the chat editor workflow. Includes 30 days of post-launch support. |
+| **Scan your URL** | **Free** | Names the platform and a rough page count. It does not preview a migrated codebase before you pay. |
+| **Automated** | **$99 one-time** | An automated migration of a simple site. You review before DNS. Editing guide and agent instructions included. Not a CMS extract and not a preview before you pay. |
+| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 
 **[Scan your URL on the homepage →](https://ejectfrom.com)**
 
@@ -349,7 +349,7 @@ Or if you're still on the fence: [run the cost calculator](#cost-calculator). Th
  "name": "Can I export my site from Webflow or Framer?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Webflow lets you export static HTML and CSS on paid Site Plans, but the CMS export is gated. The cleanest path is the Webflow CMS API. Framer does not support code export at all. The Framer help center confirms this directly. Eject solves the Framer case by rendering the live site and rebuilding it as a Next.js codebase you own."
+ "text": "Webflow can export static HTML and CSS on a paid Site Plan. The CMS export is a separate problem, and Eject does not extract it. Framer does not support code export. Automated is an automated migration of a simple site, which you review before DNS. It is not a CMS extract and not a preview before you pay."
  }
  },
  {
@@ -357,7 +357,7 @@ Or if you're still on the fence: [run the cost calculator](#cost-calculator). Th
  "name": "Will Next.js work for non-developers?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Yes. The chat editor lets you describe changes in plain English to ChatGPT, Claude, or any AI chatbot. The model reads your repo, generates the code change, spins up a preview deploy, and you click approve. One-click rollback. The Eject Express tier ships with a Site Editor Instructions prompt kit you paste into a fresh chat to set this workflow up."
+ "text": "After the move you edit by chatting with your own AI. ChatGPT, Claude, or Cursor. You review the files. An editing guide and agent instructions are included. Eject does not spin up a preview before you pay or offer one-click rollback."
  }
  },
  {
@@ -389,15 +389,15 @@ Or if you're still on the fence: [run the cost calculator](#cost-calculator). Th
  "name": "How long does a migration actually take?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "DIY, evenings plus a weekend: 10 to 14 days. With Eject Express at 49 dollars: an automated rebuild plus a Next.js starter and a prompt kit, ready in under an hour, then you deploy at your pace. With Eject Concierge at 299 dollars: a human walks the migration end-to-end on our infrastructure, 7 calendar days, hands-off."
+ "text": "Automated is a $99 automated migration of a simple site, reviewed before DNS. Done for you is $199, done by hand inside a cap of about 10 pages. Neither promises a fixed number of days, and neither is a preview before you pay."
  }
  },
  {
  "@type": "Question",
- "name": "What is the difference between Eject Express and Concierge?",
+ "name": "What is the difference between Automated and Done for you?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Express is 49 dollars. You get a playbook, AI prompts, and a Next.js starter. You run the rebuild yourself with any AI chatbot like ChatGPT, Claude, or Cursor. Concierge is 299 dollars. A human runs the playbook for you on our infrastructure. Same output, different amount of your time required."
+ "text": "Both include an editing guide so you edit by chatting with your own AI. Automated is 99 dollars: an automated migration of a simple site, which you review before DNS. Done for you is 199 dollars: a person does that move by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond that we refer out or quote an add-on."
  }
  }
  ]

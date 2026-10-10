@@ -120,11 +120,11 @@ The recipe: take your live Framer URL, run it through a tool that lifts your des
 - People who already use ChatGPT or Claude for other things and are comfortable with "describe the change, see it happen"
 - Anyone who wants the actual self-hosted endpoint (real codebase, free hosting, no vendor) without paying $1,500 to a freelancer
 
-This is what Eject Express is. We sell you a $49 playbook, a Next.js + Tailwind starter pre-loaded with your Framer site, and the AI agent prompts that walk you through the rebuild in an afternoon. You bring the chatbot. You drive the keyboard. The playbook tells both of you what to do.
+After the move, you edit by chatting with your own AI. Automated ($99) is an automated migration of a simple Framer marketing, portfolio, or landing site. You review the pages before DNS. The editing guide and agent instructions are included. It is not a CMS extract, not a preview before you pay, and not a one-afternoon guarantee.
 
-**Honest tradeoff:** You have to actually use the AI. If "I do not want to think about this for one minute" describes you, this is not the right tier. We have a Concierge tier for that ($299, a human runs the playbook for you, finished site in 7 days).
+**Honest tradeoff:** After either offer, editing is a chat with your own AI. If you want the move done by hand, Done for you is $199: about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not promise 7 days. Beyond that cap we refer out or quote an add-on.
 
-**Cost:** $49 one-time for Express, $299 one-time for Concierge. Hosting after that is $0 forever on Cloudflare Pages.
+**Cost:** $99 one-time for Automated, $199 one-time for Done for you. Hosting for a simple static site can be $0 on Cloudflare Pages. The domain is still yours to renew.
 
 ### Option 4: Hire a developer
 
@@ -148,8 +148,8 @@ The traditional answer. Find a freelancer on [Upwork](https://www.upwork.com/), 
 |------|--------------|----------------|--------------|--------------|-----------------|
 | **Webstudio** | $0 | 2-4 weeks (learn the tool) | $0 | Visual builder + light dev | N/A |
 | **Plasmic** | $0 | 2-4 weeks | $0 (or $59/mo for team) | Visual builder + React basics | N/A |
-| **Eject Express (DIY with AI)** | $49 | One afternoon | $0 | Plain English + comfort with a chatbot | You do |
-| **Eject Concierge** | $299 | 7 days | $0 | None | We do |
+| **Automated** | $99 | Reviewed before DNS. No fixed-day promise | Can be $0 for a static site | A simple marketing, portfolio, or landing page | Automated, then you review |
+| **Done for you** | $199 | Hand work inside a cap. No 7-day promise | Can be $0 for a static site | About 10 pages, 1 form | We do, by hand |
 | **Hire a developer** | $1,500-5,000 | 2-6 weeks | $0 | None | They do |
 | Stay on Framer | $0 | 0 | $30-90+/mo, rising | None | N/A |
 
@@ -176,7 +176,7 @@ We sell one of these options. So we are going to tell you when we are NOT the ri
 
 - The site is generating $50K+/month in revenue. A 1-day outage during migration is real money. Pay a professional.
 - You hate this kind of project and have the budget to make it disappear.
-- You have already started the Eject Express path twice and stalled both times. The bottleneck is not the tool, it is the time. Pay someone else.
+- The site is still a simple site, and you want a person to do the move. That is Done for you ($199), inside the cap. A store or a large CMS is a referral, not a bigger Eject tier.
 
 ### When Eject is the right pick
 
@@ -186,7 +186,7 @@ We sell one of these options. So we are going to tell you when we are NOT the ri
 - You already use ChatGPT or Claude for other things and are comfortable with the "describe what you want, see the change" loop
 - An afternoon of focused work sounds reasonable to escape a $1,000+ annual bill that will keep going up
 
-If that is you, the [Eject Express tier](#cta) is the cheapest path that actually ends with you owning the site.
+If that is you, [Automated](/pricing) ($99) is the automated migration of a simple site. After it, you edit by chatting with your own AI.
 
 If that is not you, one of the three other options is honestly better. Pick it.
 
@@ -200,15 +200,15 @@ The afternoon version is real, but here is the structured 14-day version for any
 
 ### Day 1. Run the Eject scan
 
-Drop your Framer URL into [ejectfrom.com](https://ejectfrom.com). The free scan gives you a preview of every page parsed into a Next.js + Tailwind structure. You see what comes through cleanly and what needs attention before you pay anything.
+The free scan on [ejectfrom.com](https://ejectfrom.com) names the platform and a rough page count. It is not a preview of a Next.js rebuild, and nothing is shown before you pay because the rebuild is not automatic.
 
 ### Day 2-3. Get the starter
 
-Buy Eject Express ($49). You get a GitHub repo with your site converted to Next.js + Tailwind, the assets lifted, your CMS items (blog posts, etc.) extracted to markdown, and the AI agent prompt kit.
+Automated is $99. For a simple site we run an automated migration and you review it before DNS. You also get the editing guide and agent instructions. We do not extract CMS items or blog collections. A large CMS is a referral.
 
 ### Day 4. Open the repo with your AI
 
-Open the repo in [Cursor](https://cursor.com/), [Claude Code](https://www.anthropic.com/claude-code), or whichever AI coding tool you prefer. (If you do not use one of those, ChatGPT works too. The Express kit includes prompts for both flows.)
+After the files are yours, open them in [Cursor](https://cursor.com/), Claude, or ChatGPT. The included agent instructions are the prompt you paste once. Then you edit by chatting.
 
 Paste the "Site Editor Instructions" prompt. The AI now knows the structure of your site.
 
@@ -261,7 +261,7 @@ In Cloudflare DNS, point your apex domain and `www` at the Pages project. Cloudf
 3. Set up [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) (free, privacy-friendly).
 4. Pour something. Your monthly hosting bill is now $0, forever.
 
-If you compress that into one focused afternoon instead of 14 days, you skip the "wait between sessions" overhead. Many Eject Express customers run the whole rebuild in 3-5 hours on a Saturday.
+We don't quote an afternoon, 14 days, or a 3–5 hour Saturday. Automated is an automated migration you review before DNS. Done for you is hand work inside the cap. Timing depends on the site.
 
 ---
 
@@ -291,15 +291,15 @@ Webflow is not self-hosted. They have an HTML/CSS export, but the export is inco
 
 ### Do I need to know how to code to use the Eject DIY path?
 
-No. The Eject Express tier is built for people who use ChatGPT or Claude for other things in their work and are comfortable with the "describe what you want, see it happen" loop. You do not write code. The AI does. You drive the conversation. If you can edit a Google Doc, you can run this rebuild.
+Editing after the move is a chat with your own AI. You describe the change and review it. Automated ($99) is the migration of a simple site, which you review before DNS. You do not have to write the migration by hand on that offer. We still don't promise the result matches every animation.
 
 ### What if I get stuck mid-rebuild and the AI loops on the same bug?
 
-Two paths. First, the Express kit includes a "stuck prompts" guide with escape hatches for common loops. Second, you can upgrade to Concierge ($299) at any point and a human takes over the playbook from where you stopped. We carry forward whatever you have already done.
+The editing guide covers common stuck points. Done for you ($199) is a separate hand move inside the cap, not an upgrade that continues a half-finished CMS extract. We do not extract CMS items.
 
 ### How is this different from just opening Cursor and asking it to rebuild my site?
 
-You can do that. The hard parts that you would hit if you tried: the AI does not know what your live Framer site looks like, it does not know your CMS structure, it does not know your assets, it does not know which animations matter, and it does not have a tested starter codebase that maps cleanly to the Framer rendering model. Eject Express is what you would build for yourself if you had already done this 50 times. We have done this 50+ times.
+You can do that. The hard parts are the ones we will not pretend to solve: we do not extract a Framer CMS, we do not promise pixel-perfect animations, and we do not show a preview before you pay. Automated is an automated migration of a simple site, reviewed before DNS. A collection-heavy site is a referral.
 
 ### What about my SEO?
 
@@ -319,9 +319,9 @@ You still own the site. The whole point is that the output is a real codebase on
 
 | Tier | Price | What you get |
 |------|-------|--------------|
-| **Scan your URL** | **Free** | Drop your Framer URL into [ejectfrom.com](https://ejectfrom.com). We crawl your site and show you a preview of your migrated codebase before you pay anything. |
-| **Express** | **$49 one-time** | The DIY-with-AI path. Next.js + Tailwind starter pre-loaded with your Framer site, the playbook, and the AI agent prompts. You run the rebuild yourself in an afternoon with ChatGPT, Claude, or Cursor. Includes the chat editor instructions kit for ongoing edits. |
-| **Concierge** | **$299 one-time** | A human runs the playbook for you. Finished + deployed site in 7 calendar days. We rebuild, deploy to Cloudflare Pages, set up redirects, verify SEO parity, and onboard your team to the chat editor. Includes 30 days of post-launch support. |
+| **Scan your URL** | **Free** | Names the platform and a rough page count. Not a preview of a migrated codebase. |
+| **Automated** | **$99 one-time** | An automated migration of a simple Framer site. You review before DNS. Editing guide and agent instructions included, so you edit by chatting with your own AI. Not a CMS extract and not an afternoon guarantee. |
+| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 
 **[Scan your URL on the homepage](https://ejectfrom.com)**
 
@@ -355,7 +355,7 @@ Or if you are not sure yet, [run the calculator](#cost-calculator). The number t
  "name": "Do I need to know how to code to use the Eject DIY path?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "No. The Eject Express tier is built for people who use ChatGPT or Claude for other things in their work and are comfortable with the describe-what-you-want, see-it-happen loop. You do not write code. The AI does. You drive the conversation. If you can edit a Google Doc, you can run this rebuild."
+ "text": "After the move you edit by chatting with your own AI. Automated is a $99 automated migration of a simple site, which you review before DNS. You describe later changes and review them. We do not promise every animation survives."
  }
  },
  {
@@ -363,7 +363,7 @@ Or if you are not sure yet, [run the calculator](#cost-calculator). The number t
  "name": "What if I get stuck mid-rebuild and the AI loops on the same bug?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Two paths. First, the Express kit includes a stuck-prompts guide with escape hatches for common loops. Second, you can upgrade to Concierge ($299) at any point and a human takes over the playbook from where you stopped. Whatever you have already done carries forward."
+ "text": "The editing guide covers common stuck points. Done for you is $199 and is a hand move inside a cap of about 10 pages, not an upgrade of a half-finished CMS extract."
  }
  },
  {
@@ -371,7 +371,7 @@ Or if you are not sure yet, [run the calculator](#cost-calculator). The number t
  "name": "How is this different from just opening Cursor and asking it to rebuild my site?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "The hard parts you hit going alone: the AI does not know what your live Framer site looks like, it does not know your CMS structure, it does not know your assets, it does not know which animations matter, and it does not have a tested starter codebase that maps cleanly to the Framer rendering model. Eject Express is what you would build for yourself if you had already done this 50 times."
+ "text": "We do not extract a Framer CMS, we do not promise pixel-perfect animations, and we do not show a preview before you pay. Automated is an automated migration of a simple site, reviewed before DNS."
  }
  },
  {

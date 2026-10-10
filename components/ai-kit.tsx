@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Section, Eyebrow } from "./section";
 import { cn } from "@/lib/cn";
+import { siteConfig } from "@/lib/site";
 
 const SAMPLE_INSTRUCTIONS = `You are editing my website for me. The site lives in a folder called "my-site". Each page is a file. Each section is a piece I can describe in plain English.
 
@@ -49,7 +50,7 @@ export function AiKit() {
  <span className="text-paper/40">Like, just typing what you want.</span>
  </h2>
  <p className="text-paper/70 max-w-2xl mb-10 text-lg">
- Your website is now a folder of files. Any AI can read and edit it. ChatGPT. Claude. Cursor. Free tiers all work. You paste a small instruction file once. After that, you just type things like &ldquo;change my hero to say X&rdquo; and the AI does it. No new tool. No subscription. No designer.
+ {siteConfig.editing.lead} {siteConfig.editing.included} ChatGPT, Claude, and Cursor all work. You paste the agent instructions once. After that, you type things like &ldquo;change my hero to say X&rdquo; and your AI edits the files. No new tool. No subscription from us.
  </p>
 
  <div className="flex flex-wrap items-center gap-2 mb-6">

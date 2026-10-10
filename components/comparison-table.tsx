@@ -2,12 +2,12 @@ import { Section, Eyebrow } from "./section";
 import { siteConfig } from "@/lib/site";
 
 const rows = [
- { label: "What you pay", before: "$300–$2,800 a year, every year", after: `$${siteConfig.pricing.express.price}–$${siteConfig.pricing.concierge.price} once. Then your domain (~$15/yr).` },
- { label: "Editing your site", before: "Their editor only. Subscription required.", after: "Any AI you already use. ChatGPT, Claude, Cursor." },
+ { label: "What you pay", before: "$300–$2,800 a year, every year", after: `$${siteConfig.pricing.express.price} or $${siteConfig.pricing.concierge.price} once. Then your domain.` },
+ { label: "Editing your site", before: "Their editor only. Subscription required.", after: "Chat with your own AI. Guide and agent instructions included." },
  { label: "Hosting", before: "Their hosting only. Goes down? Tough.", after: "Cloudflare free tier. Move to Vercel in 10 minutes if you want." },
  { label: "If they raise prices", before: "You pay it or rebuild from scratch.", after: "You don't. The site is yours." },
  { label: "If they shut your account", before: "Your site disappears.", after: "Nothing happens. We're not in the loop." },
- { label: "Your old domain", before: "Tied to their account.", after: "Comes with you. Same URL. Same rankings." },
+ { label: "Your old domain", before: "Tied to their account.", after: "Stays at your registrar. You point DNS when the new pages are ready." },
 ];
 
 export function ComparisonTable() {

@@ -3,6 +3,10 @@ import path from "node:path";
 import { randomBytes } from "node:crypto";
 import type { ComplexityReport } from "./complexity";
 import type { Tier } from "./stripe";
+import { fileStoreDir, resolveStorePlan, type StoreKind } from "./storage/plan";
+
+export type { StoreKind } from "./storage/plan";
+export { resolveStorePlan } from "./storage/plan";
 
 /**
  * Order store.
@@ -72,8 +76,6 @@ export type NewOrder = {
   currency: string;
 };
 
-export type StoreKind = "file" | "kv" | "blob" | "postgres";
-
 export type OrderStore = {
   kind: StoreKind;
   durable: boolean;
@@ -89,23 +91,6 @@ export type OrderStore = {
 };
 
 type Env = Record<string, string | undefined>;
-
-export function resolveStorePlan(env: Env = process.env): { kind: StoreKind; durable: boolean; label: string } {
-  const choice = env.ORDERS_STORE?.toLowerCase();
-  if (choice === "kv" || choice === "blob" || choice === "postgres" || choice === "file") {
-    if (choice === "file") {
-      return { kind: "file", durable: !env.VERCEL, label: env.VERCEL ? "file (/tmp, not durable on Vercel)" : "file" };
-    }
-    return { kind: choice, durable: true, label: choice };
-  }
-  if ((env.KV_REST_API_URL && env.KV_REST_API_TOKEN) || (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN)) {
-    return { kind: "kv", durable: true, label: "kv" };
-  }
-  if (env.BLOB_READ_WRITE_TOKEN) return { kind: "blob", durable: true, label: "blob" };
-  if (env.POSTGRES_URL || env.DATABASE_URL) return { kind: "postgres", durable: true, label: "postgres" };
-  if (env.VERCEL) return { kind: "file", durable: false, label: "file (/tmp, not durable on Vercel)" };
-  return { kind: "file", durable: true, label: "file" };
-}
 
 function requireEnv(env: Env, names: string[]): string {
   for (const name of names) {
@@ -220,9 +205,8 @@ function createMemoryApi(load: () => Promise<Db>, save: (db: Db) => Promise<void
 }
 
 function fileDir(env: Env): string {
-  if (env.ORDERS_DIR) return env.ORDERS_DIR;
-  if (env.VERCEL) return path.join("/tmp", "eject-orders");
-  return path.join(process.cwd(), "data", "orders");
+  const dir = fileStoreDir(env);
+  return path.isAbsolute(dir) ? dir : path.join(process.cwd(), dir);
 }
 
 function fileStore(env: Env, plan: { kind: StoreKind; durable: boolean; label: string }): OrderStore {

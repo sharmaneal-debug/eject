@@ -147,14 +147,14 @@ Almost six thousand dollars. For a marketing site. That isn't doing anything Squ
 
 | Line item | Monthly | 36-month total |
 |---|---|---|
-| Eject Concierge migration (one-time) |. | **$299** |
+| Eject Done for you (one-time) |. | **$199** |
 | Cloudflare Pages hosting | $0 | $0 |
 | Cloudflare Workers + Turnstile (forms, spam) | $0 | $0 |
 | Sanity CMS (free tier, 3 users + 10K docs) | $0 | $0 |
 | Resend (forms email, 3K free/mo) | $0 | $0 |
 | Domain | (you already pay this) |. |
 | Multi-language (next-intl, open source) | $0 | $0 |
-| **Total** | **~$0/mo** | **$299** |
+| **Total** | **~$0/mo** | **$199** |
 
 **Net delta over 36 months: $5,593 saved.** And the migration pays for itself in **less than 8 weeks**.
 
@@ -260,9 +260,9 @@ Owning your site looks like this:
 
 - **Forms in 40 lines of code** plus a Resend account (3K emails/mo free) plus Cloudflare Turnstile (free, no CAPTCHA puzzles).
 
-- **Editing by chat.** Your marketing team types "swap the hero headline to X and change the CTA to Start free trial." The chat editor opens a PR, spins up a preview deploy, shows them the live preview, merges on approval. **No seat fee. No code knowledge. No Webflow.**
+- **Editing by chat.** You paste instructions into ChatGPT, Claude, or Cursor and describe the change. You review the diff and deploy it. There is no hosted editor that opens a PR for you.
 
-That whole stack costs $0/month forever. The only money you'll spend is the one-time migration ($49 to $299 with Eject; more if you hire an agency to do it from scratch).
+That whole stack can cost $0/month for a simple static site. The one-time migration is $99 (Automated) or $199 (Done for you). A CMS such as Sanity is outside this service. Hiring an agency from scratch costs more, and we don't quote that number.
 
 Want the deep version of this. The 14-day playbook, the day-by-day checklist, the technical replacements for every Webflow feature? Read **[Webflow to Next.js: The 14-Day Migration Playbook](/blog/webflow-to-nextjs)**. It's the operational sibling of this post.
 
@@ -296,11 +296,11 @@ For most companies between 50 and 500 employees with a marketing site that's the
 
 ### Will I save money even after the migration cost?
 
-Almost certainly. Eject's Concierge tier is **$299 one-time**. If you're paying $100/mo on Webflow, the migration pays for itself in **3 months**. At $170/mo, it pays for itself in **under 8 weeks**. After that, you keep what you save.
+For a simple site, Done for you is **$199 one-time** and Automated is **$99**. If your checked Webflow plan is $100 a month, $199 is about two months of that bill. We don't treat a blended "$170" average as your price. Use the calculator, which cites the plan you are actually on. After the move you edit by chatting with your own AI.
 
 ### What's the absolute cheapest way to leave Webflow?
 
-Eject Express ($49 one-time) for the auto-rebuild. Then host on Cloudflare Pages (free). Then use Sanity's free tier or markdown in your repo (free). Total ongoing cost: **$0/mo**. One-time cost: **$49**. That's the floor. Most people pick Concierge ($299) because the human-led version is faster and lower-stress, but the $49 path is real.
+Automated is **$99 one-time**: an automated migration of a simple site, which you review before DNS. Host a simple static site on Cloudflare Pages. A Sanity project is not part of this service. Done for you is **$199**, done by hand inside a cap of about 10 pages. Both include an editing guide so you edit by chatting with your own AI. There is no preview before you pay.
 
 ---
 
@@ -308,8 +308,8 @@ Eject Express ($49 one-time) for the auto-rebuild. Then host on Cloudflare Pages
 
 | Tier | Price | What you get |
 |---|---|---|
-| **Express** | **$49 one-time** | Automated rebuild. We export your Webflow site, regenerate it as a Next.js codebase on Cloudflare Pages, hand you the GitHub repo. You take it from there. |
-| **Concierge** | **$299 one-time** | Human-led migration. We do the export, the rebuild, the cutover, the redirects, and we onboard your team to the chat editor. 3–5 business days, hands-off. |
+| **Automated** | **$99 one-time** | An automated migration of a simple Webflow marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included. Not a CMS extraction and not a preview before you pay. |
+| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 | **Agency** | **Custom** | For agencies migrating 5+ client sites. Volume pricing, white-label option, dedicated channel. [Contact us.](https://ejectfrom.com/agency) |
 
 **[Start your migration →](https://ejectfrom.com/start)**
@@ -378,7 +378,7 @@ If you want the technical deep-dive on what the migration actually involves day-
  "name": "Will I save money even after paying for the migration?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Almost certainly. Eject Concierge is $299 one-time. If you're paying $100/mo on Webflow, the migration pays for itself in 3 months. At $170/mo, payback is under 8 weeks. After that, every month is pure savings."
+ "text": "For a simple site, Done for you is $199 one-time and Automated is $99. Compare that with the plan you actually pay, using the calculator. After the move you edit by chatting with your own AI. We do not use a blended monthly average as your price."
  }
  },
  {
@@ -386,7 +386,7 @@ If you want the technical deep-dive on what the migration actually involves day-
  "name": "What's the absolute cheapest way to leave Webflow?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Eject Express at $49 one-time for the auto-rebuild, hosted on Cloudflare Pages free, with Sanity's free tier or markdown in your repo. Total ongoing cost is $0 per month. Total one-time cost is $49. Most teams pick Concierge at $299 because the human-led version is faster, but the $49 path is real."
+ "text": "Automated is $99: an automated migration of a simple site, reviewed before DNS, then hosted on a static host that can be free. Done for you is $199, done by hand inside a cap of about 10 pages. A Sanity CMS is not part of this service. Both include an editing guide so you edit by chatting with your own AI."
  }
  }
  ]

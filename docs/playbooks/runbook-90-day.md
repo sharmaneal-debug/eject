@@ -11,7 +11,7 @@ Day-by-day, week-by-week. Each item is a check-box. Estimated time per item in p
 - [ ] **Create the GitHub org + repo.** `Eject/eject` (or under personal account initially). Push the codebase. (15min)
 - [ ] **Set up Cloudflare account + Pages project.** Connect to GitHub. Auto-deploys on push to `main`. (30min)
 - [ ] **Wire DNS.** Cloudflare nameservers + apex + `www` + Pages. (30min)
-- [ ] **Stripe account + 3 products** (DIY $49, DwY $299, DFY $1,499). Test mode first. (1h)
+- [ ] **Stripe test-mode products** (Automated $99, Done for you $199). `pnpm setup-stripe`. No live keys. (1h)
 - [ ] **Resend account + verified domain.** For form intake + outbound. (30min)
 - [ ] **GitHub App registration** (for the editor's per-customer repo access). Defer to week 6 if time-pressed. (2h)
 - [ ] **Anthropic API key.** Spend cap at $200/mo until validated. (10min)
@@ -61,7 +61,7 @@ Day-by-day, week-by-week. Each item is a check-box. Estimated time per item in p
 ## Weeks 3–4 — Editor MVP + first DFY
 
 - [ ] **Editor v0**: chat → file edit → git commit (CLI works; web UI is week 6). Use `scripts/editor.ts` as the foundation. (2-3d)
-- [ ] **First DFY ($1,499) sale**, even if at half-price for a case-study trade. Document everything. (3-5d)
+- [ ] **First DFY ($199) sale**, even if at half-price for a case-study trade. Document everything. (3-5d)
 - [ ] **Cold email volume to 1,000/wk.** Track per-platform conversion in `data/audits/` + `data/sends/`. (ongoing)
 - [ ] **Fourth + fifth SEO post**: `/blog/webflow-too-expensive` + `/blog/squarespace-to-nextjs`. (1d)
 - [ ] **YouTube creator outreach**: DM 10 creators in the design/no-code space. Pitch a sponsored video for $1,500. (2h)

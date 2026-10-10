@@ -55,7 +55,7 @@ Site has to be ready for the first real customer. Stripe live mode requires seve
 - [ ] **Rate-limit `/api/scan`** (30 min). Cap at 10 scans per IP per hour. Otherwise someone can scrape Google for URLs and DoS your Anthropic budget. Use Upstash Redis free tier or Vercel KV.
 - [ ] **Handle scan API timeouts gracefully** (15 min). If the target site is slow / unreachable, return a friendly message ("we couldn't reach that URL") instead of a 500.
 - [ ] **Form validation on intake + checkout** (30 min). Email regex, URL regex, name length cap. Use [zod](https://zod.dev) — already a common dep.
-- [ ] **Real test of the rebuilder** (1–2 hr). Run `pnpm crawl https://your-test-framer-site.com` then `pnpm rebuild data/snapshots/...` end-to-end. Verify the output Next.js project actually runs. **This is the biggest unknown right now.** Until we do this, we don't know if Express delivers what we promise.
+- [ ] **Real test of the rebuilder** (1–2 hr). Run `pnpm crawl https://your-test-framer-site.com` then `pnpm rebuild data/snapshots/...` end-to-end. Verify the output Next.js project actually runs. **This is the biggest unknown right now.** Until we do this, we don't know if Automated delivers what we promise.
 
 ---
 
@@ -116,7 +116,7 @@ You have everything to run outbound. The playbooks are written. Time to execute.
 ### Customer experience
 
 - [ ] **Run a real test migration** (3 hr). Pick one of your own sites or a friend's site. Run `pnpm crawl` then `pnpm rebuild`. Verify the output works. **Document everything that breaks** — that becomes your week-3 product roadmap.
-- [ ] **Build the "preview link" delivery** (3 hr). After payment, the rebuilder runs and outputs a Next.js project. We need to actually deploy it as a preview to Cloudflare Pages or Vercel and email the customer the URL. This is the heart of Express — has to be smooth.
+- [ ] **Build the "preview link" delivery** (3 hr). After payment, the rebuilder runs and outputs a Next.js project. We need to actually deploy it as a preview to Cloudflare Pages or Vercel and email the customer the URL. This is the heart of Automated — has to be smooth.
 - [ ] **Customer support inbox** (15 min). `hi@ejectfrom.com` forwards to your real email until volume justifies a Helpscout / Plain account.
 
 ---
@@ -136,8 +136,8 @@ Public moments to drive traffic + first non-outbound customers.
 ## Phase 5 — Iterate (ongoing)
 
 - [ ] **Weekly content** — 1 blog post per week minimum. Stay on the keyword roadmap. Don't drift into shower-thoughts content.
-- [ ] **Customer testimonials + case studies** — every shipped Concierge customer becomes a 1-page case study (`/case-studies/[slug]`) with before/after Lighthouse + cost screenshots + a real quote.
-- [ ] **A/B test the pricing page** — the moment you have 100 visitors/week. Test $49 vs $79 Express, $299 vs $499 Concierge.
+- [ ] **Customer testimonials + case studies** — every shipped Done for you customer becomes a 1-page case study (`/case-studies/[slug]`) with before/after Lighthouse + cost screenshots + a real quote.
+- [ ] **A/B test the pricing page** — the moment you have 100 visitors/week. Test $99 vs $79 Automated, $199 vs $999 Done for you.
 - [ ] **Refund + dispute SOPs** — write them down before you have a dispute. Keep refund rate < 5%.
 - [ ] **Weekly retro** — every Friday, 15 min. What converted? What didn't? One thing to change next week.
 

@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export const metadata: Metadata = {
-  title: "Express Kit",
+  title: "Editing kit",
   description: "The kit you get when a simple-site order is eligible.",
   robots: { index: false, follow: false },
 };
@@ -25,7 +25,7 @@ export default async function Page({
   if (!access.ok || !token) {
     return (
       <Section>
-        <Eyebrow>Express Kit</Eyebrow>
+        <Eyebrow>Editing kit</Eyebrow>
         <KitLocked reason={access.ok ? "Missing order token." : access.reason} />
       </Section>
     );
@@ -34,7 +34,7 @@ export default async function Page({
   return (
     <>
       <Section className="pb-0">
-        <Eyebrow>Express Kit</Eyebrow>
+        <Eyebrow>Editing kit</Eyebrow>
         <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-5 max-w-3xl">
           Welcome. <span className="text-ink/40">Let&apos;s rebuild your site.</span>
         </h1>

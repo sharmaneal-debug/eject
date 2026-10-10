@@ -1,99 +1,62 @@
 import type { Metadata } from "next";
 import { Section, Eyebrow } from "@/components/section";
+import { ScopeLimits } from "@/components/scope-limits";
+import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
 import Link from "next/link";
 
-export const metadata: Metadata = {
- title: "About",
- description: "Eject is a productized service that migrates your Framer/Webflow/Wix site to a Next.js codebase you own.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "About",
+  description: "Eject helps people leave a simple marketing, portfolio, or landing site. We don't extract a CMS or migrate a store.",
+  path: "/about",
+});
 
 export default function Page() {
- return (
- <>
- <Section>
- <Eyebrow>About</Eyebrow>
- <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-7 max-w-3xl">
- A small team. <span className="text-ink/40">A short list of opinions.</span>
- </h1>
+  return (
+    <>
+      <Section>
+        <Eyebrow>About</Eyebrow>
+        <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-7 max-w-3xl">
+          Edit by chatting. <span className="text-ink/40">A narrow service.</span>
+        </h1>
 
- <div className="grid md:grid-cols-2 gap-12 max-w-5xl prose-lite">
- <div>
- <h2 className="text-2xl h-section mb-3">Why this exists</h2>
- <p className="mb-4">
- In 2026, you can host a fast, beautiful website for almost nothing. Cloudflare Pages is free. Domains are $12 a year. Next.js + Tailwind is the most-used frontend stack on earth.
- </p>
- <p className="mb-4">
- And yet a million solo founders, indie operators, and small agencies pay <strong>$300–$2,800 a year</strong> to no-code platforms for static marketing sites. The platforms make exporting deliberately painful. That&apos;s how the lock-in works.
- </p>
- <p>
- We exist to do the unglamorous part: extract, rebuild, deploy, hand you the keys. Then leave.
- </p>
- </div>
-
- <div>
- <h2 className="text-2xl h-section mb-3">What we won&apos;t do</h2>
- <ul className="space-y-2 text-ink-soft">
- <li>· Lock you in. There&apos;s nothing to unlock. The GitHub repo is yours.</li>
- <li>· Sell your data. We don&apos;t train on it. We don&apos;t resell it.</li>
- <li>· Up-charge for &quot;features&quot; like robots.txt or redirects. Those are just files.</li>
- <li>· Ship a flaky chat editor. If we can&apos;t make it reliable, we won&apos;t bill you for it.</li>
- <li>· Take work we shouldn&apos;t. Heavy ecommerce, multi-language, gated apps. We say no.</li>
- </ul>
- </div>
- </div>
- </Section>
-
- <Section className="bg-paper-warm">
- <div className="grid md:grid-cols-2 gap-12 items-start max-w-5xl">
- <div>
- <Eyebrow>The opinions</Eyebrow>
- <h2 className="h-section text-3xl md:text-4xl mb-4 max-w-md">
- Three things we believe.
- </h2>
- <p className="text-ink-soft max-w-md">
- You can disagree. The pricing is the same.
- </p>
- </div>
- <div className="space-y-7">
- <div>
- <p className="font-mono text-xs uppercase tracking-widest text-signal mb-2">No. 1</p>
- <p className="font-medium text-lg mb-1">Hosting is a commodity. Stop renting it.</p>
- <p className="text-ink-soft">
- Cloudflare, Netlify, Vercel, GitHub Pages. Pick any. They&apos;re all faster than Webflow. Most are free.
- </p>
- </div>
- <div>
- <p className="font-mono text-xs uppercase tracking-widest text-signal mb-2">No. 2</p>
- <p className="font-medium text-lg mb-1">Your CMS shouldn&apos;t be your prison.</p>
- <p className="text-ink-soft">
- A markdown file in a git repo is portable, diffable, and free. A &quot;CMS plan&quot; isn&apos;t.
- </p>
- </div>
- <div>
- <p className="font-mono text-xs uppercase tracking-widest text-signal mb-2">No. 3</p>
- <p className="font-medium text-lg mb-1">Non-technical people can edit code now.</p>
- <p className="text-ink-soft">
- A chatbot that knows your codebase is the visual editor of 2026. We just had to build it.
- </p>
- </div>
- </div>
- </div>
- </Section>
-
- <Section>
- <div className="rounded-2xl bg-ink text-paper p-10 md:p-14 text-center">
- <h2 className="h-section text-3xl md:text-4xl mb-4">Migrate your site.</h2>
- <p className="text-paper/70 max-w-xl mx-auto mb-7">
- Free 5-min Loom audit. We send it within 24 hours. No call required.
- </p>
- <Link
- href="/migrate"
- className="inline-flex items-center justify-center rounded-lg bg-signal text-paper px-6 py-3 text-sm font-medium hover:bg-paper hover:text-ink transition"
- >
- Start a free audit →
- </Link>
- </div>
- </Section>
- </>
- );
+        <div className="grid md:grid-cols-2 gap-12 max-w-5xl">
+          <div className="space-y-4 text-ink-soft leading-relaxed">
+            <h2 className="text-2xl h-section text-ink mb-3">Why this exists</h2>
+            <p>
+              A simple site — a homepage, a portfolio, a landing page — does not need a monthly builder bill. The files can live on a free static host. The hard part is getting the pages out without pretending the export is one click.
+            </p>
+            <p>
+              {siteConfig.legalEntity.name} runs Eject so that after the move you edit by chatting with your own AI. {siteConfig.pricing.express.name} (${siteConfig.pricing.express.price}) is an automated migration of a simple site, reviewed before DNS. {siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price}) is that move, done by hand inside a cap. We do not extract a CMS, migrate a store, or show a preview before you pay.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-2xl h-section mb-3">What we won&apos;t pretend</h2>
+            <ul className="space-y-2 text-ink-soft">
+              <li>· That a scan is a preview of a rebuilt site.</li>
+              <li>· That we lift a CMS, a store, or a member area.</li>
+              <li>· That PageSpeed or rankings move by a fixed number of points.</li>
+              <li>· That we host the site or keep an editor subscription.</li>
+              <li>· That a quote without a source is a price.</li>
+            </ul>
+          </div>
+        </div>
+      </Section>
+      <ScopeLimits />
+      <Section>
+        <div className="rounded-2xl bg-ink text-paper p-10 md:p-14 text-center">
+          <h2 className="h-section text-3xl md:text-4xl mb-4">Watch the renewal instead of guessing.</h2>
+          <p className="text-paper/70 max-w-xl mx-auto mb-7">
+            90, 60, and 30 days before the invoice. Simple sites only.
+          </p>
+          <Link
+            href="/renewal-watch"
+            className="inline-flex items-center justify-center rounded-lg bg-signal text-paper px-6 py-3 text-sm font-medium hover:bg-paper hover:text-ink transition"
+          >
+            Open renewal watch →
+          </Link>
+        </div>
+      </Section>
+    </>
+  );
 }
