@@ -64,8 +64,8 @@ So the only clean exit from an annual plan is **before** it renews.
 |---|---|---|
 | Website plan | $348 × 3 = $1,044 | $0 hosting on Cloudflare Pages ("unlimited sites, seats, requests, and bandwidth", [pages.cloudflare.com](https://pages.cloudflare.com/)) |
 | Domain | Squarespace's standard rate after year one | Your registrar's rate (keep it at Squarespace or transfer) |
-| One-time | $0 | Eject Automated $99 (self-serve) or Done for you $199 (after a call) |
-| **3-year total, excluding domain** | **$1,044** | **$99 to $199** |
+| One-time | $0 | Eject Automated $99 (self-serve) or custom migration |
+| **3-year total, excluding domain** | **$1,044** | **$99, or ask for custom pricing** |
 
 Run your own plan and billing cycle in the [renewal savings calculator](/calculator?p=squarespace).
 
@@ -136,4 +136,4 @@ No. Your domain subscription stays active and keeps billing. You can keep it, po
 
 ## Where to go next
 
-Automated is $99 and you can buy it on the spot. Done for you is $199 after a call, for a simple site. See [renewal watch](/renewal-watch), [book a call](/book).
+Automated is $99 and you can buy it on the spot. Custom migration, for a simple site. See [renewal watch](/renewal-watch), [contact us for custom pricing](/book).

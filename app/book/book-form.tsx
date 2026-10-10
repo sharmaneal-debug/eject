@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { siteConfig } from "@/lib/site";
 
 type Result = {
   ok: boolean;
@@ -79,25 +78,23 @@ export function BookForm({ bookingUrl, embed, support }: { bookingUrl: string | 
           {result.scanError ? (
             <p className="text-sm text-ink-soft mb-3">The free scan did not finish: {result.scanError}. We still have your note.</p>
           ) : (
-            <p className="text-sm text-ink-soft mb-3">Platform reading: {result.platform || "not sure"}. This is the same free scan as the homepage, not a rebuilt preview.</p>
+            <p className="text-sm text-ink-soft mb-3">Scanned {result.siteUrl}.</p>
           )}
           {result.emailSkipped && (
             <p className="text-sm text-ink-soft mb-3">The request is stored. If you do not hear back, email {support}.</p>
           )}
           {bookingUrl ? (
             <div className="mt-4">
-              <a href={bookingUrl} className="inline-flex rounded-xl bg-ink text-paper px-5 py-3 text-sm font-medium hover:bg-signal" target="_blank" rel="noreferrer">
+              <a href={bookingUrl} className="text-sm text-accent" target="_blank" rel="noreferrer">
                 Open the calendar
               </a>
               {embed && (
-                <iframe title="Book a call" src={bookingUrl} className="mt-4 w-full h-[640px] rounded-xl border border-line bg-white" />
+                <iframe title="Calendar" src={bookingUrl} className="mt-4 w-full h-[420px] rounded-xl border border-line bg-white" />
               )}
             </div>
           ) : (
             <p className="text-sm text-ink-soft">
-              The calendar link is not configured yet. Email{" "}
-              <a className="text-accent" href={`mailto:${support}?subject=Done%20for%20you%20call`}>{support}</a>{" "}
-              and we will send a time. {siteConfig.pricing.concierge.name} is ${siteConfig.pricing.concierge.price} after the call, if the site fits the cap.
+              Email <a className="text-accent" href={`mailto:${support}`}>{support}</a>.
             </p>
           )}
         </div>

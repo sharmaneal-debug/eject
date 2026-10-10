@@ -9,7 +9,7 @@ Ordered top to bottom. Each phase has a "what" and a "why now." Strikethrough as
 These four block everything downstream.
 
 - [ ] **Sign up for Vercel** with your GitHub account (2 min). Import `sharmaneal-debug/eject`. Paste env vars from `.env.local`. Deploy. → `eject.vercel.app`. Walk-through: `docs/setup-deploy.md`.
-- [ ] **Reuse your Laniakea Resend account** (5 min — no new account, no new bill). Add `ejectfrom.com` as a second verified domain alongside VedasAI. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@ejectfrom.com` → `neal@laniakea.design` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
+- [ ] **Reuse your Laniakea Resend account** (5 min — no new account, no new bill). Add `ejectfrom.com` as a second verified domain alongside VedasAI. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@ejectfrom.com` → `the operator inbox` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
 - [ ] **Roll the live Stripe key** (`sk_live_…`) you posted in chat earlier (3 min). Stripe dashboard → API keys → Roll. Old key keeps working for 1 hour. Replace nowhere — we're using test keys for everything. The leaked key is the security issue, not the test ones.
 - [ ] **Buy `ejectfrom.com`** (~$30, 5 min). Cloudflare Registrar is the cheapest renewal-fair option ($9.99 first year, $9.77/yr after). Or Porkbun ($12.71/yr). Skip GoDaddy.
 
@@ -137,7 +137,7 @@ Public moments to drive traffic + first non-outbound customers.
 
 - [ ] **Weekly content** — 1 blog post per week minimum. Stay on the keyword roadmap. Don't drift into shower-thoughts content.
 - [ ] **Customer testimonials + case studies** — every shipped Done for you customer becomes a 1-page case study (`/case-studies/[slug]`) with before/after Lighthouse + cost screenshots + a real quote.
-- [ ] **A/B test the pricing page** — the moment you have 100 visitors/week. Test $99 vs $79 Automated, $199 vs $999 Done for you.
+- [ ] **A/B test the pricing page** — the moment you have 100 visitors/week. Test the $99 automated price. Custom work stays unpublished.
 - [ ] **Refund + dispute SOPs** — write them down before you have a dispute. Keep refund rate < 5%.
 - [ ] **Weekly retro** — every Friday, 15 min. What converted? What didn't? One thing to change next week.
 

@@ -6,9 +6,9 @@ import { ScopeLimits } from "@/components/scope-limits";
 import { Section, Eyebrow } from "@/components/section";
 import { pageMetadata } from "@/lib/seo";
 import type { PlatformId } from "@/lib/pricing/platforms";
-import { siteConfig, doneForYouCapLabel } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 
-const offerLine = `${siteConfig.editing.lead} ${siteConfig.editing.included} ${siteConfig.pricing.express.name} ($${siteConfig.pricing.express.price}) is an automated migration you review before DNS. ${siteConfig.pricing.concierge.name} ($${siteConfig.pricing.concierge.price}) is done by hand: ${doneForYouCapLabel()}. Beyond that, we refer out or quote an add-on.`;
+const offerLine = `Automated move: $${siteConfig.pricing.express.price}. Custom work has no public price.`;
 
 const data: Record<
   PlatformId,

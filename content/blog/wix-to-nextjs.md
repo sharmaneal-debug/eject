@@ -383,7 +383,7 @@ If all five are true, and the site is a simple brochure, Automated ($99) runs an
 - The site generates real revenue and downtime costs you actual money
 - You've tried before and got stuck on Day 2 staring at HTML soup
 
-If you nodded at any of these, **Done for you ($199) is the hand-done offer**, and only for a simple site: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. You still review before DNS. Beyond that cap we refer out or quote an add-on. We do not extract a CMS, and we do not promise a 7-day delivery.
+If you nodded at any of these, **custom migration is the hand-done offer**, and only for a simple site: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. You still review before DNS. Beyond that cap we refer out or quote an add-on. We do not extract a CMS, and we do not promise a 7-day delivery.
 
 ### When you should NOT migrate at all (yet)
 
@@ -474,11 +474,11 @@ You can. Your old Wix site lives on the free Wix tier as an archive (just on a `
 
 ### How long does the migration actually take?
 
-A simple site on Automated ($99) is an automated migration you review before DNS. Done for you ($199) is the same kind of site, done by hand inside the cap above. We do not promise 7 or 14 days. Stores and bookings are out of scope. After either offer, you edit by chatting with your own AI.
+A simple site on Automated ($99) is an automated migration you review before DNS. custom migration is the same kind of site, done by hand inside the cap above. We do not promise 7 or 14 days. Stores and bookings are out of scope. After either offer, you edit by chatting with your own AI.
 
 ### How much does it cost?
 
-The migration itself: **$99** (Automated, an automated migration of a simple site, reviewed before DNS) or **$199** (Done for you, by hand, inside the cap). After the move, you edit by chatting with your own AI. Hosting for a simple static site can be **$0/month** on Cloudflare Pages. We don't quote a payback month from a typical Wix bill, because that bill depends on the plan you actually have.
+The migration itself: **$99** (Automated, an automated migration of a simple site, reviewed before DNS) or **custom** (Done for you, by hand, inside the cap). After the move, you edit by chatting with your own AI. Hosting for a simple static site can be **$0/month** on Cloudflare Pages. We don't quote a payback month from a typical Wix bill, because that bill depends on the plan you actually have.
 
 ---
 
@@ -487,7 +487,7 @@ The migration itself: **$99** (Automated, an automated migration of a simple sit
 | Tier | Price | What you get |
 |------|-------|--------------|
 | **Automated** | **$99 one-time** | An automated migration of a simple Wix marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included, so you edit by chatting with your own AI. Not a CMS extract and not a preview before you pay. |
-| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
+| **Done for you** | **custom pricing** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 | **Custom** | **Talk to us** | Heavy e-commerce, multi-language, member areas, or sites with 500+ pages. We scope and quote. |
 
 **[Start your migration →](https://ejectfrom.com/start)**
@@ -556,7 +556,7 @@ If you're on a different platform, we have honest playbooks for those too: [Webf
  "name": "How long does a Wix-to-Next.js migration take?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Automated is a $99 automated migration of a simple site, which you review before DNS. Done for you is $199, done by hand, for about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not promise 7 or 14 days."
+ "text": "Automated is a $99 automated migration of a simple site, which you review before DNS. Custom migration, done by hand, for about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not promise 7 or 14 days."
  }
  },
  {
@@ -564,7 +564,7 @@ If you're on a different platform, we have honest playbooks for those too: [Webf
  "name": "How much does the migration cost?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Automated is $99 one-time. Done for you is $199 one-time, inside a simple-site cap. After the move you edit by chatting with your own AI. Hosting for a simple static site can be $0 per month on Cloudflare Pages. We do not quote a payback period from a typical Wix bill."
+ "text": "Automated is $99 one-time. Custom migration one-time, inside a simple-site cap. After the move you edit by chatting with your own AI. Hosting for a simple static site can be $0 per month on Cloudflare Pages. We do not quote a payback period from a typical Wix bill."
  }
  }
  ]

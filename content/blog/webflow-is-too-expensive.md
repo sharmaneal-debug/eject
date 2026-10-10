@@ -147,14 +147,14 @@ Almost six thousand dollars. For a marketing site. That isn't doing anything Squ
 
 | Line item | Monthly | 36-month total |
 |---|---|---|
-| Eject Done for you (one-time) |. | **$199** |
+| Eject Done for you (one-time) |. | **custom** |
 | Cloudflare Pages hosting | $0 | $0 |
 | Cloudflare Workers + Turnstile (forms, spam) | $0 | $0 |
 | Sanity CMS (free tier, 3 users + 10K docs) | $0 | $0 |
 | Resend (forms email, 3K free/mo) | $0 | $0 |
 | Domain | (you already pay this) |. |
 | Multi-language (next-intl, open source) | $0 | $0 |
-| **Total** | **~$0/mo** | **$199** |
+| **Total** | **~$0/mo** | **custom** |
 
 **Net delta over 36 months: $5,593 saved.** And the migration pays for itself in **less than 8 weeks**.
 
@@ -262,7 +262,7 @@ Owning your site looks like this:
 
 - **Editing by chat.** You paste instructions into ChatGPT, Claude, or Cursor and describe the change. You review the diff and deploy it. There is no hosted editor that opens a PR for you.
 
-That whole stack can cost $0/month for a simple static site. The one-time migration is $99 (Automated) or $199 (Done for you). A CMS such as Sanity is outside this service. Hiring an agency from scratch costs more, and we don't quote that number.
+That whole stack can cost $0/month for a simple static site. The one-time migration is $99 (Automated) or custom pricing (Done for you). A CMS such as Sanity is outside this service. Hiring an agency from scratch costs more, and we don't quote that number.
 
 Want the deep version of this. The 14-day playbook, the day-by-day checklist, the technical replacements for every Webflow feature? Read **[Webflow to Next.js: The 14-Day Migration Playbook](/blog/webflow-to-nextjs)**. It's the operational sibling of this post.
 
@@ -296,11 +296,11 @@ For most companies between 50 and 500 employees with a marketing site that's the
 
 ### Will I save money even after the migration cost?
 
-For a simple site, Done for you is **$199 one-time** and Automated is **$99**. If your checked Webflow plan is $100 a month, $199 is about two months of that bill. We don't treat a blended "$170" average as your price. Use the calculator, which cites the plan you are actually on. After the move you edit by chatting with your own AI.
+For a simple site, Automated is **$99**. Custom work has no public price. We handle the migration for you, step by step. We don't treat a blended "$170" average as your price. Use the calculator, which cites the plan you are actually on. After the move you edit by chatting with your own AI.
 
 ### What's the absolute cheapest way to leave Webflow?
 
-Automated is **$99 one-time**: an automated migration of a simple site, which you review before DNS. Host a simple static site on Cloudflare Pages. A Sanity project is not part of this service. Done for you is **$199**, done by hand inside a cap of about 10 pages. Both include an editing guide so you edit by chatting with your own AI. There is no preview before you pay.
+Automated is **$99 one-time**: an automated migration of a simple site, which you review before DNS. Host a simple static site on Cloudflare Pages. A Sanity project is not part of this service. Done for you is **custom**, done by hand inside a cap of about 10 pages. Both include an editing guide so you edit by chatting with your own AI. There is no preview before you pay.
 
 ---
 
@@ -309,7 +309,7 @@ Automated is **$99 one-time**: an automated migration of a simple site, which yo
 | Tier | Price | What you get |
 |---|---|---|
 | **Automated** | **$99 one-time** | An automated migration of a simple Webflow marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included. Not a CMS extraction and not a preview before you pay. |
-| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
+| **Done for you** | **custom pricing** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 | **Agency** | **Custom** | For agencies migrating 5+ client sites. Volume pricing, white-label option, dedicated channel. [Contact us.](https://ejectfrom.com/agency) |
 
 **[Start your migration →](https://ejectfrom.com/start)**
@@ -378,7 +378,7 @@ If you want the technical deep-dive on what the migration actually involves day-
  "name": "Will I save money even after paying for the migration?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "For a simple site, Done for you is $199 one-time and Automated is $99. Compare that with the plan you actually pay, using the calculator. After the move you edit by chatting with your own AI. We do not use a blended monthly average as your price."
+ "text": "For a simple site, Custom migration one-time and Automated is $99. Compare that with the plan you actually pay, using the calculator. After the move you edit by chatting with your own AI. We do not use a blended monthly average as your price."
  }
  },
  {
@@ -386,7 +386,7 @@ If you want the technical deep-dive on what the migration actually involves day-
  "name": "What's the absolute cheapest way to leave Webflow?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Automated is $99: an automated migration of a simple site, reviewed before DNS, then hosted on a static host that can be free. Done for you is $199, done by hand inside a cap of about 10 pages. A Sanity CMS is not part of this service. Both include an editing guide so you edit by chatting with your own AI."
+ "text": "Automated is $99: an automated migration of a simple site, reviewed before DNS, then hosted on a static host that can be free. Custom migration, done by hand inside a cap of about 10 pages. A Sanity CMS is not part of this service. Both include an editing guide so you edit by chatting with your own AI."
  }
  }
  ]

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   }
   if (tier === "done_for_you") {
     return NextResponse.json(
-      { ok: false, error: "Done for you is booked on a call, then paid from a link we send.", book: "/book" },
+      { ok: false, error: "Custom work is not a public checkout.", book: "/book" },
       { status: 409 },
     );
   }

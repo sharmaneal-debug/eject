@@ -1,4 +1,4 @@
-import { siteConfig, doneForYouCapLabel } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 import { addUtcDays, daysUntilDate, formatLongDate } from "./dates";
 
 export type MoveStep = {
@@ -22,7 +22,7 @@ const STEP_COPY: { id: MoveStep["id"]; daysBefore: number; title: string; detail
     id: "60",
     daysBefore: 60,
     title: "Start the move",
-    detail: `Pick ${siteConfig.pricing.express.name} ($${siteConfig.pricing.express.price}), an automated migration of a simple site that you review before DNS, or ${siteConfig.pricing.concierge.name} ($${siteConfig.pricing.concierge.price}), which we do by hand: ${doneForYouCapLabel()}. ${siteConfig.editing.lead} ${siteConfig.editing.included} There is no preview before you pay. Beyond the cap, we refer out or quote an add-on.`,
+    detail: `Automated move: $${siteConfig.pricing.express.price}. Custom work has no public price.`,
   },
   {
     id: "30",

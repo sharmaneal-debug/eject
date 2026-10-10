@@ -19,12 +19,8 @@ export default function Page() {
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
           <div>
             <Eyebrow>Simple sites</Eyebrow>
-            <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-5 max-w-2xl">
-              Edit by chatting, after the move.
-            </h1>
-            <p className="text-ink-soft leading-relaxed max-w-md mb-8 text-lg">
-              {siteConfig.editing.lead} If it is a marketing page, a portfolio, or a landing page, we&apos;ll say whether {siteConfig.pricing.express.name} (${siteConfig.pricing.express.price}) or {siteConfig.pricing.concierge.name} (${siteConfig.pricing.concierge.price}) applies. If it is a store or a CMS, we&apos;ll say who to hire instead. This form saves a lead. It does not start a crawl, and it does not book a Loom.
-            </p>
+            <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-3 max-w-2xl">Tell us the URL.</h1>
+            <p className="text-ink-soft mb-6">Simple sites. The automated move is ${siteConfig.pricing.express.price}.</p>
             <ol className="space-y-5 max-w-md text-sm">
               <li>
                 <p className="font-medium">1. You describe the pages</p>

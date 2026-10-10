@@ -1,7 +1,7 @@
 # Cold Email Playbook
 
 **Pitch:** Eject from Webflow. Own your site. Pay $5 a year.
-**Offers:** Automated $99 / Done for you $199. Amounts live in `lib/site.ts`. No editor subscription.
+**Offers:** Automated $99. Custom work has no public price. Amounts live in `lib/site.ts`. No editor subscription.
 **Stack we ship:** Next.js + Cloudflare Pages (free tier) + optional AI editor
 **ICP:** solo agency owners + indie founders paying $19–$80/mo on Framer/Webflow/Wix
 
@@ -23,7 +23,7 @@ Ran your site through Lighthouse: **{{lighthouse_score}}/100 performance**. CMS 
 
 Same site, rebuilt as a Next.js codebase you own, deployed on Cloudflare Pages: **$5/year**. Domain only. Hosting is free.
 
-We do this as a productized service. $199 done-for-you, 7-day turnaround. You keep your design. You stop renting.
+We do this as a productized service. The automated move is $99. If you want us to handle it, pricing is custom. You keep your design. You stop renting.
 
 Want me to record a 5-min Loom showing exactly what we'd ship for {{site_url}}?
 
@@ -45,7 +45,7 @@ What you're actually getting: a CDN, a form handler, and a CMS with {{cms_item_c
 
 Cloudflare Pages gives you the CDN free. Resend gives you forms free up to 3k/mo. The CMS is markdown files in your repo — git-tracked, AI-editable.
 
-We migrate you for $199 once. You break even in {{breakeven_months}} months.
+The automated move is $99. Custom work is quoted. You break even in {{breakeven_months}} months on the $99 move.
 
 5-min Loom? I'll show you the rebuilt site before you decide.
 
@@ -91,7 +91,7 @@ I ran your site:
 
 Migrating to a Next.js codebase on Cloudflare Pages costs you **$5/year** (just the domain). Same design, faster, yours forever.
 
-We do this as a fixed-price service: $199 done-for-you, 7 days. CMS migrates 1:1 to MDX or Sanity (your call).
+The automated move is $99. Custom work is quoted. CMS work is outside the simple-site move.
 
 Want a 5-min Loom showing the rebuild for {{site_url}}?
 
@@ -118,7 +118,7 @@ After ejecting, your costs:
 - Forms (Resend free tier): $0
 - CMS (markdown in repo): $0
 
-**Break-even on the $199 migration: {{breakeven_months}} months.**
+**Break-even on the $99 move: {{breakeven_months}} months.**
 
 If editing is the worry — we ship an optional AI editor ($79/mo) that lets you update the site in plain English. Cancel anytime, site keeps working.
 
@@ -136,7 +136,7 @@ Loom audit?
 
 Last one.
 
-You're paying **${{annual_cost_estimate}}/yr** to rent a site you designed yourself. That's the whole pitch. We can fix it for $199 once.
+You're paying **${{annual_cost_estimate}}/yr** to rent a site you designed yourself. That's the whole pitch. The automated move is $99. Custom work is quoted.
 
 Reply "loom" for the audit. Ignore if you're good.
 
@@ -163,7 +163,7 @@ Your current spend: **${{annual_cost_estimate}}/yr** on Wix Premium + extras. Pe
 
 We rebuild {{site_url}} as a Next.js codebase you own. Hosted on Cloudflare Pages free tier. Total cost after migration: **$5/year**.
 
-$199 done-for-you. 10-day turnaround (Wix takes longer because we have to manually re-extract your content — no API).
+The automated move is $99. Custom work is quoted. Wix takes longer because the content has to be copied by hand.
 
 Want a 5-min Loom? I'll show you what the rebuilt site looks like + your real Lighthouse score.
 
@@ -191,7 +191,7 @@ We've migrated **{{wix_migrations_count}}** Wix sites this quarter. Process:
 3. Set up 301 redirects so SEO survives
 4. Hand you the GitHub repo
 
-You go from locked-in to fully owned. **$199 once, $5/yr after.**
+You go from locked-in to fully owned. **$99 once for the automated move, then about $5/yr for the domain. Custom work is quoted.**
 
 Loom audit?
 
@@ -236,7 +236,7 @@ No pitch deck, no sales call. Just the audit.
 
 After you watch it, two options:
 - **Automated ($99)** — an automated migration of a simple site. You review it, then you edit by chatting with your own agent
-- **Done for you ($199)** — we do that move by hand, inside a cap of about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff
+- **custom work (no public price)** — we do that move by hand, inside a cap of about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff
 
 Or none of the above. Watching the Loom doesn't commit you to anything.
 
@@ -251,11 +251,11 @@ eject.dev
 
 ### "I'm not technical / I don't want to manage code"
 
-You don't have to. The Done-for-You SKU ($199) means we ship the whole thing — you never open a terminal. For ongoing edits, the Editor add-on ($79/mo) lets you update the site by typing "change the headline to X" in a chatbox. If you cancel the Editor, the site keeps running on Cloudflare for free. Worst case you're back where you started, minus the Webflow bill.
+You don't have to. Custom work means we handle the migration for you, step by step — you never open a terminal. For ongoing edits, the Editor add-on ($79/mo) lets you update the site by typing "change the headline to X" in a chatbox. If you cancel the Editor, the site keeps running on Cloudflare for free. Worst case you're back where you started, minus the Webflow bill.
 
 ### "I love Webflow's editor — I'd lose that"
 
-Fair. The Webflow visual editor is genuinely good. The trade is: you keep paying ${{annual_cost_estimate}}/yr forever, OR you pay $199 once + optional $79/mo for our AI editor that handles 90% of the same edits via plain English. Most customers find the AI editor faster for content changes; we're honest that for major redesigns you'd hire a designer either way. Want a Loom comparing both editing flows?
+Fair. The Webflow visual editor is genuinely good. The trade is: you keep paying ${{annual_cost_estimate}}/yr forever, OR you pay $99 once for the automated move, or ask us for custom pricing, and then edit by chatting with your own AI. Most customers find the AI editor faster for content changes; we're honest that for major redesigns you'd hire a designer either way. Want a Loom comparing both editing flows?
 
 ### "Won't this break my SEO?"
 

@@ -125,16 +125,9 @@ export function ScanResults({ data }: { data: ScanData }) {
  ]}
  />
  <Path
- badge={`${byHand.name} · $${byHand.price}`}
- title="We do the move by hand, inside a cap. Then you edit by chatting."
- steps={[
- `Pay $${byHand.price}`,
- `About ${byHand.cap.pages} pages, ${byHand.cap.forms} form, ${byHand.cap.revisionRounds} revision rounds`,
- `A ${byHand.cap.handoffMinutes}-minute handoff`,
- "Same editing guide and agent instructions",
- "Beyond the cap, we refer out or quote an add-on",
- ]}
- dark
+ badge={byHand.name}
+ title="We handle the migration for you, step by step."
+ steps={["Custom pricing", "Simple sites"]}
  />
  </div>
  </div>
@@ -154,25 +147,9 @@ export function ScanResults({ data }: { data: ScanData }) {
  {siteConfig.pricing.express.cta} <span className="group-hover:translate-x-1 inline-block transition">→</span>
  </p>
  </CheckoutLink>
- <CheckoutLink
- tier="concierge"
- className="rounded-2xl border-2 border-ink bg-ink text-paper p-7 hover:bg-signal hover:border-signal transition group"
- >
- <div className="flex items-baseline justify-between mb-2">
- <p className="text-xs font-mono uppercase tracking-widest text-paper/60">{siteConfig.pricing.concierge.name}</p>
- <span className="text-[10px] font-mono uppercase tracking-widest bg-signal text-paper rounded-full px-2 py-0.5">
- Most popular
- </span>
- </div>
- <p className="h-section text-3xl md:text-4xl mb-2">
- ${siteConfig.pricing.concierge.price}
- <span className="text-paper/50 text-base font-normal"> · one-time</span>
+ <p className="text-sm text-ink-muted self-center">
+ <a className="underline-offset-4 hover:underline" href="/book">Contact us or book a call for custom pricing</a>
  </p>
- <p className="text-paper/80 text-sm mb-4">{siteConfig.pricing.concierge.blurb}</p>
- <p className="text-paper text-sm font-medium">
- {siteConfig.pricing.concierge.cta} <span className="group-hover:translate-x-1 inline-block transition">→</span>
- </p>
- </CheckoutLink>
  </div>
  </>
  ) : (

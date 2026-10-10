@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { siteConfig } from "@/lib/site";
 
 export function OpsPaymentLink({ opsKey }: { opsKey: string }) {
   const [url, setUrl] = useState<string | null>(null);
@@ -37,7 +36,7 @@ export function OpsPaymentLink({ opsKey }: { opsKey: string }) {
 
   return (
     <form onSubmit={onSubmit} className="mt-10 rounded-2xl border border-line bg-white p-6 max-w-xl space-y-3">
-      <p className="font-medium">Done for you payment link · ${siteConfig.pricing.concierge.price}</p>
+      <p className="font-medium">Custom payment link</p>
       <p className="text-sm text-ink-muted">Use this after the call. It creates a test-mode or mock checkout. It does not appear on the public pricing page.</p>
       <input name="name" placeholder="Customer name" className="w-full rounded-lg border border-line px-3 py-2 text-sm" />
       <input name="email" type="email" required placeholder="Customer email" className="w-full rounded-lg border border-line px-3 py-2 text-sm" />

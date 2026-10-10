@@ -155,4 +155,4 @@ With a paid Workspace plan you can export HTML/CSS, but CMS items and pages aren
 
 ## Where to go next
 
-Automated is $99 and you can buy it on the spot. Done for you is $199 after a call, for a simple site. See [renewal watch](/renewal-watch), [book a call](/book).
+Automated is $99 and you can buy it on the spot. Custom migration, for a simple site. See [renewal watch](/renewal-watch), [contact us for custom pricing](/book).

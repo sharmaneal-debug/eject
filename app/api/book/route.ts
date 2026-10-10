@@ -6,7 +6,6 @@ import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { safeFetch, SsrfError } from "@/lib/ssrf";
 import { detectPlatform, PLATFORM_LABELS } from "@/lib/platform";
 import { buildScanEstimate } from "@/lib/scan-estimate";
-import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
 
@@ -77,8 +76,8 @@ export async function POST(req: Request) {
   });
 
   const to = process.env.LEAD_NOTIFICATION_TO?.trim() || supportEmail();
-  const subject = `Book a call · ${email} · ${siteUrl || "no url"}`;
-  const text = `Done for you call request.
+  const subject = `Custom pricing · ${email} · ${siteUrl || "no url"}`;
+  const text = `Custom pricing request.
 
 Name: ${body.name || "(not provided)"}
 Email: ${email}
@@ -88,7 +87,7 @@ ${note}
 Lead id: ${saved.lead.id}
 Stored: ${saved.info.driver} (durable: ${saved.info.durable})
 
-${siteConfig.pricing.concierge.name} is $${siteConfig.pricing.concierge.price} after the call, if the site fits the cap.
+Custom pricing. We handle the migration for you, step by step.
 `;
   const mailed = await sendEmail({ to, subject, text, html: `<pre>${text.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!)}</pre>` });
 

@@ -32,7 +32,7 @@ export const costConstants = {
   reviewMinutesFlat: 20,
   /** Person time on the $99 automated tier: a short review, not a rebuild. */
   automatedReviewMinutes: 20,
-  /** Person time on the $199 tier inside the cap, plus the included handoff. */
+  /** Person time on the custom tier inside the cap, plus the included handoff. */
   doneForYouPolishMinutes: 90,
 
   // What it costs us to serve one simple site.

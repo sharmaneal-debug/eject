@@ -5,7 +5,6 @@ import { ScopeLimits } from "@/components/scope-limits";
 import { JsonLd } from "@/components/json-ld";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
-import { PRICING_LAST_CHECKED } from "@/lib/pricing/platforms";
 
 export const metadata: Metadata = pageMetadata({
   title: "Renewal watch",
@@ -29,12 +28,8 @@ export default function Page() {
       <JsonLd data={schema} />
       <Section className="pb-0">
         <Eyebrow>Renewal watch</Eyebrow>
-        <h1 className="h-display text-5xl md:text-7xl tracking-tightest max-w-4xl mb-5">
-          Edit by chatting. <span className="text-ink/40">Move before the invoice.</span>
-        </h1>
-        <p className="text-ink-soft max-w-2xl text-lg leading-relaxed">
-          {siteConfig.editing.lead} Paste the renewal email, or type the platform, plan, and date. The savings line subtracts the ${siteConfig.pricing.express.price} {siteConfig.pricing.express.name} fee. {siteConfig.pricing.concierge.name} is ${siteConfig.pricing.concierge.price}. Prices were checked {PRICING_LAST_CHECKED}. We do not invent a number when the vendor page didn&apos;t publish one.
-        </p>
+        <h1 className="h-display text-5xl md:text-7xl tracking-tightest">Renewal watch</h1>
+        <p className="mt-3 text-ink-soft">Reminders before the invoice. The math uses the ${siteConfig.pricing.express.price} move.</p>
       </Section>
       <Section>
         <RenewalWatchForm />

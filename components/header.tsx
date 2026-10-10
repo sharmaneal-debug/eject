@@ -3,11 +3,8 @@ import { siteConfig } from "@/lib/site";
 import { EjectMark } from "./eject-mark";
 
 const links = [
-  { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/book", label: "Book a call" },
   { href: "/calculator", label: "Calculator" },
-  { href: "/renewal-watch", label: "Renewal watch" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -29,10 +26,10 @@ export function Header() {
           ))}
         </nav>
         <Link
-          href="/"
+          href="/checkout?tier=express"
           className="rounded-md bg-ink text-paper px-4 py-2 text-sm font-medium hover:bg-signal transition"
         >
-          Scan my site
+          Buy for $99
         </Link>
       </div>
     </header>

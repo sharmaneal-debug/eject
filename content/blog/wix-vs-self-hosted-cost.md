@@ -51,17 +51,17 @@ So if your Wix plan "renews on December 1", your card can be charged around **No
 | Domain | Whatever your registrar charges | You pay for a domain on Wix too. At-cost registrars like Cloudflare "do not mark up domain prices at all" ([Cloudflare Registrar](https://www.cloudflare.com/products/registrar/)) |
 | Contact form | Often $0 on a form service's free tier | Check the provider's current limits |
 | Editing | Your AI assistant | No builder subscription needed |
-| One-time move | DIY (your time) or a service | Eject: Automated $99 or Done for you $199 |
+| One-time move | DIY (your time) or a service | Eject: Automated $99 or custom migration |
 
 Since you pay for a domain either way, set it aside and compare what's left:
 
 | Over 3 years | Stay on Wix Light | Stay on Wix Core | Move (Automated) | Move (Done for you) |
 |---|---|---|---|---|
 | Builder / hosting | $612 | $1,044 | $0 | $0 |
-| One-time move | $0 | $0 | $99 | $199 |
-| **Total** | **$612** | **$1,044** | **$99** | **$199** |
+| One-time move | $0 | $0 | $99 | custom pricing |
+| **Total** | **$612** | **$1,044** | **$99** | **custom** |
 
-Moving a Core site with Done for you ($199) saves **$845 over three years** ($1,044 minus $199), and the move pays for itself in about 7 months. A Light site moved the same way saves $413 over three years. If you're comfortable doing it yourself, the gap is bigger. Plug in your own plan with the [renewal savings calculator](/calculator?p=wix).
+Moving a Core site with the $99 automated move saves **$945 over three years**, and the move pays for itself in about 4 months. A Light site moved the same way saves $513 over three years. Custom work has no public price. If you're comfortable doing it yourself, the gap is bigger. Plug in your own plan with the [renewal savings calculator](/calculator?p=wix).
 
 ## The catch: you can't export a Wix site
 
@@ -140,4 +140,4 @@ No. Wix says services purchased during a sale renew at the standard rate.
 
 ## Where to go next
 
-Automated is $99 and you can buy it on the spot. Done for you is $199 after a call, for a simple site. See [renewal watch](/renewal-watch), [book a call](/book).
+Automated is $99 and you can buy it on the spot. Custom migration, for a simple site. See [renewal watch](/renewal-watch), [contact us for custom pricing](/book).

@@ -56,4 +56,4 @@ Writes `out/orders/<orderId>/` from the stored delivery packet (README, AGENTS.m
 
 ## `pnpm setup-stripe`
 
-Create-or-lookup Stripe **test mode** products for the $99 automated and $199 done-for-you prices. Refuses live keys. Prints `ENV=price_id` lines. Does not write `.env`.
+Create-or-lookup Stripe **test mode** products for the $99 automated price and the unpublished custom amount. Refuses live keys. Prints `ENV=price_id` lines. Does not write `.env`.

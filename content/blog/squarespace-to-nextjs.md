@@ -23,7 +23,7 @@ This post is the long version of that rescue mission. You'll get:
 - [The 36-month cost of staying](#cost-math), with real 2026 plan pricing
 - [What you actually keep when you migrate](#what-you-keep). Design, posts, pages, redirects, SEO
 - [The 14-day playbook](#playbook), where AI does the rebuild work for you
-- [Automated ($99) or done by hand ($199)](#diy-or-hire). Simple sites only, including when not to migrate
+- [Automated ($99) or custom migration](#diy-or-hire). Simple sites only, including when not to migrate
 - [The chat editor](#chat-editor). Edit your new site by chatting with any AI
 - [An interactive cost calculator](#cost-calculator)
 - [FAQ with proper schema markup](#faq), so this article pulls its weight in search
@@ -399,7 +399,7 @@ We run an automated migration of a simple Squarespace site. You review the pages
 - You are willing to review the pages before the domain moves
 - You want to edit afterward by chatting with your own AI
 
-### Done for you ($199 one-time)
+### Done for you (custom pricing)
 
 A person does that move by hand: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. You still review before DNS. We do not promise 7 days. Beyond the cap we refer out or quote an add-on.
 
@@ -516,7 +516,7 @@ You can. Your Squarespace account stays accessible (Squarespace doesn't delete p
 |----------|-------|--------------|
 | **Free scan** | **$0** | Names the platform and a rough page count. Not a savings audit, not a preview of a rebuilt site, and not a tier recommendation before you look at the pages. |
 | **Automated** | **$99 one-time** | An automated migration of a simple Squarespace marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included. Not a blog converter. |
-| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
+| **Done for you** | **custom pricing** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 
 **[Start your migration →](https://ejectfrom.com/start)**
 

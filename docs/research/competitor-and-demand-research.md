@@ -153,8 +153,8 @@ Framer-specific:
 - **"Framer nailed the UI, but it priced itself out of the market."** — 69 upvotes, 62 comments — *"Webflow: $59/month. Framer: $256/month for the same use case. 4x cost."*
 - **"Searching for Framer Alternatives after recent Price Changes"** — 42 upvotes — *"15 clients on framer right now... costs will increase 400%. Lose more than half my clients."*
 - **"Framer just killed my agency margins. Alternatives?"** — 23 upvotes — *"My clients are on Scale now and I'm eating the cost since I quoted them before the hike."*
-- **"Framer is amazing… but the vendor lock-in is killing me."** — 24 upvotes — describes Neal's product: *"I'd happily pay extra to keep it in my stack long-term if they loosened the walls just a bit."*
-- **"I found a way to cut framer costs to almost $0 - unframer, react export plugin"** — 34 upvotes — OP describes Neal's exact business model
+- **"Framer is amazing… but the vendor lock-in is killing me."** — 24 upvotes — describes this product: *"I'd happily pay extra to keep it in my stack long-term if they loosened the walls just a bit."*
+- **"I found a way to cut framer costs to almost $0 - unframer, react export plugin"** — 34 upvotes — OP describes this business model
 - **"I'm not paying $30 extra just for robots.txt and redirects."** — 67 upvotes
 - **"Looking for a cheaper framer alternative"** — 15 upvotes, 31 comments
 
@@ -213,7 +213,7 @@ Multiple paid offerings = validated WTP. None combine **(a)** DFY migration + **
 
 ### Marketing channel map (1-5 scoring)
 
-| Channel | Reach | Cost | Speed | Scale | Neal-fit | Verdict |
+| Channel | Reach | Cost | Speed | Scale | Fit | Verdict |
 |---|---|---|---|---|---|---|
 | SEO blog | 5 | 5 | 1 | 5 | 4 | **WORK** — 6-12mo payoff, but the moat |
 | YouTube | 5 | 5 | 2 | 5 | 3 | **HIGHEST TRUST CHANNEL** — partner with creator |
@@ -221,7 +221,7 @@ Multiple paid offerings = validated WTP. None combine **(a)** DFY migration + **
 | Twitter X build-in-public | 4 | 5 | 3 | 4 | 3 | Slow ramp |
 | IndieHackers | 3 | 5 | 4 | 2 | 4 | Worthwhile but small |
 | Webflow/Framer forums | 5 | 5 | 5 | 2 | 4 | **WORK** — highest-intent free channel |
-| Cold email Webflow operators | 5 | 4 | 4 | 4 | 5 | **WORK — Neal's strength** |
+| Cold email Webflow operators | 5 | 4 | 4 | 4 | 5 | **WORK** |
 | Cold email Framer operators | 5 | 4 | 4 | 4 | 5 | **WORK — strongest 30-day channel** |
 | Product Hunt | 3 | 5 | 4 | 1 | 3 | One spike |
 | HN Show | 4 | 5 | 4 | 2 | 4 | **WORTH ONE BIG SHOT** |
@@ -254,9 +254,9 @@ Multiple paid offerings = validated WTP. None combine **(a)** DFY migration + **
 ### Key findings
 
 - Demand is loud + current. Framer's Oct 2025 + Webflow's late-2024 pricing is still bleeding in real-time.
-- Existing migration agencies prove WTP at $5-60K/migration. Neal differentiates, doesn't compete on "we move you."
+- Existing migration agencies prove WTP at $5-60K/migration. Eject differentiates, doesn't compete on "we move you."
 - **Wedge is the AI-chatbot editor** — r/nextjs counter-signal proves bare Next.js fails growth teams.
 - YouTube + SEO have 6-12mo payoff but huge long tail — almost no high-quality "leaving Framer/Webflow" content from a credible operator yet.
-- Cold email + Reddit/Forum are week-1 wedge — Neal's Z Cyber outreach skills transfer 1:1.
+- Cold email + Reddit/Forum are week-1 wedge — Outreach skills transfer.
 - Pricing the market accepts: agencies $1.5-5K/site + $99-299/mo; founders $3-8K turnkey; B2B SaaS $15-50K + retainer.
 - Counter-positioning headlines from real pain language: *"Keep editing your site like Framer. Pay like Vercel."* / *"Stop paying $300/mo to host a static page."* / *"Your Framer site, owned, in 7 days."*

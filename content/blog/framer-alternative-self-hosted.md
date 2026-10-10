@@ -122,9 +122,9 @@ The recipe: take your live Framer URL, run it through a tool that lifts your des
 
 After the move, you edit by chatting with your own AI. Automated ($99) is an automated migration of a simple Framer marketing, portfolio, or landing site. You review the pages before DNS. The editing guide and agent instructions are included. It is not a CMS extract, not a preview before you pay, and not a one-afternoon guarantee.
 
-**Honest tradeoff:** After either offer, editing is a chat with your own AI. If you want the move done by hand, Done for you is $199: about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not promise 7 days. Beyond that cap we refer out or quote an add-on.
+**Honest tradeoff:** After either offer, editing is a chat with your own AI. If you want the move done by hand, Custom migration: about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not promise 7 days. Beyond that cap we refer out or quote an add-on.
 
-**Cost:** $99 one-time for Automated, $199 one-time for Done for you. Hosting for a simple static site can be $0 on Cloudflare Pages. The domain is still yours to renew.
+**Cost:** $99 one-time for Automated, custom pricing for Done for you. Hosting for a simple static site can be $0 on Cloudflare Pages. The domain is still yours to renew.
 
 ### Option 4: Hire a developer
 
@@ -149,7 +149,7 @@ The traditional answer. Find a freelancer on [Upwork](https://www.upwork.com/), 
 | **Webstudio** | $0 | 2-4 weeks (learn the tool) | $0 | Visual builder + light dev | N/A |
 | **Plasmic** | $0 | 2-4 weeks | $0 (or $59/mo for team) | Visual builder + React basics | N/A |
 | **Automated** | $99 | Reviewed before DNS. No fixed-day promise | Can be $0 for a static site | A simple marketing, portfolio, or landing page | Automated, then you review |
-| **Done for you** | $199 | Hand work inside a cap. No 7-day promise | Can be $0 for a static site | About 10 pages, 1 form | We do, by hand |
+| **Done for you** | custom pricing | Hand work inside a cap. No 7-day promise | Can be $0 for a static site | About 10 pages, 1 form | We do, by hand |
 | **Hire a developer** | $1,500-5,000 | 2-6 weeks | $0 | None | They do |
 | Stay on Framer | $0 | 0 | $30-90+/mo, rising | None | N/A |
 
@@ -176,7 +176,7 @@ We sell one of these options. So we are going to tell you when we are NOT the ri
 
 - The site is generating $50K+/month in revenue. A 1-day outage during migration is real money. Pay a professional.
 - You hate this kind of project and have the budget to make it disappear.
-- The site is still a simple site, and you want a person to do the move. That is Done for you ($199), inside the cap. A store or a large CMS is a referral, not a bigger Eject tier.
+- The site is still a simple site, and you want a person to do the move. That is custom migration, inside the cap. A store or a large CMS is a referral, not a bigger Eject tier.
 
 ### When Eject is the right pick
 
@@ -295,7 +295,7 @@ Editing after the move is a chat with your own AI. You describe the change and r
 
 ### What if I get stuck mid-rebuild and the AI loops on the same bug?
 
-The editing guide covers common stuck points. Done for you ($199) is a separate hand move inside the cap, not an upgrade that continues a half-finished CMS extract. We do not extract CMS items.
+The editing guide covers common stuck points. custom migration is a separate hand move inside the cap, not an upgrade that continues a half-finished CMS extract. We do not extract CMS items.
 
 ### How is this different from just opening Cursor and asking it to rebuild my site?
 
@@ -321,7 +321,7 @@ You still own the site. The whole point is that the output is a real codebase on
 |------|-------|--------------|
 | **Scan your URL** | **Free** | Names the platform and a rough page count. Not a preview of a migrated codebase. |
 | **Automated** | **$99 one-time** | An automated migration of a simple Framer site. You review before DNS. Editing guide and agent instructions included, so you edit by chatting with your own AI. Not a CMS extract and not an afternoon guarantee. |
-| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
+| **Done for you** | **custom pricing** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 
 **[Scan your URL on the homepage](https://ejectfrom.com)**
 
@@ -363,7 +363,7 @@ Or if you are not sure yet, [run the calculator](#cost-calculator). The number t
  "name": "What if I get stuck mid-rebuild and the AI loops on the same bug?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "The editing guide covers common stuck points. Done for you is $199 and is a hand move inside a cap of about 10 pages, not an upgrade of a half-finished CMS extract."
+ "text": "The editing guide covers common stuck points. Custom migration and is a hand move inside a cap of about 10 pages, not an upgrade of a half-finished CMS extract."
  }
  },
  {

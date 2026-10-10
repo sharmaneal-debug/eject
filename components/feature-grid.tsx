@@ -19,7 +19,7 @@ const features = [
  },
  {
  badge: "04",
- title: `${siteConfig.pricing.concierge.name}, $${siteConfig.pricing.concierge.price}`,
+ title: "Custom migration",
  body: `A person does the move by hand: ${doneForYouCapLabel()}. Beyond that, we refer out or quote an add-on.`,
  },
  {

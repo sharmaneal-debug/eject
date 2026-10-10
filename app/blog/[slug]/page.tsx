@@ -168,9 +168,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <article className="max-w-[680px]">
           <aside className="rounded-xl border border-line bg-paper-warm p-5 mb-10 text-sm text-ink-soft leading-relaxed">
             <p className="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Offer, October 2026</p>
-            {siteConfig.editing.lead} {siteConfig.editing.included} {siteConfig.pricing.express.name} is ${siteConfig.pricing.express.price}: an automated migration of a simple site, which you review before DNS. {siteConfig.pricing.concierge.name} is ${siteConfig.pricing.concierge.price}: the same kind of site, done by hand, up to about {siteConfig.pricing.concierge.cap.pages} pages, {siteConfig.pricing.concierge.cap.forms} form, {siteConfig.pricing.concierge.cap.revisionRounds} revision rounds, and a {siteConfig.pricing.concierge.cap.handoffMinutes}-minute handoff. We do not extract a CMS, migrate a store, or show a preview before you pay. Older sections of this post may describe a wider service or an older price. The{" "}
-            <Link href="/calculator" className="text-accent hover:text-signal">calculator</Link> uses vendor prices checked on 2026-10-10, and the{" "}
-            <Link href="/how-it-works" className="text-accent hover:text-signal">how it works</Link> page is the current offer.
+            Automated move: ${siteConfig.pricing.express.price}.{" "}
+            <Link href="/book" className="text-accent hover:text-signal">Contact us or book a call for custom pricing</Link>.
           </aside>
           {segments.map((seg, i) => (
             <div key={i}>

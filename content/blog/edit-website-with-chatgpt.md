@@ -448,10 +448,10 @@ Three ways in:
 | Option | What it costs | What you get |
 |---|---|---|
 | **Scan your site** | **Free** | Drop your URL into our scanner. We'll tell you, in 60 seconds, whether your site is a good fit for migration, what we'd estimate the migration to cost, and what the 36-month savings look like. No commitment, no signup. |
-| **Start a migration** | **$99 or $199 one-time** | Automated ($99) is an automated migration of a simple site, reviewed before DNS. Done for you ($199) is that move by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. After that you edit by chatting with your own AI. The editing guide is included. Simple sites only. |
-| **Talk to a human** | **Free 20-min call** | If you've read this far and still aren't sure, book a call. We'll look at your site live, tell you honestly whether migration makes sense, and recommend the right tier (or recommend you stay where you are if that's the right answer). |
+| **Start a migration** | **$99 or custom pricing** | Automated ($99) is an automated migration of a simple site, reviewed before DNS. custom migration is that move by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. After that you edit by chatting with your own AI. The editing guide is included. Simple sites only. |
+| **Talk to a human** | **Free 20-min call** | If you've read this far and still aren't sure, contact us for custom pricing. We'll look at your site live, tell you honestly whether migration makes sense, and recommend the right tier (or recommend you stay where you are if that's the right answer). |
 
-**[Scan your site →](https://ejectfrom.com/scan)** • **[Start a migration →](https://ejectfrom.com/start)** • **[Book a call →](https://ejectfrom.com/call)**
+**[Scan your site →](https://ejectfrom.com/scan)** • **[Start a migration →](https://ejectfrom.com/start)** • **[Contact us for custom pricing →](https://ejectfrom.com/call)**
 
 The internet has spent ten years convincing you that editing a website is hard. As of 2026, it isn't. Open ChatGPT. Type what you want changed. Done.
 

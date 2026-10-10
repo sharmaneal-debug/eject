@@ -84,7 +84,7 @@ export function ScoreReport({ order }: { order: Order }) {
             </a>{" "}
             with order <span className="font-mono">{order.id}</span>. A person issues a refund or a quote. This app does not move money on its own.
             {score.referral === "refer_out" ? " A store, a member area, or a heavy CMS needs a different kind of project." : ""}
-            {score.referral === "add_on" ? " The $99 and $199 prices stop at about 10 pages and 1 form." : ""}
+            {score.referral === "add_on" ? " The $99 move stops at about 10 pages and 1 form." : ""}
           </p>
         </div>
       )}

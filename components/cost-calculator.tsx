@@ -1,13 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { siteConfig } from "@/lib/site";
 import { PLATFORMS, SELF_HOSTED, defaultPlanId, getPlan, type PlatformId } from "@/lib/pricing/platforms";
 import { calculateSavings, formatUsd, type BillingChoice } from "@/lib/pricing/savings";
-import { CheckoutLink } from "./checkout-link";
-
 type Billing = BillingChoice;
 
 export function CostCalculator({ initialPlatform = "webflow" }: { initialPlatform?: PlatformId }) {
@@ -15,11 +12,10 @@ export function CostCalculator({ initialPlatform = "webflow" }: { initialPlatfor
   const [planId, setPlanId] = useState(defaultPlanId(initialPlatform));
   const [billing, setBilling] = useState<Billing>("yearly");
   const [years, setYears] = useState(3);
-  const [tier, setTier] = useState<"express" | "concierge">("express");
 
   const platform = PLATFORMS.find((p) => p.id === platformId) ?? PLATFORMS[0]!;
   const plan = getPlan(platform.id, planId) ?? platform.plans[0]!;
-  const ejectOneTimeUsd = tier === "express" ? siteConfig.pricing.express.price : siteConfig.pricing.concierge.price;
+  const ejectOneTimeUsd = siteConfig.pricing.express.price;
 
   const result = useMemo(
     () =>
@@ -97,24 +93,7 @@ export function CostCalculator({ initialPlatform = "webflow" }: { initialPlatfor
             </div>
           </Field>
 
-          <div className="mt-2 pt-6 border-t border-line">
-            <p className="text-sm font-medium mb-3">One-time Eject fee to subtract</p>
-            <div className="grid grid-cols-2 gap-2">
-              <Toggle
-                active={tier === "express"}
-                onClick={() => setTier("express")}
-                label={`${siteConfig.pricing.express.name} · $${siteConfig.pricing.express.price}`}
-              />
-              <Toggle
-                active={tier === "concierge"}
-                onClick={() => setTier("concierge")}
-                label={`${siteConfig.pricing.concierge.name} · $${siteConfig.pricing.concierge.price}`}
-              />
-            </div>
-            <p className="text-xs text-ink-muted mt-2">
-              {siteConfig.pricing.express.name} is an automated migration of a simple site. {siteConfig.pricing.concierge.name} is that move, done by hand inside a cap. You review before DNS. {siteConfig.editing.lead}
-            </p>
-          </div>
+          <p className="mt-2 pt-6 border-t border-line text-sm">Fee subtracted: ${siteConfig.pricing.express.price}.</p>
         </div>
 
         <div className="p-6 lg:p-8 bg-paper-warm">
@@ -163,15 +142,7 @@ export function CostCalculator({ initialPlatform = "webflow" }: { initialPlatfor
             </a>
           </p>
 
-          <CheckoutLink
-            tier={tier}
-            className="inline-flex w-full items-center justify-center rounded-lg bg-ink text-paper px-4 py-3 text-sm font-medium hover:bg-signal transition"
-          >
-            Start with {tier === "express" ? siteConfig.pricing.express.name : siteConfig.pricing.concierge.name} · ${ejectOneTimeUsd} →
-          </CheckoutLink>
-          <Link href="/renewal-watch" className="mt-3 inline-flex w-full items-center justify-center text-sm text-accent hover:text-signal">
-            Watch a renewal date instead →
-          </Link>
+          <p className="text-sm text-ink-muted">One-time fee in this math: ${ejectOneTimeUsd}.</p>
         </div>
       </div>
     </div>

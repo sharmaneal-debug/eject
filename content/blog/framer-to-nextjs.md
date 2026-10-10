@@ -148,7 +148,7 @@ Here's the inventory, with a Next.js replacement for each.
 
 **What Framer does:** [nothing](https://www.framer.com/help/articles/can-i-export-my-website-to-html-and-self-host-it/). The Framer help center is unusually candid here. Quoting the page directly, you "cannot export." There is no official HTML/CSS export. There is no API to dump your design. The lock-in is the actual product.
 
-**Replacement:** After the move, you edit by chatting with your own AI. An editing guide and agent instructions are included. Automated ($99) is an automated migration of a simple marketing, portfolio, or landing site. You review it before DNS. Done for you ($199) is that move, done by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not extract Framer CMS data. There is no preview before you pay.
+**Replacement:** After the move, you edit by chatting with your own AI. An editing guide and agent instructions are included. Automated ($99) is an automated migration of a simple marketing, portfolio, or landing site. You review it before DNS. custom migration is that move, done by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We do not extract Framer CMS data. There is no preview before you pay.
 
 That's the whole list. Eight things. Each has a free or near-free replacement. The hard one is the canvas, and that's exactly what the rest of this article is about solving.
 
@@ -356,7 +356,7 @@ Real talk. Not every site is a good DIY candidate, and not every owner should sp
 - You have more money than time
 - You've already started a migration and it stalled
 
-That's [Automated](/pricing) ($99, an automated migration of a simple site, reviewed before DNS) or [Done for you](/pricing) ($199, done by hand inside a cap). After either one, you edit by chatting with your own AI. Neither extracts a CMS, and neither promises a fixed number of days.
+That's [Automated](/pricing) ($99, an automated migration of a simple site, reviewed before DNS) or [Done for you](/pricing) (custom pricing, done by hand inside a cap). After either one, you edit by chatting with your own AI. Neither extracts a CMS, and neither promises a fixed number of days.
 
 ### When you should NOT migrate at all
 
@@ -443,7 +443,7 @@ You can. Your old Framer project sits archived on the free Workspace plan. Spin 
 
 ### How long does the migration actually take?
 
-Automated ($99) is an automated migration of a simple site. You review it before DNS. It is not a one-hour publish. Done for you ($199) is a person doing that work by hand inside the cap. We don't promise seven days. Afterward you edit by chatting with your own AI.
+Automated ($99) is an automated migration of a simple site. You review it before DNS. It is not a one-hour publish. custom migration is a person doing that work by hand inside the cap. We don't promise seven days. Afterward you edit by chatting with your own AI.
 
 ### How do I edit my new site without writing code?
 
@@ -457,7 +457,7 @@ You chat with ChatGPT or Claude. The kit is instructions you paste into a new ch
 |------|-------|--------------|
 | **Scan your URL** | **Free** | The scan on [ejectfrom.com](https://ejectfrom.com) names the platform and a rough page count. It is not a preview of a migrated site, and it is not shown before you pay. |
 | **Automated** | **$99 one-time** | An automated migration of a simple Framer marketing, portfolio, or landing site. You review before DNS. Editing guide and agent instructions included. Not a CMS extract. |
-| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
+| **Done for you** | **custom pricing** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 
 **[Scan your URL on the homepage →](https://ejectfrom.com)**
 
@@ -523,7 +523,7 @@ Or if you're not sure yet: [run the calculator](#cost-calculator). The number te
  "name": "How long does the migration take?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Automated is a $99 automated migration of a simple site, reviewed before DNS. Done for you is $199, done by hand inside a cap. Neither promises a fixed number of days, and neither is a preview before you pay."
+ "text": "Automated is a $99 automated migration of a simple site, reviewed before DNS. Custom migration, done by hand inside a cap. Neither promises a fixed number of days, and neither is a preview before you pay."
  }
  },
  {

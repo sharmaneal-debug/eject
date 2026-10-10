@@ -1,6 +1,6 @@
 # Eject — Real unit economics
 
-Last updated: 2026-05-03. Numbers are for **test/sandbox usage today**. Re-run when prices or stack change.
+Last updated: 2026-05-03. Numbers are for **test/sandbox usage today**. The custom-work dollar figure below is an internal billing amount. It is not a public price. Re-run when prices or stack change.
 
 ## TL;DR
 

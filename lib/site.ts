@@ -11,10 +11,9 @@ export const siteConfig = {
   name: "Eject",
   domain: "ejectfrom.com",
   url: "https://ejectfrom.com",
-  tagline: "Edit your site by chatting.",
-  shortTagline: "Move a simple site once. Then edit it by chatting with your own AI.",
-  description:
-    "After the move, you edit your own site by chatting with your own AI agent. An editing guide and agent instructions are included. Automated is a $99 one-time migration for a simple site. Done for you is $199, done by hand, for simple sites up to about 10 pages.",
+  tagline: "Move your site for $99.",
+  shortTagline: "Move a simple site. $99 once.",
+  description: "Move a simple site for $99. You own the files.",
   email: "hi@ejectfrom.com",
   twitter: "@useeject",
 
@@ -25,8 +24,8 @@ export const siteConfig = {
   },
 
   editing: {
-    lead: "After the move, you edit your own site by chatting with your own AI agent.",
-    included: "An editing guide and agent instructions are included.",
+    lead: "You edit the files by chatting with your own AI.",
+    included: "An editing guide is included.",
   },
 
   pricing: {
@@ -34,39 +33,23 @@ export const siteConfig = {
       id: "express" as const,
       name: "Automated",
       price: automatedPrice,
-      blurb:
-        "An automated migration of a simple marketing, portfolio, or landing site. You review the pages before DNS. Not a preview before you pay, and not a CMS extract.",
-      bullets: [
-        "An automated migration of a simple site",
-        "You review the pages before anyone points DNS",
-        "An editing guide and agent instructions, so you edit by chatting with your own AI",
-        "A short guide for putting the result on a free static host",
-        "A DNS checklist for when you are ready to switch",
-        "30 days of email support if you get stuck",
-      ],
-      cta: `Start for $${automatedPrice}`,
+      blurb: "Automated move of a simple site.",
+      bullets: ["Simple sites", "You own the files", "Editing guide included"],
+      cta: `Buy for $${automatedPrice}`,
     },
     concierge: {
       id: "concierge" as const,
-      name: "Done for you",
+      name: "Custom",
       price: doneForYouPrice,
-      blurb:
-        `Not a buy-now button. Book a call. Neal and a colleague do the move by hand for a simple site: up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. You pay $${doneForYouPrice} after the call if we take the work. Beyond the cap, we refer out or quote an add-on.`,
+      blurb: "We handle the migration for you, step by step.",
       cap: {
         pages: 10,
         forms: 1,
         revisionRounds: 2,
         handoffMinutes: 30,
       },
-      bullets: [
-        "A person moves the pages by hand",
-        "Simple sites only: about 10 pages, 1 form, 2 revision rounds",
-        "A 30-minute handoff when the pages are ready",
-        "The same editing guide and agent instructions, so you edit by chatting afterward",
-        "Help deploying on a free host in an account you control",
-        "Beyond the cap, we refer out or quote a priced add-on",
-      ],
-      cta: "Book a call",
+      bullets: ["We handle the migration for you, step by step."],
+      cta: "Contact us",
     },
   },
 } as const;

@@ -61,10 +61,7 @@ export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: str
 
 // ---------- Templates ----------
 
-// Internal notification to Neal whenever a paid customer comes through.
-// Sent in addition to the customer's kickoff email, so leads land in his
-// existing Laniakea inbox without needing a separate database. Uses Reply-To
-// of the customer so Neal can reply directly from his inbox.
+// Internal notice for a paid order. Reply-To is the customer.
 export function paidLeadNotification(opts: {
   name: string;
   email: string;
@@ -74,10 +71,11 @@ export function paidLeadNotification(opts: {
   stripeSessionId?: string;
 }) {
   const offer = tierConfig(opts.tier);
-  const subject = `Paid · ${offer.name} · $${opts.amount} · ${opts.email}`;
+  const money = opts.tier === "done_for_you" ? "custom" : `$${opts.amount}`;
+  const subject = `Paid · ${offer.name} · ${money} · ${opts.email}`;
   const text = `New paid customer.
 
-Tier:    ${offer.name} ($${opts.amount})
+Tier:    ${offer.name} (${money})
 Name:    ${opts.name || "(not provided)"}
 Email:   ${opts.email}
 Site:    ${opts.siteUrl || "(none)"}
@@ -91,7 +89,7 @@ Eject internal notification`;
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
 <p style="font-size: 18px; font-weight: 600;">New paid customer</p>
 <table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
-<tr><td style="padding: 6px 12px; color: #5A5A66; width: 90px;">Tier</td><td style="padding: 6px 12px;"><strong>${tierConfig(opts.tier).name}</strong> ($${opts.amount})</td></tr>
+<tr><td style="padding: 6px 12px; color: #5A5A66; width: 90px;">Tier</td><td style="padding: 6px 12px;"><strong>${tierConfig(opts.tier).name}</strong> (${opts.tier === "done_for_you" ? "custom" : `$${opts.amount}`})</td></tr>
 <tr><td style="padding: 6px 12px; color: #5A5A66;">Name</td><td style="padding: 6px 12px;">${escape(opts.name || "(not provided)")}</td></tr>
 <tr><td style="padding: 6px 12px; color: #5A5A66;">Email</td><td style="padding: 6px 12px;"><a href="mailto:${escape(opts.email)}">${escape(opts.email)}</a></td></tr>
 <tr><td style="padding: 6px 12px; color: #5A5A66;">Site</td><td style="padding: 6px 12px;">${escape(opts.siteUrl || "(none)")}</td></tr>
@@ -193,7 +191,7 @@ export function conciergeKickoffEmail(opts: { name: string; siteUrl: string; int
  const subject = `${opts.name || "Hi"}, your Eject ${offer.name} payment is in`;
  const text = `Hi ${opts.name || "there"},
 
-Your $${offer.price} ${offer.name} payment came through. A person hand-polishes a simple site (up to 10 pages, 1 form, 2 revision rounds, a 30-minute handoff). You edit it afterwards by chatting with your own agent.
+Your custom migration payment came through. We handle the migration for you, step by step.
 
 What happens next:
 
@@ -214,7 +212,7 @@ ${siteConfig.url}
  const html = `<!doctype html>
 <html><body style="font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #0B0B0F; max-width: 560px; margin: 0 auto; padding: 24px;">
  <p style="font-size: 18px;">Hi ${escape(opts.name) || "there"},</p>
- <p>Your <strong>$${offer.price} ${offer.name}</strong> payment came through. Stripe may also email a receipt. A person hand-polishes a simple site. You edit it afterwards with your own agent.</p>
+ <p>Your custom migration payment came through. We handle the migration for you, step by step.</p>
  <ol style="padding-left: 20px;">
  <li>${opts.intakeUrl ? `Submit the site for scoring: <a href="${escape(opts.intakeUrl)}">${escape(opts.intakeUrl)}</a>` : `We confirm <code>${escape(opts.siteUrl)}</code> with you.`}</li>
  <li>Simple marketing, portfolio, and landing pages can continue. Anything else is refunded or referred out.</li>

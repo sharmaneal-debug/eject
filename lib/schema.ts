@@ -41,9 +41,8 @@ export function serviceSchema() {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Website migration",
-    name: "Eject — move a simple site, then edit it by chatting",
-    description:
-      "After the move, you edit a simple marketing, portfolio, or landing site by chatting with your own AI. Automated is an automated migration you review before DNS. Done for you is the same kind of site, done by hand inside a page cap. Not a CMS extraction, not a store migration, and not a preview before you pay.",
+    name: "Eject. Move a simple site for $99.",
+    description: siteConfig.description,
     provider: { "@type": "Organization", name: siteConfig.legalEntity.name, url: siteConfig.url },
     areaServed: "Worldwide",
     offers: [
@@ -54,15 +53,6 @@ export function serviceSchema() {
         price: siteConfig.pricing.express.price,
         priceCurrency: "USD",
         url: `${siteConfig.url}/checkout?tier=express`,
-        availability: "https://schema.org/InStock",
-      },
-      {
-        "@type": "Offer",
-        name: siteConfig.pricing.concierge.name,
-        description: siteConfig.pricing.concierge.blurb,
-        price: siteConfig.pricing.concierge.price,
-        priceCurrency: "USD",
-        url: `${siteConfig.url}/checkout?tier=concierge`,
         availability: "https://schema.org/InStock",
       },
     ],

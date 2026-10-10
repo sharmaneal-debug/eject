@@ -43,7 +43,7 @@ export async function sendRenewalReminder(opts: {
     opts.slot === "90"
       ? "Confirm the site is only a marketing page, portfolio, or landing page. If it is a store or a large CMS, don't start a move with us."
       : opts.slot === "60"
-        ? `Start the move now if the site is in scope. ${siteConfig.pricing.express.name} ($${siteConfig.pricing.express.price}) is an automated migration of a simple site that you review before DNS. ${siteConfig.pricing.concierge.name} ($${siteConfig.pricing.concierge.price}) is that same kind of site, done by hand inside a page cap. ${siteConfig.editing.lead} ${siteConfig.editing.included} There is no preview before you pay.`
+        ? `The automated move is $${siteConfig.pricing.express.price}. Custom work has no public price.`
         : "Turn off auto-renew in the platform's billing settings. Switch DNS only after the new site is on a host you control.";
   const text = `Your ${platform} renewal is in ${opts.daysUntil} days (${when}).
 

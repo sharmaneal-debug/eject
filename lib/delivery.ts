@@ -55,7 +55,7 @@ export function buildDelivery(order: Order, report: ComplexityReport, snapshot: 
 
   const tierNote =
     order.tier === "done_for_you"
-      ? `Done for you ($${offer.price}). A person hand-polishes the site. Included: ${simpleSiteScope.revisionRounds} revision rounds and a ${simpleSiteScope.handoffMinutes}-minute handoff. Cap: ${simpleSiteScope.maxPages} pages and ${simpleSiteScope.maxForms} form.`
+      ? `Custom migration. We handle the migration for you, step by step.`
       : `Automated ($${offer.price}). The migration run is queued or manual depending on whether ANTHROPIC_API_KEY is set. Editing afterwards is yours.`;
   const readme = `# ${slug}\n\n## Edit it by chatting\n\nOpen this folder in Cursor, Claude, or ChatGPT. The agent follows AGENTS.md. You can also run \`node scripts/chat-edit.mjs "your change"\` to queue a sentence in edits/inbox.md.\n\n${tierNote}\n\n## What was automated\n\n- Public pages were fetched and scored.\n- Eligibility: ${report.eligibility}.\n- Assets look ${report.assetsPullable ? "pullable" : "hard to pull"} (${report.assetCount} found).\n- Rebuild ease: ${report.rebuildEase}.\n\n## What is reviewed\n\n${order.tier === "done_for_you" ? "A person builds and reviews the pages before you see them." : "The automated tier does not publish a preview by itself. A visual pass still happens before anything is called done."} PageSpeed gains are not measured or promised.\n\n## Commands\n\nFrom the Eject repository:\n\n\`\`\`sh\npnpm crawl ${snapshot.finalUrl} --max-pages=${simpleSiteScope.maxPages}\npnpm rebuild data/snapshots/${slug}\npnpm editor ./out/orders/${order.id}\n\`\`\`\n\n\`pnpm rebuild\` and \`pnpm editor\` need ANTHROPIC_API_KEY. Without that key, use AGENTS.md with your own agent.\n`;
 

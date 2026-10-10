@@ -142,4 +142,4 @@ Basic is $120/year billed yearly ($180 if monthly). Pro is $360/year billed year
 
 ## Where to go next
 
-Automated is $99 and you can buy it on the spot. Done for you is $199 after a call, for a simple site. See [renewal watch](/renewal-watch), [book a call](/book).
+Automated is $99 and you can buy it on the spot. Custom migration, for a simple site. See [renewal watch](/renewal-watch), [contact us for custom pricing](/book).

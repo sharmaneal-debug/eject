@@ -9,7 +9,7 @@ This repository is two things:
 1. **The marketing site** at `eject.dev` (Next.js 15 App Router + Tailwind). Pages, pricing, cost calculator, blog, intake form.
 2. **The migration tooling** in `scripts/` — Playwright crawler, Claude-driven rebuilder, prospect auditor, chat editor prototype.
 
-The full business plan is in `~/Knowledge/wiki/projects/website-migration-service.md` (Neal's vault). Underlying competitor + SEO + demand research is in `docs/research/`.
+Underlying competitor, SEO, and demand research is in `docs/research/`.
 
 ## Repo layout
 
@@ -64,7 +64,7 @@ Names and dollar amounts live in `lib/site.ts`. Checkout, kickoff email, deliver
 | Offer | Price | What it is |
 |---|---|---|
 | Automated | $99 once | Automated migration of a simple site. You review before DNS. |
-| Done for you | $199 once | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. |
+| Custom | No public price | We handle the migration for you, step by step. About 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. |
 
 After either offer, the customer edits by chatting with their own AI. An editing guide and agent instructions are included. Simple sites only. There is no monthly editor and no preview before payment. Stripe stays in test mode.
 

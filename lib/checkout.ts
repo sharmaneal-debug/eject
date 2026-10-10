@@ -24,7 +24,7 @@ export async function createCheckoutSession(input: {
   if (input.tier === "done_for_you" && channel !== "operator") {
     return {
       kind: "unavailable",
-      reason: "Done for you starts with a call. Use the booking page. A payment link is sent after the call.",
+      reason: "Custom work is not a public checkout. Use the contact page.",
     };
   }
   const cfg = tierConfig(input.tier);

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site";
+import { LEGAL_UPDATED } from "@/lib/legal";
+import { CustomPricingLink } from "./custom-pricing-link";
 import { EjectMark } from "./eject-mark";
 
 export function Footer() {
@@ -33,7 +35,7 @@ export function Footer() {
             <li><Link className="hover:text-signal" href="/blog">Blog</Link></li>
             <li><Link className="hover:text-signal" href="/about">About</Link></li>
             <li><Link className="hover:text-signal" href="/contact">Contact</Link></li>
-            <li><Link className="hover:text-signal" href="/book">Book a call</Link></li>
+            <li><CustomPricingLink className="text-sm text-ink-muted hover:text-signal" /></li>
             <li><a className="hover:text-signal" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></li>
           </ul>
         </div>
@@ -50,7 +52,7 @@ export function Footer() {
       </div>
       <div className="border-t border-line/70 py-5 px-6 text-center text-xs text-ink-muted">
         © {new Date().getFullYear()} {siteConfig.legalEntity.name}. Operated by {siteConfig.legalEntity.name}.{" "}
-        Not affiliated with Webflow, Framer, Wix, or Squarespace.
+        Last updated: {LEGAL_UPDATED}. Not affiliated with Webflow, Framer, Wix, or Squarespace.
       </div>
     </footer>
   );

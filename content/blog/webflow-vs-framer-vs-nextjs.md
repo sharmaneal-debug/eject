@@ -177,8 +177,8 @@ Here's the part the platforms' marketing pages don't show you. Real numbers, thr
 | Domain | $12/yr | $12/yr | $12/yr |
 | **Monthly run rate (avg)** | **$111** | **$70–$120** | **$0–$5** |
 | **36-month total** | **$3,996** | **$2,520–$4,320** | **$0–$180** |
-| **Migration cost (one-time)** | $0 (already there) | $0 (already there) | $99 (Automated) or $199 (Done for you) |
-| **3-year all-in** | **$3,996** | **$2,520–$4,320** | **$99 or $199**, then hosting you choose |
+| **Migration cost (one-time)** | $0 (already there) | $0 (already there) | $99 (Automated) or custom pricing (Done for you) |
+| **3-year all-in** | **$3,996** | **$2,520–$4,320** | **$99 or custom pricing**, then hosting you choose |
 
 **3-year delta vs Next.js:**
 - Webflow: roughly **$3,500–$3,950 saved**
@@ -233,7 +233,7 @@ The TL;DR:
 4. Deploy to Cloudflare Pages. Set up redirects to keep your URLs identical.
 5. Cut over DNS. Cancel Webflow 24 hours later.
 
-After the move, you edit by chatting with your own AI. Automated ($99) is an automated migration of a simple site, reviewed before DNS. Done for you ($199) is hand work inside a cap. We don't promise 14 days, 7 days, or one hour.
+After the move, you edit by chatting with your own AI. Automated ($99) is an automated migration of a simple site, reviewed before DNS. custom migration is hand work inside a cap. We don't promise 14 days, 7 days, or one hour.
 
 ### You're on Framer
 
@@ -280,7 +280,7 @@ It depends on your specific setup, but for typical small B2B sites Framer comes 
 
 ### Can I export my site from Webflow or Framer?
 
-Webflow lets you export static HTML and CSS on paid Site Plans, but the CMS export is gated. Framer does not support code export. For a simple page, Automated ($99) runs an automated migration you review before DNS. Done for you ($199) is that move, done by hand inside a cap. We do not extract a CMS.
+Webflow lets you export static HTML and CSS on paid Site Plans, but the CMS export is gated. Framer does not support code export. For a simple page, Automated ($99) runs an automated migration you review before DNS. custom migration is that move, done by hand inside a cap. We do not extract a CMS.
 
 ### Will Next.js work for non-developers?
 
@@ -300,11 +300,11 @@ Yes. The Cloudflare Pages free plan includes unlimited static requests, unlimite
 
 ### How long does a migration actually take?
 
-Automated ($99) is an automated migration of a simple site. You review the pages before DNS. It is not a one-hour publish and not a preview before you pay. Done for you ($199) is a person doing that move by hand: about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We don't promise seven days.
+Automated ($99) is an automated migration of a simple site. You review the pages before DNS. It is not a one-hour publish and not a preview before you pay. custom migration is a person doing that move by hand: about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. We don't promise seven days.
 
 ### What's the difference between Automated and Done for you?
 
-Both include an editing guide and agent instructions, so after the move you edit by chatting with your own AI. Automated is $99: an automated migration of a simple marketing, portfolio, or landing site, which you review before DNS. Done for you is $199: a person does that move by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond the cap we refer out or quote an add-on. Neither is a CMS extract or a preview before you pay.
+Both include an editing guide and agent instructions, so after the move you edit by chatting with your own AI. Automated is $99: an automated migration of a simple marketing, portfolio, or landing site, which you review before DNS. Custom migration: a person does that move by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond the cap we refer out or quote an add-on. Neither is a CMS extract or a preview before you pay.
 
 ---
 
@@ -323,7 +323,7 @@ If you're in bucket 4, here's the offer:
 |---|---|---|
 | **Scan your URL** | **Free** | Names the platform and a rough page count. It does not preview a migrated codebase before you pay. |
 | **Automated** | **$99 one-time** | An automated migration of a simple site. You review before DNS. Editing guide and agent instructions included. Not a CMS extract and not a preview before you pay. |
-| **Done for you** | **$199 one-time** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
+| **Done for you** | **custom pricing** | The same kind of site, done by hand: about 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. Same editing kit. Beyond the cap, we refer out or quote an add-on. |
 
 **[Scan your URL on the homepage →](https://ejectfrom.com)**
 
@@ -389,7 +389,7 @@ Or if you're still on the fence: [run the cost calculator](#cost-calculator). Th
  "name": "How long does a migration actually take?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Automated is a $99 automated migration of a simple site, reviewed before DNS. Done for you is $199, done by hand inside a cap of about 10 pages. Neither promises a fixed number of days, and neither is a preview before you pay."
+ "text": "Automated is a $99 automated migration of a simple site, reviewed before DNS. Custom migration, done by hand inside a cap of about 10 pages. Neither promises a fixed number of days, and neither is a preview before you pay."
  }
  },
  {
@@ -397,7 +397,7 @@ Or if you're still on the fence: [run the cost calculator](#cost-calculator). Th
  "name": "What is the difference between Automated and Done for you?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Both include an editing guide so you edit by chatting with your own AI. Automated is 99 dollars: an automated migration of a simple site, which you review before DNS. Done for you is 199 dollars: a person does that move by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond that we refer out or quote an add-on."
+ "text": "Both include an editing guide so you edit by chatting with your own AI. Automated is 99 dollars: an automated migration of a simple site, which you review before DNS. Custom work has no public price. We handle the migration for you, step by step, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff. Beyond that we refer out or quote an add-on."
  }
  }
  ]

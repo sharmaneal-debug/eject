@@ -20,7 +20,7 @@ Estimated migration hours from the scorer: ztekinc 6.6, minimum-01 1.5, one-temp
 
 ## What the score said
 
-- **ztekinc.com.** Framer. 19 pages and 5 form tags, so the $99 / $199 cap does not include it. Assets were readable. Animation signal: Framer. Referral: priced add-on or refer out.
+- **ztekinc.com.** Framer. 19 pages and 5 form tags, so the simple-site cap does not include it. Assets were readable. Animation signal: Framer. Referral: priced add-on or refer out.
 - **minimum-01.** Framer portfolio, 2 pages, no form. Eligible. Animation signal is the platform itself, not a 3D scene.
 - **one-template.** Webflow marketing template, 6 pages, 1 form. Eligible. Webflow interactions were detected.
 - **Wix mentor site.** 16 pages and heavy JavaScript, plus Lottie. Not eligible. Asset sample was not treated as an easy pull.
