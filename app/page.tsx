@@ -6,16 +6,6 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "Move a simple site." },
   description: "Launching soon.",
-  openGraph: {
-    title: "Move a simple site.",
-    description: "Launching soon.",
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-  },
-  twitter: {
-    title: "Move a simple site.",
-    description: "Launching soon.",
-  },
 };
 
 export default function HomePage() {
