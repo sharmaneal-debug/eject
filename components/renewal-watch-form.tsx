@@ -129,7 +129,7 @@ export function RenewalWatchForm({
           {done.persisted ? "Saved." : "Saved for this server process only."}{" "}
           {done.emailSent ? "Confirmation email sent." : "Email did not send."}
         </p>
-        <Link href={done.unsubscribePath} className="text-sm text-accent hover:text-signal">
+        <Link href={done.unsubscribePath} className="inline-flex min-h-11 items-center text-base text-accent hover:text-signal">
           Unsubscribe link
         </Link>
       </div>

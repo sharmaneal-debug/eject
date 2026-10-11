@@ -135,7 +135,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
       {/* Hero */}
       <Section className="pb-0">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-ink-muted hover:text-signal mb-7 transition">
+        <Link href="/blog" className="mb-4 inline-flex min-h-11 items-center text-base text-ink-muted hover:text-signal">
           ← All articles
         </Link>
         <Eyebrow>{post.tags?.[0] ?? "Article"}</Eyebrow>

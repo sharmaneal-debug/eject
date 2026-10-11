@@ -14,13 +14,17 @@ const links = [
 export function Footer() {
   return (
     <footer className="border-t border-line/70">
-      <div className="mx-auto flex max-w-content flex-col gap-4 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
-        <p className="text-base leading-relaxed text-ink-muted">
+      <div className="mx-auto grid w-full max-w-content gap-2 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-6">
+        <p className="min-w-0 text-base leading-snug text-ink-muted">
           © {new Date().getFullYear()} {siteConfig.legalEntity.name}. Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.
         </p>
-        <nav className="grid gap-1 sm:grid-cols-2 lg:flex lg:flex-wrap">
+        <nav className="flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-2">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center text-base text-ink-soft hover:text-ink">
+            <Link
+              key={link.href}
+              href={link.href}
+              className="inline-flex min-h-11 items-center px-2 text-base text-ink-soft hover:text-ink"
+            >
               {link.label}
             </Link>
           ))}

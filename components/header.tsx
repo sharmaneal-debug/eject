@@ -33,9 +33,9 @@ export function Header({ buyHref }: { buyHref: string }) {
           </span>
           <span className="text-lg font-semibold tracking-tight">{siteConfig.name}</span>
         </Link>
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-2 lg:flex">
           {links.slice(0, 3).map((link) => (
-            <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center text-base text-ink-soft hover:text-ink">
+            <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center px-2 text-base text-ink-soft hover:text-ink">
               {link.label}
             </Link>
           ))}
@@ -59,9 +59,9 @@ export function Header({ buyHref }: { buyHref: string }) {
         </div>
       </div>
       {open && (
-        <nav id="site-menu" className="border-t border-line px-4 py-2 lg:hidden">
+        <nav id="site-menu" className="flex flex-col gap-1 border-t border-line px-3 py-2 lg:hidden">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="flex min-h-11 items-center text-base">
+            <Link key={link.href} href={link.href} className="flex min-h-11 items-center px-2 text-base">
               {link.label}
             </Link>
           ))}

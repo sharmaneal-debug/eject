@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BoxScreen } from "@/components/box-screen";
 import { CostCalculator } from "@/components/cost-calculator";
 import { JsonLd } from "@/components/json-ld";
 import { PricingTable } from "@/components/pricing-table";
@@ -26,6 +27,9 @@ export default function HomePage() {
       </section>
       <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
         <Steps />
+        <div className="mt-4">
+          <BoxScreen />
+        </div>
       </section>
       <section className="mx-auto max-w-content min-w-0 px-4 py-6 pb-12 sm:px-6">
         <PricingTable />

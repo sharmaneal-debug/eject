@@ -34,11 +34,10 @@ export default function Page() {
             <p className="text-sm text-ink-soft mt-1">{line}</p>
           </div>
         ))}
-        <p className="text-sm mt-6">
-          <Link className="text-accent" href="/terms">Terms</Link>
-          {" · "}
-          <Link className="text-accent" href="/refunds">Refunds</Link>
-        </p>
+        <nav className="mt-6 flex flex-col sm:flex-row sm:gap-x-2">
+          <Link className="inline-flex min-h-11 items-center px-2 text-base text-accent" href="/terms">Terms</Link>
+          <Link className="inline-flex min-h-11 items-center px-2 text-base text-accent" href="/refunds">Refunds</Link>
+        </nav>
         <p className="text-xs text-ink-muted mt-4">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
       </div>
     </Section>

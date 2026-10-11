@@ -73,6 +73,24 @@ details[open] summary::after {
   font-weight: 600;
 }
 
+.eject-scan {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  height: 2px;
+  background: #ff5c2a;
+  animation: eject-scan 1.6s ease-in-out infinite;
+}
+
+@keyframes eject-scan {
+  from { top: 0.75rem; }
+  to { top: calc(100% - 0.75rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eject-scan { animation: none; display: none; }
+}
+
 .prose-lite p { color: #1A1A20; line-height: 1.65; }
 .prose-lite a { color: #0066FF; text-decoration: underline; text-underline-offset: 3px; }
 .prose-lite a:hover { color: #FF5C2A; }
