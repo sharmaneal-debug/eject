@@ -1,0 +1,26 @@
+{
+  "slug": "cern",
+  "url": "https://info.cern.ch",
+  "crawlMs": 1996,
+  "scoreMs": 1,
+  "rebuildMs": 2,
+  "shotMs": 820,
+  "totalMs": 2819,
+  "eligibility": "ELIGIBLE",
+  "referral": "none",
+  "reasons": [
+    "Simple marketing, portfolio, or landing page. Within the page, CMS, form, and commerce limits."
+  ],
+  "platform": "Custom or unknown",
+  "pageCount": 1,
+  "crawledPageCount": 1,
+  "assetCount": 0,
+  "assetBytes": 0,
+  "assetsPullable": true,
+  "formCount": 0,
+  "rebuildEase": "easy",
+  "animationSignals": [],
+  "hours": 1.3,
+  "textLines": 7,
+  "imageUrls": 0
+}

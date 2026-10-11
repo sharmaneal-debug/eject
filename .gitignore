@@ -8,8 +8,10 @@ out
 .DS_Store
 *.log
 data/snapshots
+data/orders
 data/audits
 data/prospects
 data/sends
 .tsbuildinfo
 next-env.d.ts
+.data

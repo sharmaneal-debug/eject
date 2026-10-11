@@ -9,21 +9,86 @@
 html, body {
   background: #FBFAF7;
   color: #0B0B0F;
+  font-size: 16px;
+  overflow-x: clip;
   font-feature-settings: "ss01", "ss02", "cv11";
+}
+
+body {
+  overflow-wrap: anywhere;
+}
+
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+}
+
+input, select, textarea, button {
+  max-width: 100%;
+}
+
+pre, code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+th, td {
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 ::selection { background: #FF5C2A; color: white; }
 
 .h-display {
   letter-spacing: -0.04em;
-  line-height: 0.95;
+  line-height: 1.02;
   font-weight: 600;
+}
+
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary::after {
+  content: "+";
+  margin-left: auto;
+  color: #5a5a66;
+  font-weight: 400;
+}
+details[open] summary::after {
+  content: "–";
 }
 
 .h-section {
   letter-spacing: -0.025em;
   line-height: 1.05;
   font-weight: 600;
+}
+
+.eject-scan {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  height: 2px;
+  background: #ff5c2a;
+  animation: eject-scan 1.6s ease-in-out infinite;
+}
+
+@keyframes eject-scan {
+  from { top: 0.75rem; }
+  to { top: calc(100% - 0.75rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eject-scan { animation: none; display: none; }
 }
 
 .prose-lite p { color: #1A1A20; line-height: 1.65; }

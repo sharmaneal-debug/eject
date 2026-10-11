@@ -4,7 +4,7 @@ You already have a Resend account on your Laniakea workspace (currently used by 
 
 A single Resend account can hold many verified domains. Eject piggybacks on the Laniakea Resend by adding `ejectfrom.com` as a second sending domain. The 3,000-emails/month free tier is shared across the whole account, but Eject will use ~50–500 emails/month for the foreseeable future, well under whatever VedasAI uses.
 
-**Heads up on inbound:** Resend only *sends* email. Customer replies don't go to your Resend account. We handle inbound separately via Cloudflare Email Routing (step 3 below) — that's what actually puts replies in your `neal@laniakea.design` inbox.
+**Heads up on inbound:** Resend only *sends* email. Customer replies don't go to your Resend account. We handle inbound separately via Cloudflare Email Routing (step 3 below) — that's what actually puts replies in your `the operator inbox` inbox.
 
 ## 1. Add `ejectfrom.com` as a verified sending domain
 
@@ -27,9 +27,9 @@ Use the same Resend API key you already use for VedasAI, or create a new key tag
    RESEND_API_KEY=re_…
    RESEND_FROM=Eject <hi@ejectfrom.com>
    ```
-   Leave `RESEND_FROM` blank until `ejectfrom.com` shows ✓ in Resend Domains. Until then, mail sends from `onboarding@resend.dev` with `Reply-To: hi@ejectfrom.com`.
+   Leave `RESEND_FROM` blank until `ejectfrom.com` shows ✓ in Resend Domains. Until `RESEND_FROM` is set, Eject skips the send. It does not fall back to `onboarding@resend.dev`.
 
-## 3. Forward `hi@ejectfrom.com` → `neal@laniakea.design` (free)
+## 3. Forward `hi@ejectfrom.com` → `the operator inbox` (free)
 
 Resend doesn't receive email. We use Cloudflare Email Routing (free) to forward incoming mail to your Laniakea inbox.
 
@@ -37,9 +37,9 @@ If `ejectfrom.com` is registered through Cloudflare Registrar, this is built in.
 
 1. Cloudflare dashboard → pick `ejectfrom.com` → **Email** → **Email Routing**.
 2. Click **Get started**. Cloudflare auto-adds the MX + TXT records.
-3. **Routes** → **Create address** → `hi@ejectfrom.com` → **Send to** → `neal@laniakea.design` → save.
-4. Add a wildcard rule: `*@ejectfrom.com` → `neal@laniakea.design`. Catches typos like `info@`, `support@`.
-5. Verify your destination email by clicking the link Cloudflare sends to `neal@laniakea.design`.
+3. **Routes** → **Create address** → `hi@ejectfrom.com` → **Send to** → `the operator inbox` → save.
+4. Add a wildcard rule: `*@ejectfrom.com` → `the operator inbox`. Catches typos like `info@`, `support@`.
+5. Verify your destination email by clicking the link Cloudflare sends to `the operator inbox`.
 
 That's it. Customer hits "reply" on a kickoff email → goes to `hi@ejectfrom.com` → Cloudflare forwards instantly → lands in your Laniakea inbox. No new mailbox to monitor.
 
@@ -51,7 +51,7 @@ After this is set up:
 |---|---|
 | Eject sends emails | Laniakea Resend account, `ejectfrom.com` domain |
 | VedasAI sends emails | Laniakea Resend account, VedasAI's domain |
-| Eject inbound (replies) | Cloudflare Email Routing → `neal@laniakea.design` |
+| Eject inbound (replies) | Cloudflare Email Routing → `the operator inbox` |
 | Eject monthly bill | $0 (free tier) |
 | Risk of confusing the two | None — different `from:` addresses, separate Resend domain analytics |
 
@@ -64,7 +64,7 @@ With `RESEND_API_KEY` set in Vercel:
 - Run a Stripe test checkout (test card `4242 4242 4242 4242`) on the deployed site.
 - After payment, `/checkout/success` calls `/api/checkout/finalize`, which sends the kickoff email via Resend.
 - Check the inbox of the email you used at Stripe checkout. Email arrives within ~30s.
-- Reply to that email. It should land in `neal@laniakea.design` within seconds.
+- Reply to that email. It should land in `the operator inbox` within seconds.
 
 ## Cost
 

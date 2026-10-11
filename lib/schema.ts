@@ -7,16 +7,12 @@ export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: siteConfig.name,
+    name: siteConfig.legalEntity.name,
+    alternateName: siteConfig.name,
     url: siteConfig.url,
     logo: `${siteConfig.url}/icon.svg`,
     description: siteConfig.description,
-    email: siteConfig.email,
-    sameAs: [`https://twitter.com/${siteConfig.twitter.replace(/^@/, "")}`].filter(Boolean),
-    parentOrganization: {
-      "@type": "Organization",
-      name: siteConfig.legalEntity.name,
-    },
+    email: siteConfig.legalEntity.contactEmail,
   };
 }
 
@@ -31,15 +27,35 @@ export function websiteSchema() {
   };
 }
 
-export function serviceSchema() {
+export function productSchema() {
+  const offer = siteConfig.pricing.express;
   return {
     "@context": "https://schema.org",
-    "@type": "Service",
-    serviceType: "Website migration",
-    name: "Eject",
+    "@type": "Product",
+    name: `${offer.name} site move`,
     description: siteConfig.description,
-    provider: { "@type": "Organization", name: siteConfig.legalEntity.name, url: siteConfig.url },
-    areaServed: "Worldwide",
+    brand: { "@type": "Brand", name: siteConfig.name },
+    offers: {
+      "@type": "Offer",
+      name: offer.name,
+      description: offer.blurb,
+      price: offer.price,
+      priceCurrency: "USD",
+      url: `${siteConfig.url}/pricing`,
+      availability: "https://schema.org/InStock",
+    },
+  };
+}
+
+export function faqSchema(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
   };
 }
 
@@ -48,7 +64,6 @@ export function articleSchema(post: {
   description: string;
   slug: string;
   date: string;
-  author?: string;
   ogImage?: string;
 }) {
   const url = `${siteConfig.url}/blog/${post.slug}`;
@@ -59,7 +74,7 @@ export function articleSchema(post: {
     description: post.description,
     datePublished: post.date,
     dateModified: post.date,
-    author: { "@type": "Organization", name: post.author || siteConfig.name },
+    author: { "@type": "Organization", name: siteConfig.name },
     publisher: {
       "@type": "Organization",
       name: siteConfig.legalEntity.name,

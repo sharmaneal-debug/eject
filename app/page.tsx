@@ -1,27 +1,39 @@
 import type { Metadata } from "next";
+import { BoxScreen } from "@/components/box-screen";
+import { CostCalculator } from "@/components/cost-calculator";
 import { JsonLd } from "@/components/json-ld";
-import { organizationSchema, websiteSchema } from "@/lib/schema";
+import { PricingTable } from "@/components/pricing-table";
+import { Steps } from "@/components/steps";
+import { organizationSchema, productSchema, websiteSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: { absolute: "Move a simple site." },
-  description: "Launching soon.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: siteConfig.tagline,
+  description: siteConfig.description,
+  path: "/",
+});
 
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={[organizationSchema(), websiteSchema()]} />
-      <div className="mx-auto w-full max-w-content px-6 pb-6 pt-8">
-        <h1 className="text-4xl font-semibold tracking-tight text-ink">Move a simple site.</h1>
-        <p className="mt-4 text-xl text-ink">Launching soon.</p>
-        <a
-          href={`mailto:${siteConfig.email}`}
-          className="mt-6 inline-flex min-h-12 items-center text-lg font-semibold text-ink underline decoration-ink decoration-2 underline-offset-4 opacity-100"
-        >
-          {siteConfig.email}
-        </a>
-      </div>
+      <JsonLd data={[organizationSchema(), websiteSchema(), productSchema()]} />
+      <section className="mx-auto max-w-content min-w-0 px-4 pb-2 pt-10 sm:px-6 md:pt-16">
+        <h1 className="h-display max-w-3xl text-4xl sm:text-5xl lg:text-6xl">Move a simple site. $99.</h1>
+        <p className="mt-4 text-lg text-ink-soft">You own the files.</p>
+      </section>
+      <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
+        <CostCalculator initialPlatform="framer" initialPlanId="pro" />
+      </section>
+      <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
+        <Steps />
+        <div className="mt-4">
+          <BoxScreen />
+        </div>
+      </section>
+      <section className="mx-auto max-w-content min-w-0 px-4 py-6 pb-12 sm:px-6">
+        <PricingTable />
+      </section>
     </>
   );
 }

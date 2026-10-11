@@ -154,7 +154,7 @@ When you're done, your site is live at a URL like `your-site-abc123.pages.dev` o
 
 This is the moment. Open the deploy guide section on **Custom Domain**. Add your real domain to your hosting provider. Update the DNS record at your registrar. Wait 5–30 minutes. Visit your domain.
 
-You're live. Go check your old hosting account and cancel the subscription. That's the moment Eject earns its $49.
+You're live. Go check your old hosting account and cancel the subscription. That's the moment the monthly bill ends.
 
 ---
 
@@ -171,6 +171,6 @@ Open the **AI Editing Kit** page. Copy the Instruction File. Save it once into t
 A few things you should also do this week:
 1. Submit your sitemap to Google Search Console (10 min). Your traffic is tied to this.
 2. Tell your team / customers nothing has changed (it hasn't, except your bill).
-3. If you used the Express tier and have any feedback or got stuck, email hi@ejectfrom.com. We read every reply.
+3. If you used the Automated offer and have any feedback or got stuck, email hi@ejectfrom.com. We read every reply.
 
 You now own your website. Forever.

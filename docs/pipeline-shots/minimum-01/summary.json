@@ -1,0 +1,28 @@
+{
+  "slug": "minimum-01",
+  "url": "https://minimum-01.framer.website/",
+  "crawlMs": 532,
+  "scoreMs": 4,
+  "rebuildMs": 4,
+  "shotMs": 470,
+  "totalMs": 1010,
+  "eligibility": "ELIGIBLE",
+  "referral": "none",
+  "reasons": [
+    "Simple marketing, portfolio, or landing page. Within the page, CMS, form, and commerce limits."
+  ],
+  "platform": "Framer",
+  "pageCount": 2,
+  "crawledPageCount": 2,
+  "assetCount": 2,
+  "assetBytes": 43485,
+  "assetsPullable": true,
+  "formCount": 0,
+  "rebuildEase": "easy",
+  "animationSignals": [
+    "framer"
+  ],
+  "hours": 1.5,
+  "textLines": 57,
+  "imageUrls": 3
+}

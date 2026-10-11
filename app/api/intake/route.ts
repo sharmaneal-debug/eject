@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { logLead } from "@/lib/leads";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 // Intake form handler. Logs every submission to Google Sheets via the
 // LEADS_WEBHOOK_URL Apps Script web app (see docs/setup-leads.md).

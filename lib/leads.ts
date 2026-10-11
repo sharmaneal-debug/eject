@@ -11,6 +11,7 @@
 // outage blocking checkout or scans.
 
 import { siteConfig } from "./site";
+import { getOrderStore } from "./orders";
 
 export type LeadEvent =
  | "scan_completed"
@@ -27,18 +28,23 @@ export type LeadPayload = {
 };
 
 export async function logLead(payload: LeadPayload): Promise<void> {
- const url = process.env.LEADS_WEBHOOK_URL;
- if (!url) {
- // Not configured yet. Log locally so we can see it in Vercel function logs.
- console.log("[leads]", JSON.stringify(payload));
- return;
+ const body: LeadPayload = {
+  ...payload,
+  source: payload.source ?? siteConfig.url,
+  ts: payload.ts ?? new Date().toISOString(),
+ };
+
+ try {
+  await getOrderStore().appendLead(body);
+ } catch (err) {
+  console.warn("[leads] store failed:", (err as Error).message);
  }
 
- const body: LeadPayload = {
-...payload,
- source: payload.source ?? siteConfig.url,
- ts: payload.ts ?? new Date().toISOString(),
- };
+ const url = process.env.LEADS_WEBHOOK_URL;
+ if (!url) {
+  console.log("[leads] LEADS_WEBHOOK_URL unset; stored", body.event);
+  return;
+ }
 
  try {
  // Apps Script web apps reject preflight unless we use a "simple" request.
@@ -52,6 +58,6 @@ export async function logLead(payload: LeadPayload): Promise<void> {
  signal: AbortSignal.timeout(3500),
  });
  } catch (err) {
- console.warn("[leads] failed:", (err as Error).message);
+ console.warn("[leads] webhook failed:", (err as Error).message);
  }
 }

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Section, Eyebrow } from "@/components/section";
 import { LEGAL_UPDATED } from "@/lib/legal";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description: `Email ${siteConfig.email}.`,
-};
+  path: "/contact",
+});
 
 export default function Page() {
   return (

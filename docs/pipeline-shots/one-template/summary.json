@@ -1,0 +1,28 @@
+{
+  "slug": "one-template",
+  "url": "https://one-template.webflow.io/",
+  "crawlMs": 437,
+  "scoreMs": 3,
+  "rebuildMs": 4,
+  "shotMs": 1170,
+  "totalMs": 1614,
+  "eligibility": "ELIGIBLE",
+  "referral": "none",
+  "reasons": [
+    "Simple marketing, portfolio, or landing page. Within the page, CMS, form, and commerce limits."
+  ],
+  "platform": "Webflow",
+  "pageCount": 6,
+  "crawledPageCount": 6,
+  "assetCount": 52,
+  "assetBytes": 583776,
+  "assetsPullable": true,
+  "formCount": 1,
+  "rebuildEase": "easy",
+  "animationSignals": [
+    "webflow-ix"
+  ],
+  "hours": 2.7,
+  "textLines": 175,
+  "imageUrls": 36
+}

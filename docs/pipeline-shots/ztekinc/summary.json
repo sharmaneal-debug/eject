@@ -1,0 +1,29 @@
+{
+  "slug": "ztekinc",
+  "url": "https://ztekinc.com",
+  "crawlMs": 1160,
+  "scoreMs": 65,
+  "rebuildMs": 25,
+  "shotMs": 1082,
+  "totalMs": 2332,
+  "eligibility": "NOT_ELIGIBLE",
+  "referral": "add_on",
+  "reasons": [
+    "Page count is 19. The included price covers up to 10 pages. Beyond that is a refer-out or a priced add-on.",
+    "There are 5 forms. The included price covers 1. Extra forms are a priced add-on or a refer-out."
+  ],
+  "platform": "Framer",
+  "pageCount": 19,
+  "crawledPageCount": 16,
+  "assetCount": 32,
+  "assetBytes": 230803,
+  "assetsPullable": true,
+  "formCount": 5,
+  "rebuildEase": "manual",
+  "animationSignals": [
+    "framer"
+  ],
+  "hours": 6.6,
+  "textLines": 546,
+  "imageUrls": 52
+}

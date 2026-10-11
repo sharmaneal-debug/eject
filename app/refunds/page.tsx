@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section, Eyebrow } from "@/components/section";
 import { LEGAL_UPDATED } from "@/lib/legal";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Refunds",
   description: "Email us to ask for a refund. We send it to the original payment method.",
-};
+  path: "/refunds",
+});
 
 export default function Page() {
   return (
@@ -32,7 +34,9 @@ export default function Page() {
           <h2 className="text-lg text-ink">Timing</h2>
           <p className="text-sm text-ink-soft mt-1">Your bank may take longer to show it.</p>
         </div>
-        <p className="text-sm mt-6"><Link className="text-accent" href="/terms">Terms</Link></p>
+        <nav className="mt-6">
+          <Link className="inline-flex min-h-11 items-center px-2 text-base text-accent" href="/terms">Terms</Link>
+        </nav>
         <p className="text-xs text-ink-muted mt-4">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
       </div>
     </Section>

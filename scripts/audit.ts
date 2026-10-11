@@ -12,8 +12,8 @@
  * Output: a JSON record per URL appended to `data/audits/{date}.jsonl`.
  *
  * Usage:
- *   pnpm tsx scripts/audit.ts https://example.com
- *   pnpm tsx scripts/audit.ts --batch=data/prospects/2026-05-02.csv
+ *   pnpm site-audit https://example.com
+ *   pnpm site-audit --batch=data/prospects/2026-05-02.csv
  */
 
 import { chromium } from "playwright";
@@ -36,6 +36,7 @@ type Audit = {
 async function detectAndMeasure(url: string): Promise<Audit> {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await context.addInitScript("globalThis.__name = (target) => target;");
   const page = await context.newPage();
 
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30_000 });
@@ -83,9 +84,12 @@ async function detectAndMeasure(url: string): Promise<Audit> {
   // Lighthouse via Google PageSpeed Insights (free, no API key required for low volume).
   let lighthousePerformance: number | null = null;
   try {
+    // Keyless PSI shares a tiny daily quota and answers 429 most of the time. Set PAGESPEED_API_KEY.
+    const keyParam = process.env.PAGESPEED_API_KEY ? `&key=${encodeURIComponent(process.env.PAGESPEED_API_KEY)}` : "";
     const psi = await fetch(
-      `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=mobile&category=performance`,
+      `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=mobile&category=performance${keyParam}`,
     );
+    if (!psi.ok) console.warn(`  ! PageSpeed API answered ${psi.status}; Lighthouse score left empty${keyParam ? "" : " (no PAGESPEED_API_KEY set)"}`);
     if (psi.ok) {
       const data = (await psi.json()) as { lighthouseResult?: { categories?: { performance?: { score?: number } } } };
       const score = data.lighthouseResult?.categories?.performance?.score;
@@ -132,7 +136,7 @@ async function run() {
   if (positional.length) targets.push(...positional);
 
   if (!targets.length) {
-    console.error("usage: pnpm tsx scripts/audit.ts <url> [--batch=path.csv]");
+    console.error("usage: pnpm site-audit <url> [--batch=path.csv]");
     process.exit(2);
   }
 

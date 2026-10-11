@@ -9,7 +9,7 @@ Ordered top to bottom. Each phase has a "what" and a "why now." Strikethrough as
 These four block everything downstream.
 
 - [ ] **Sign up for Vercel** with your GitHub account (2 min). Import `sharmaneal-debug/eject`. Paste env vars from `.env.local`. Deploy. → `eject.vercel.app`. Walk-through: `docs/setup-deploy.md`.
-- [ ] **Reuse your Laniakea Resend account** (5 min — no new account, no new bill). Add `ejectfrom.com` as a second verified domain alongside VedasAI. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@ejectfrom.com` → `neal@laniakea.design` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
+- [ ] **Reuse your Laniakea Resend account** (5 min — no new account, no new bill). Add `ejectfrom.com` as a second verified domain alongside VedasAI. Use the existing `re_…` API key. Set up Cloudflare Email Routing to forward `hi@ejectfrom.com` → `the operator inbox` so customer replies land in your existing inbox. Walk-through: `docs/setup-resend.md`.
 - [ ] **Roll the live Stripe key** (`sk_live_…`) you posted in chat earlier (3 min). Stripe dashboard → API keys → Roll. Old key keeps working for 1 hour. Replace nowhere — we're using test keys for everything. The leaked key is the security issue, not the test ones.
 - [ ] **Buy `ejectfrom.com`** (~$30, 5 min). Cloudflare Registrar is the cheapest renewal-fair option ($9.99 first year, $9.77/yr after). Or Porkbun ($12.71/yr). Skip GoDaddy.
 
@@ -55,7 +55,7 @@ Site has to be ready for the first real customer. Stripe live mode requires seve
 - [ ] **Rate-limit `/api/scan`** (30 min). Cap at 10 scans per IP per hour. Otherwise someone can scrape Google for URLs and DoS your Anthropic budget. Use Upstash Redis free tier or Vercel KV.
 - [ ] **Handle scan API timeouts gracefully** (15 min). If the target site is slow / unreachable, return a friendly message ("we couldn't reach that URL") instead of a 500.
 - [ ] **Form validation on intake + checkout** (30 min). Email regex, URL regex, name length cap. Use [zod](https://zod.dev) — already a common dep.
-- [ ] **Real test of the rebuilder** (1–2 hr). Run `pnpm crawl https://your-test-framer-site.com` then `pnpm rebuild data/snapshots/...` end-to-end. Verify the output Next.js project actually runs. **This is the biggest unknown right now.** Until we do this, we don't know if Express delivers what we promise.
+- [ ] **Real test of the rebuilder** (1–2 hr). Run `pnpm crawl https://your-test-framer-site.com` then `pnpm rebuild data/snapshots/...` end-to-end. Verify the output Next.js project actually runs. **This is the biggest unknown right now.** Until we do this, we don't know if Automated delivers what we promise.
 
 ---
 
@@ -116,7 +116,7 @@ You have everything to run outbound. The playbooks are written. Time to execute.
 ### Customer experience
 
 - [ ] **Run a real test migration** (3 hr). Pick one of your own sites or a friend's site. Run `pnpm crawl` then `pnpm rebuild`. Verify the output works. **Document everything that breaks** — that becomes your week-3 product roadmap.
-- [ ] **Build the "preview link" delivery** (3 hr). After payment, the rebuilder runs and outputs a Next.js project. We need to actually deploy it as a preview to Cloudflare Pages or Vercel and email the customer the URL. This is the heart of Express — has to be smooth.
+- [ ] **Build the "preview link" delivery** (3 hr). After payment, the rebuilder runs and outputs a Next.js project. We need to actually deploy it as a preview to Cloudflare Pages or Vercel and email the customer the URL. This is the heart of Automated — has to be smooth.
 - [ ] **Customer support inbox** (15 min). `hi@ejectfrom.com` forwards to your real email until volume justifies a Helpscout / Plain account.
 
 ---
@@ -136,8 +136,8 @@ Public moments to drive traffic + first non-outbound customers.
 ## Phase 5 — Iterate (ongoing)
 
 - [ ] **Weekly content** — 1 blog post per week minimum. Stay on the keyword roadmap. Don't drift into shower-thoughts content.
-- [ ] **Customer testimonials + case studies** — every shipped Concierge customer becomes a 1-page case study (`/case-studies/[slug]`) with before/after Lighthouse + cost screenshots + a real quote.
-- [ ] **A/B test the pricing page** — the moment you have 100 visitors/week. Test $49 vs $79 Express, $299 vs $499 Concierge.
+- [ ] **Customer testimonials + case studies** — every shipped Done for you customer becomes a 1-page case study (`/case-studies/[slug]`) with before/after Lighthouse + cost screenshots + a real quote.
+- [ ] **A/B test the pricing page** — the moment you have 100 visitors/week. Test the $99 automated price. Custom work stays unpublished.
 - [ ] **Refund + dispute SOPs** — write them down before you have a dispute. Keep refund rate < 5%.
 - [ ] **Weekly retro** — every Friday, 15 min. What converted? What didn't? One thing to change next week.
 

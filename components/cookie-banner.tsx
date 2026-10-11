@@ -34,23 +34,37 @@ export function CookieBanner() {
   if (choice !== null) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white px-4 py-3">
-      <div className="mx-auto flex w-full max-w-content flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-base leading-snug text-ink">
-          This choice stays in your browser. We do not load advertising or analytics scripts.{" "}
-          <Link className="font-semibold text-ink underline decoration-2 underline-offset-2" href="/privacy">
-            Privacy
-          </Link>
-        </p>
-        <div className="flex shrink-0 gap-2">
-          <button type="button" onClick={() => choose("essential")} className="inline-flex min-h-11 items-center rounded-lg border border-line px-3 text-base text-ink">
-            Essential only
-          </button>
-          <button type="button" onClick={() => choose("analytics")} className="inline-flex min-h-11 items-center rounded-lg bg-ink px-3 text-base text-paper">
-            Allow analytics
-          </button>
+    <>
+      <div className="h-14" aria-hidden="true" />
+      <div data-cookie-banner className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white">
+        <div className="mx-auto flex h-14 w-full max-w-content items-center gap-2 px-3 sm:px-6">
+          <p className="min-w-0 flex-1 text-sm leading-tight text-ink">
+            Stored in this browser.
+            <br className="sm:hidden" /> No ad scripts.{" "}
+            <Link className="underline underline-offset-2" href="/privacy">
+              Privacy
+            </Link>
+          </p>
+          <div className="flex shrink-0 gap-1">
+            <button
+              type="button"
+              aria-label="Essential only"
+              onClick={() => choose("essential")}
+              className="inline-flex h-8 items-center rounded-md border border-line px-2 text-xs text-ink"
+            >
+              Essential
+            </button>
+            <button
+              type="button"
+              aria-label="Allow analytics"
+              onClick={() => choose("analytics")}
+              className="inline-flex h-8 items-center rounded-md bg-ink px-2 text-xs text-paper"
+            >
+              Allow
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

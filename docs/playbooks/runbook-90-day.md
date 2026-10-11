@@ -11,7 +11,7 @@ Day-by-day, week-by-week. Each item is a check-box. Estimated time per item in p
 - [ ] **Create the GitHub org + repo.** `Eject/eject` (or under personal account initially). Push the codebase. (15min)
 - [ ] **Set up Cloudflare account + Pages project.** Connect to GitHub. Auto-deploys on push to `main`. (30min)
 - [ ] **Wire DNS.** Cloudflare nameservers + apex + `www` + Pages. (30min)
-- [ ] **Stripe account + 3 products** (DIY $49, DwY $299, DFY $1,499). Test mode first. (1h)
+- [ ] **Stripe test-mode products** (Automated $99 public, custom work operator-only). `pnpm setup-stripe`. No live keys. (1h)
 - [ ] **Resend account + verified domain.** For form intake + outbound. (30min)
 - [ ] **GitHub App registration** (for the editor's per-customer repo access). Defer to week 6 if time-pressed. (2h)
 - [ ] **Anthropic API key.** Spend cap at $200/mo until validated. (10min)
@@ -61,7 +61,7 @@ Day-by-day, week-by-week. Each item is a check-box. Estimated time per item in p
 ## Weeks 3–4 — Editor MVP + first DFY
 
 - [ ] **Editor v0**: chat → file edit → git commit (CLI works; web UI is week 6). Use `scripts/editor.ts` as the foundation. (2-3d)
-- [ ] **First DFY ($1,499) sale**, even if at half-price for a case-study trade. Document everything. (3-5d)
+- [ ] **First DFY (custom pricing) sale**, even if at half-price for a case-study trade. Document everything. (3-5d)
 - [ ] **Cold email volume to 1,000/wk.** Track per-platform conversion in `data/audits/` + `data/sends/`. (ongoing)
 - [ ] **Fourth + fifth SEO post**: `/blog/webflow-too-expensive` + `/blog/squarespace-to-nextjs`. (1d)
 - [ ] **YouTube creator outreach**: DM 10 creators in the design/no-code space. Pitch a sponsored video for $1,500. (2h)
@@ -103,7 +103,7 @@ Day-by-day, week-by-week. Each item is a check-box. Estimated time per item in p
 - **Day 14 — paid customers**: < 3 paying = pivot pricing or positioning. Don't keep buying ads with broken offer.
 - **Day 30 — outbound conversion**: < 0.3% paid conversion on cold email = list is wrong. Switch from PublicWWW seeds to BuiltWith + Apollo.
 - **Day 60 — editor reliability**: > 1 in 20 chat-edits breaks the build = ship the editor as **paid manual review** ($149/mo "Pro" only) until it's fixed. Don't ship a flaky editor as Hobby.
-- **Day 90 — capacity**: > 6 active migrations in any week = hire the contractor. Solo Neal caps at ~6/week.
+- **Day 90 — capacity**: > 6 active migrations in any week = hire the contractor. Solo capacity caps at ~6/week.
 
 ---
 

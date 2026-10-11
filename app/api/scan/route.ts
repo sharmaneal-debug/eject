@@ -1,215 +1,147 @@
 import { NextResponse } from "next/server";
 import { logLead } from "@/lib/leads";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { safeFetch, SsrfError } from "@/lib/ssrf";
+import { detectPlatform, PLATFORM_LABELS, type Platform } from "@/lib/platform";
+import { buildScanEstimate } from "@/lib/scan-estimate";
+import { costConstants } from "@/lib/cost-constants";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
-const SCAN_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const SCAN_MAX_PER_IP = 12; // ~12 scans per hour per IP
+const SCAN_WINDOW_MS = 60 * 60 * 1000;
+const SCAN_MAX_PER_IP = 8;
+const SCAN_MAX_GLOBAL = 60;
 
-type Platform = "webflow" | "framer" | "wix" | "squarespace" | "shopify" | "wordpress" | "other";
-
-const PLATFORM_HINTS: { platform: Platform; patterns: RegExp[] }[] = [
- {
- platform: "webflow",
- patterns: [/<meta[^>]+content="Webflow"/i, /webflow\.io/, /wf-form-/, /data-wf-page/, /\.webflow\./],
- },
- {
- platform: "framer",
- patterns: [/framerusercontent\.com/, /framer\.app/, /<meta[^>]+content="Framer"/i, /\.framer\./],
- },
- {
- platform: "wix",
- patterns: [/static\.parastorage\.com/, /Wix\.com Website Builder/i, /_wixCIDX/, /wixsite\.com/],
- },
- {
- platform: "squarespace",
- patterns: [/squarespace\.com/i, /sqsp\.net/, /static1\.squarespace\.com/],
- },
- {
- platform: "shopify",
- patterns: [/cdn\.shopify\.com/, /Shopify\.theme/, /\.myshopify\.com/],
- },
- {
- platform: "wordpress",
- patterns: [/wp-content/, /wp-includes/, /<meta[^>]+content="WordPress/i],
- },
-];
-
-const PLATFORM_LABELS: Record<Platform, string> = {
- webflow: "Webflow",
- framer: "Framer",
- wix: "Wix",
- squarespace: "Squarespace",
- shopify: "Shopify",
- wordpress: "WordPress",
- other: "Custom or unknown",
-};
-
-function normalizeUrl(input: string): string {
- let s = input.trim();
- if (!s) throw new Error("missing url");
- if (!/^https?:\/\//i.test(s)) s = `https://${s}`;
- // Reject obvious garbage: must have a dot in the hostname
- const hostMatch = s.match(/^https?:\/\/([^/]+)/i);
- const host = hostMatch?.[1] ?? "";
- if (!host.includes(".") || host.length < 4) {
-   throw new Error("That doesn't look like a website URL. Try something like example.com.");
- }
- const u = new URL(s);
- return u.toString();
-}
-
-async function fetchWithTimeout(url: string, ms: number, init?: RequestInit) {
- const ctrl = new AbortController();
- const t = setTimeout(() => ctrl.abort(), ms);
- try {
- const r = await fetch(url, {
-...init,
- signal: ctrl.signal,
- redirect: "follow",
- headers: {
- "User-Agent": "Mozilla/5.0 (compatible; EjectScan/0.1; +https://ejectfrom.com/scan)",
- Accept: "text/html,application/xhtml+xml,application/xml,*/*",
-...(init?.headers ?? {}),
- },
- });
- return r;
- } finally {
- clearTimeout(t);
- }
-}
-
-function detectPlatform(html: string): Platform {
- for (const { platform, patterns } of PLATFORM_HINTS) {
- if (patterns.some((re) => re.test(html))) return platform;
- }
- return "other";
-}
-
-function pickTitle(html: string): string {
- const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
- return (m?.[1] ?? "").trim().slice(0, 200);
-}
-
-function pickDescription(html: string): string {
- const m =
- html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) ||
- html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']*)["']/i);
- return (m?.[1] ?? "").trim().slice(0, 300);
+function friendlyUrl(input: string): string {
+  let value = input.trim();
+  if (!value) throw new Error("missing url");
+  if (value.length > 300) throw new Error("That URL can't be scanned.");
+  if (!/^https?:\/\//i.test(value)) value = `https://${value}`;
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("That URL can't be scanned.");
+  }
+  const host = url.hostname.replace(/\.$/, "");
+  if (!host.includes(".") || host.length < 4) throw new Error("That URL can't be scanned.");
+  return url.toString();
 }
 
 async function countPages(origin: string): Promise<number> {
- // Try sitemap.xml then sitemap_index.xml.
- const candidates = [`${origin}/sitemap.xml`, `${origin}/sitemap_index.xml`, `${origin}/sitemap-0.xml`];
- for (const c of candidates) {
- try {
- const r = await fetchWithTimeout(c, 6000);
- if (!r.ok) continue;
- const text = await r.text();
- // Count <loc>…</loc> entries; if it's a sitemap index, fetch first child.
- const isIndex = /<sitemapindex/i.test(text);
- if (isIndex) {
- const firstChild = text.match(/<loc>([^<]+)<\/loc>/i)?.[1];
- if (firstChild) {
- const cr = await fetchWithTimeout(firstChild, 6000);
- if (cr.ok) {
- const ct = await cr.text();
- const matches = ct.match(/<loc>/gi);
- if (matches) return Math.min(matches.length, 999);
- }
- }
- continue;
- }
- const matches = text.match(/<loc>/gi);
- if (matches) return Math.min(matches.length, 999);
- } catch {
- /* try next */
- }
- }
- return 0;
+  const candidates = [`${origin}/sitemap.xml`, `${origin}/sitemap_index.xml`, `${origin}/sitemap-0.xml`];
+  for (const candidate of candidates) {
+    try {
+      const response = await safeFetch(candidate, { timeoutMs: 6000 });
+      if (!response.ok) continue;
+      const text = (await response.text()).slice(0, costConstants.htmlByteCap);
+      if (/<sitemapindex/i.test(text)) {
+        const firstChild = text.match(/<loc>([^<]+)<\/loc>/i)?.[1];
+        if (!firstChild) continue;
+        const child = await safeFetch(firstChild.trim(), { timeoutMs: 6000 });
+        if (!child.ok) continue;
+        const childText = (await child.text()).slice(0, costConstants.htmlByteCap);
+        return Math.min(childText.match(/<loc>/gi)?.length ?? 0, 999);
+      }
+      const matches = text.match(/<loc>/gi);
+      if (matches) return Math.min(matches.length, 999);
+    } catch {
+      /* try the next sitemap */
+    }
+  }
+  return 0;
+}
+
+function pickTitle(html: string): string {
+  const match = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  return (match?.[1] ?? "").replace(/\s+/g, " ").trim().slice(0, 200);
+}
+
+function pickDescription(html: string): string {
+  const match =
+    html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) ||
+    html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']*)["']/i);
+  return (match?.[1] ?? "").trim().slice(0, 300);
 }
 
 export async function POST(req: Request) {
- const t0 = Date.now();
+  const started = Date.now();
+  const ip = clientIp(req);
+  const limit = rateLimit({ key: `scan:${ip}`, windowMs: SCAN_WINDOW_MS, max: SCAN_MAX_PER_IP });
+  const globalLimit = rateLimit({ key: "scan:global", windowMs: SCAN_WINDOW_MS, max: SCAN_MAX_GLOBAL });
+  if (!limit.ok || !globalLimit.ok) {
+    const retryAfter = Math.max(1, Math.ceil((limit.resetAt - Date.now()) / 1000));
+    return NextResponse.json(
+      { ok: false, error: "you've hit the scan limit for this hour. try again in a bit." },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } },
+    );
+  }
 
- // Rate limit per IP — prevents anyone from running up our Anthropic budget
- // by scripting the scanner.
- const ip = clientIp(req);
- const rl = rateLimit({ key: `scan:${ip}`, windowMs: SCAN_WINDOW_MS, max: SCAN_MAX_PER_IP });
- if (!rl.ok) {
- const retryAfter = Math.max(1, Math.ceil((rl.resetAt - Date.now()) / 1000));
- return NextResponse.json(
- { ok: false, error: "you've hit the scan limit for this hour. try again in a bit." },
- { status: 429, headers: { "Retry-After": String(retryAfter) } },
- );
- }
+  try {
+    const body = (await req.json()) as { url?: string };
+    if (!body?.url) return NextResponse.json({ ok: false, error: "missing url" }, { status: 400 });
 
- try {
- const body = (await req.json()) as { url?: string };
- if (!body?.url) {
- return NextResponse.json({ ok: false, error: "missing url" }, { status: 400 });
- }
- const url = normalizeUrl(body.url);
- const origin = new URL(url).origin;
+    let requested: string;
+    try {
+      requested = friendlyUrl(body.url);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "missing url";
+      return NextResponse.json({ ok: false, error: message }, { status: 422 });
+    }
 
- // Fetch homepage; budget ~6s.
- let homeRes;
- try {
- homeRes = await fetchWithTimeout(url, 6500);
- } catch {
- return NextResponse.json(
- { ok: false, error: "We couldn't find that website. Check the URL and try again." },
- { status: 422 },
- );
- }
- if (!homeRes.ok) {
- return NextResponse.json(
- { ok: false, error: `That URL returned ${homeRes.status}. Maybe the site is down, or the URL is wrong?` },
- { status: 422 },
- );
- }
- const html = await homeRes.text();
+    let home: Response;
+    try {
+      home = await safeFetch(requested, { timeoutMs: 6500 });
+    } catch (err) {
+      if (err instanceof SsrfError) {
+        return NextResponse.json({ ok: false, error: "That URL can't be scanned." }, { status: 422 });
+      }
+      return NextResponse.json(
+        { ok: false, error: "We couldn't find that website. Check the URL and try again." },
+        { status: 422 },
+      );
+    }
+    if (!home.ok) {
+      return NextResponse.json(
+        { ok: false, error: `That URL returned ${home.status}. Maybe the site is down, or the URL is wrong?` },
+        { status: 422 },
+      );
+    }
 
- const platform = detectPlatform(html);
- const title = pickTitle(html);
- const description = pickDescription(html);
+    const html = (await home.text()).slice(0, costConstants.htmlByteCap);
+    const finalUrl = home.url || requested;
+    const platform: Platform = detectPlatform(html);
+    const pageCount = await countPages(new URL(finalUrl).origin);
+    const estimate = buildScanEstimate(platform);
 
- const pageCount = await countPages(origin);
+    logLead({
+      event: "scan_completed",
+      data: {
+        url: finalUrl,
+        hostname: new URL(finalUrl).hostname,
+        platform,
+        pageCount,
+        monthlyCostEstimate: estimate.monthlyCostEstimate,
+        annualCostEstimate: estimate.annualCostEstimate,
+        durationMs: Date.now() - started,
+      },
+    });
 
- logLead({
- event: "scan_completed",
- data: {
- url,
- hostname: new URL(url).hostname,
- platform,
- pageCount,
- durationMs: Date.now() - t0,
- userAgent: req.headers.get("user-agent") ?? "",
- referer: req.headers.get("referer") ?? "",
- },
- });
-
- return NextResponse.json({
- ok: true,
- url,
- platform,
- platformLabel: PLATFORM_LABELS[platform],
- title,
- description,
- pageCount,
- durationMs: Date.now() - t0,
- });
- } catch (err) {
- const msg = (err as Error).message || "";
- // If our normalizer threw a friendly message, pass it through with 422
- if (msg.includes("doesn't look like a website URL") || msg.includes("missing url")) {
- return NextResponse.json({ ok: false, error: msg }, { status: 422 });
- }
- // Anything else: avoid leaking internals
- return NextResponse.json(
- { ok: false, error: "We couldn't find that website. Check the URL and try again." },
- { status: 500 },
- );
- }
+    return NextResponse.json({
+      ok: true,
+      url: finalUrl,
+      platform,
+      platformLabel: PLATFORM_LABELS[platform],
+      title: pickTitle(html),
+      description: pickDescription(html),
+      pageCount,
+      ...estimate,
+      durationMs: Date.now() - started,
+    });
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "We couldn't find that website. Check the URL and try again." },
+      { status: 500 },
+    );
+  }
 }

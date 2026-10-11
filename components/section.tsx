@@ -10,8 +10,8 @@ export function Section({
  bare?: boolean;
 }) {
  return (
- <section className={cn(bare ? "" : "py-20 md:py-28", className)}>
- <div className="max-w-content mx-auto px-6">{children}</div>
+ <section className={cn(bare ? "" : "py-10 md:py-16", className)}>
+ <div className="mx-auto max-w-content min-w-0 px-4 sm:px-6">{children}</div>
  </section>
  );
 }

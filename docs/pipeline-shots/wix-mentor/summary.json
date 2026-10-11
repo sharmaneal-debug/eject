@@ -1,0 +1,29 @@
+{
+  "slug": "wix-mentor",
+  "url": "https://mohdhafizpsp.wixsite.com/home",
+  "crawlMs": 1343,
+  "scoreMs": 165,
+  "rebuildMs": 28,
+  "shotMs": 2547,
+  "totalMs": 4083,
+  "eligibility": "NOT_ELIGIBLE",
+  "referral": "add_on",
+  "reasons": [
+    "Page count is 16. The included price covers up to 10 pages. Beyond that is a refer-out or a priced add-on.",
+    "JavaScript weight is too high for a simple-site migration."
+  ],
+  "platform": "Wix",
+  "pageCount": 16,
+  "crawledPageCount": 16,
+  "assetCount": 176,
+  "assetBytes": 55186,
+  "assetsPullable": false,
+  "formCount": 1,
+  "rebuildEase": "manual",
+  "animationSignals": [
+    "lottie"
+  ],
+  "hours": 5.2,
+  "textLines": 512,
+  "imageUrls": 90
+}

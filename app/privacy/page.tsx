@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section, Eyebrow } from "@/components/section";
 import { LEGAL_UPDATED } from "@/lib/legal";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
   description: `Privacy policy for Eject, operated by ${siteConfig.legalEntity.name}.`,
-};
+  path: "/privacy",
+});
 
 const lines = [
   ["What we collect", "The URL you scan, and the name and email you send us."],
@@ -48,11 +50,10 @@ export default function Page() {
             </div>
           </dl>
         </details>
-        <p className="text-sm mt-6">
-          <Link className="text-accent" href="/terms">Terms</Link>
-          {" · "}
-          <Link className="text-accent" href="/contact">Contact</Link>
-        </p>
+        <nav className="mt-6 flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-2">
+          <Link className="inline-flex min-h-11 items-center px-2 text-base text-accent" href="/terms">Terms</Link>
+          <Link className="inline-flex min-h-11 items-center px-2 text-base text-accent" href="/contact">Contact</Link>
+        </nav>
         <p className="text-xs text-ink-muted mt-4">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
       </div>
     </Section>

@@ -113,7 +113,7 @@ Below are 100+ example prompts. Copy any of them, replace the bracketed parts wi
 
 > Change my pricing from $99/month to $129/month everywhere it appears.
 
-> Add a new $49 starter tier between Free and Pro on the pricing page.
+> Add a starter tier between Free and Pro on the pricing page.
 
 > Update the "Save 20% annually" callout to say "Save 30% annually" and change the math.
 
