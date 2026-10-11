@@ -69,7 +69,7 @@ Wix says your site "needs to be hosted and operated on Wix's servers," and its a
 
 1. List every page, form and embed.
 2. Copy the text and download your original images.
-3. Rebuild as a small static site (by hand, with an AI assistant, or with us). Our [Wix to Next.js guide](/blog/wix-to-nextjs) has the details.
+3. Rebuild as a small static site (by hand, with an AI assistant, or with us).
 4. Recreate the contact form and test it.
 5. Point your domain at the new host.
 6. Turn off auto-renew in Wix **before the early charge date**.

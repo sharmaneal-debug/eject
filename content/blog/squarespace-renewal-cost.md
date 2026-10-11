@@ -74,7 +74,7 @@ Run your own plan and billing cycle in the [renewal savings calculator](/calcula
 Squarespace's export is limited. It creates a WordPress .xml file of *some* content, and "many features rely on our platform's JavaScript and CSS, so some content doesn't export" ([Export your site content](https://support.squarespace.com/hc/en-us/articles/206566687)). For a simple site, a rebuild is usually cleaner:
 
 1. **Find your renewal date:** Billing panel → Subscriptions → Website → **Payment due date**. Note your domain's date too.
-2. **Rebuild** the pages as a small static site (yourself with an AI assistant, or with us). Our [Squarespace to Next.js guide](/blog/squarespace-to-nextjs) has the steps.
+2. **Rebuild** the pages as a small static site (yourself with an AI assistant, or with us).
 3. **Recreate forms** and test them.
 4. **Point your domain** at the new host while Squarespace is still active.
 5. **Cancel the website subscription:** Billing → Subscriptions → your plan → **Cancel subscription**. Outside the refund window, the site stays online until the billing cycle ends ([Cancel your website subscription](https://support.squarespace.com/hc/en-us/articles/205810508-Cancel-your-website-subscription)).

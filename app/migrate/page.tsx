@@ -1,45 +1,36 @@
 import type { Metadata } from "next";
-import { LeadForm } from "@/components/lead-form";
-import { ScopeLimits } from "@/components/scope-limits";
-import { Section, Eyebrow } from "@/components/section";
+import Link from "next/link";
+import { HonestScope } from "@/components/honest-scope";
+import { Section } from "@/components/section";
 import { pageMetadata } from "@/lib/seo";
-import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Ask about a simple site",
-  description:
-    "Tell us about a marketing, portfolio, or landing page on Framer, Webflow, Wix, or Squarespace. We reply about fit. We don't record a preview.",
+  title: "Move a simple site",
+  description: "Simple sites only. About 10 pages. You approve a preview before any DNS change.",
   path: "/migrate",
 });
 
+const platforms = [
+  { href: "/migrate/webflow", label: "Webflow" },
+  { href: "/migrate/framer", label: "Framer" },
+  { href: "/migrate/wix", label: "Wix" },
+  { href: "/migrate/squarespace", label: "Squarespace" },
+];
+
 export default function Page() {
   return (
-    <>
-      <Section>
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
-          <div>
-            <Eyebrow>Simple sites</Eyebrow>
-            <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-3 max-w-2xl">Tell us the URL.</h1>
-            <p className="text-ink-soft mb-6">Simple sites. The automated move is ${siteConfig.pricing.express.price}.</p>
-            <ol className="space-y-5 max-w-md text-sm">
-              <li>
-                <p className="font-medium">1. You describe the pages</p>
-                <p className="text-ink-muted">A URL and a sentence. No CMS item count, because we don&apos;t extract one.</p>
-              </li>
-              <li>
-                <p className="font-medium">2. We answer fit</p>
-                <p className="text-ink-muted">In scope, or a referral. We don&apos;t send a rebuilt preview.</p>
-              </li>
-              <li>
-                <p className="font-medium">3. You decide</p>
-                <p className="text-ink-muted">The lead is not an order. Checkout is a separate step, and only for a simple site.</p>
-              </li>
-            </ol>
-          </div>
-          <LeadForm intent="migrate" source="migrate" />
-        </div>
-      </Section>
-      <ScopeLimits compact />
-    </>
+    <Section>
+      <h1 className="h-display text-4xl tracking-tightest md:text-6xl">Move a simple site.</h1>
+      <div className="mt-4">
+        <HonestScope />
+      </div>
+      <nav className="mt-6 flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-2">
+        {platforms.map((item) => (
+          <Link key={item.href} href={item.href} className="inline-flex min-h-11 items-center px-2 text-base text-accent">
+            {item.label}
+          </Link>
+        ))}
+      </nav>
+    </Section>
   );
 }

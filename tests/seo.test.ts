@@ -44,7 +44,24 @@ test("sitemap lists public pages and the new posts with their dates", () => {
   assert.equal(urls.some((url) => url.includes("/kit")), false);
   assert.equal(urls.some((url) => url.includes("unsubscribe")), false);
   const posts = listPosts();
+  assert.deepEqual(
+    posts.map((post) => post.slug).sort(),
+    [...NEW_POSTS].sort(),
+  );
   assert.equal(urls.filter((url) => url.includes("/blog/")).length, posts.length);
+  const retired = [
+    "edit-website-with-chatgpt",
+    "framer-alternative-self-hosted",
+    "framer-to-nextjs",
+    "squarespace-to-nextjs",
+    "webflow-is-too-expensive",
+    "webflow-to-nextjs",
+    "webflow-vs-framer-vs-nextjs",
+    "wix-to-nextjs",
+  ];
+  for (const slug of retired) {
+    assert.equal(urls.includes(`${siteConfig.url}/blog/${slug}`), false, slug);
+  }
   for (const slug of NEW_POSTS) {
     const entry = entries.find((item) => item.url === `${siteConfig.url}/blog/${slug}`);
     assert.ok(entry, slug);

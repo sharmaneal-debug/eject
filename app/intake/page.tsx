@@ -41,8 +41,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
         <div>
           <h1 className="h-display text-4xl md:text-5xl tracking-tightest mb-4">Score the site.</h1>
           <p className="text-ink-soft text-lg max-w-2xl mb-8">
-            We fetch public pages only, then decide ELIGIBLE or NOT ELIGIBLE for a simple marketing, portfolio, or landing page.
-            Stores and heavy CMS sites stop here. Nothing is rebuilt automatically.
+            We fetch public pages only. Simple sites are about 10 pages. You approve a preview before any DNS change. Refund if you don&apos;t approve.
           </p>
           <PaidIntakeForm token={token} initialUrl={order.siteUrl} />
           <p className="text-xs text-ink-muted mt-4">

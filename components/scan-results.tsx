@@ -121,7 +121,7 @@ export function ScanResults({ data }: { data: ScanData }) {
  "We run an automated migration of the in-scope pages",
  "You review the pages before anyone points DNS",
  "Editing guide and agent instructions are included",
- "There is no rebuilt preview before you pay",
+ "You approve a preview before any DNS change",
  ]}
  />
  <Path

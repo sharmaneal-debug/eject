@@ -56,7 +56,7 @@ Because there's no export, you capture what's on your live site and rebuild it a
 
 1. **Inventory every page.** List each URL, plus your forms, embeds (booking, video, newsletter) and images.
 2. **Capture the content.** Copy the text, download your original images (not the compressed versions), and note your fonts and colors.
-3. **Rebuild.** An AI coding assistant can rebuild a simple Framer site as a small Next.js or HTML project from screenshots and your content. Our [Framer to Next.js guide](/blog/framer-to-nextjs) walks through it.
+3. **Rebuild.** An AI coding assistant can rebuild a simple Framer site as a small Next.js or HTML project from screenshots and your content.
 4. **Re-create the forms.** Framer's built-in forms won't come with you. Pick a form handler and test that submissions reach your inbox.
 5. **Map redirects.** If any URLs change, add redirects so Google and old links still land.
 

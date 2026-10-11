@@ -67,7 +67,7 @@ Webflow can export code, but:
 - "Dynamic content (CMS items/pages) can't be exported."
 - Webflow's pricing FAQ adds that when you host elsewhere, "forms will stop working."
 
-For a simple static site, the export is a decent starting point. For anything with a blog, plan to export each CMS Collection as CSV and rebuild those pages. Our [Webflow to Next.js playbook](/blog/webflow-to-nextjs) covers the technical side.
+For a simple static site, the export is a decent starting point. A large blog is a bigger project than this guide.
 
 ## Step 3: Build the new site and host it for free
 
