@@ -8,11 +8,19 @@ export const runtime = "edge";
 //
 // Defaults to siteConfig.tagline if no params are passed (homepage / OG).
 
+const BLOCKED = /\$|\bexpress\b|\bconcierge\b|\bpricing\b|\bprice\b/i;
+
+function publicText(value: string | null, fallback: string, max: number) {
+  const text = (value ?? "").trim();
+  if (!text || BLOCKED.test(text)) return fallback.slice(0, max);
+  return text.slice(0, max);
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const title = (searchParams.get("title") || siteConfig.tagline).slice(0, 100);
-  const subtitle = (searchParams.get("subtitle") || siteConfig.shortTagline).slice(0, 120);
-  const eyebrow = (searchParams.get("eyebrow") || siteConfig.name).slice(0, 40);
+  const title = publicText(searchParams.get("title"), siteConfig.tagline, 100);
+  const subtitle = publicText(searchParams.get("subtitle"), siteConfig.shortTagline, 120);
+  const eyebrow = publicText(searchParams.get("eyebrow"), siteConfig.name, 40);
 
   return new ImageResponse(
     (

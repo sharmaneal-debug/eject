@@ -15,9 +15,8 @@ export default function Page() {
       <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-2">Contact</h1>
       <p className="text-ink-soft mb-6">Last updated: {LEGAL_UPDATED}.</p>
       <p className="text-lg">
-        <a className="text-accent" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+        <a className="inline-flex min-h-12 items-center text-accent" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
       </p>
-      <p className="text-sm text-ink-soft mt-4 max-w-md">Contact us for custom pricing.</p>
       <p className="text-xs text-ink-muted mt-6">Operated by {siteConfig.legalEntity.name}. Last updated: {LEGAL_UPDATED}.</p>
     </Section>
   );

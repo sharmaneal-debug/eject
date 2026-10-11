@@ -34,18 +34,22 @@ export function CookieBanner() {
   if (choice !== null) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-3xl rounded-2xl border border-line bg-white p-4 shadow-lg md:left-auto md:right-6">
-      <p className="text-sm text-ink-soft leading-relaxed">
-        This choice stays in your browser. We do not load advertising or analytics scripts. Read the{" "}
-        <Link className="text-accent" href="/privacy">privacy policy</Link>.
-      </p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" onClick={() => choose("essential")} className="rounded-lg border border-line px-3 py-2 text-sm">
-          Essential only
-        </button>
-        <button type="button" onClick={() => choose("analytics")} className="rounded-lg bg-ink text-paper px-3 py-2 text-sm">
-          Allow analytics
-        </button>
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white px-4 py-3">
+      <div className="mx-auto flex w-full max-w-content flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-base leading-snug text-ink">
+          This choice stays in your browser. We do not load advertising or analytics scripts.{" "}
+          <Link className="font-semibold text-ink underline decoration-2 underline-offset-2" href="/privacy">
+            Privacy
+          </Link>
+        </p>
+        <div className="flex shrink-0 gap-2">
+          <button type="button" onClick={() => choose("essential")} className="inline-flex min-h-11 items-center rounded-lg border border-line px-3 text-base text-ink">
+            Essential only
+          </button>
+          <button type="button" onClick={() => choose("analytics")} className="inline-flex min-h-11 items-center rounded-lg bg-ink px-3 text-base text-paper">
+            Allow analytics
+          </button>
+        </div>
       </div>
     </div>
   );

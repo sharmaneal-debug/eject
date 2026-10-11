@@ -1,11 +1,7 @@
 import Stripe from "stripe";
-import { siteConfig } from "./site";
 
-// Stripe is optional at build time so the site renders even without keys.
-// At runtime, /api/checkout will return a 503 if STRIPE_SECRET_KEY is missing.
-//
-// We use the fetch HTTP client so the SDK works in Edge runtimes (Cloudflare
-// Pages, Vercel Edge). Falls back to the default Node client when not in edge.
+// Kept so a future checkout can opt in deliberately. No route imports this,
+// and getStripe is not called while checkout is closed.
 export function getStripe() {
  const key = process.env.STRIPE_SECRET_KEY;
  if (!key) return null;
@@ -13,23 +9,4 @@ export function getStripe() {
  apiVersion: "2025-02-24.acacia",
  httpClient: Stripe.createFetchHttpClient(),
  });
-}
-
-export type Tier = "express" | "concierge";
-
-// Map our internal tier ids to Stripe price ids set in env.
-// Run `pnpm setup-stripe` to create these products + prices in your Stripe
-// account, then paste the price ids into your .env file.
-export function priceIdForTier(tier: Tier): string | null {
- if (tier === "express") return process.env.STRIPE_PRICE_EXPRESS ?? null;
- if (tier === "concierge") return process.env.STRIPE_PRICE_CONCIERGE ?? null;
- return null;
-}
-
-export function tierConfig(tier: Tier) {
- return tier === "concierge" ? siteConfig.pricing.concierge : siteConfig.pricing.express;
-}
-
-export function isValidTier(t: unknown): t is Tier {
- return t === "express" || t === "concierge";
 }

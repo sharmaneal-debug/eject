@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       email: String(body?.email ?? "").slice(0, 200),
       siteUrl: String(body?.siteUrl ?? "").slice(0, 500),
       platform: String(body?.platform ?? "").slice(0, 50),
-      tier: String(body?.tier ?? "express").slice(0, 20),
+      tier: String(body?.tier ?? "").slice(0, 20),
       pages: Number(body?.pages) || 0,
       cmsItems: Number(body?.cmsItems) || 0,
       notes: String(body?.notes ?? "").slice(0, 2000),

@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 const lines = [
   ["What we collect", "The URL you scan, and the name and email you send us."],
-  ["Payments", "Stripe handles the card. We do not store the card number."],
-  ["Use", "We reply, run the scan, and keep records a sale requires."],
+  ["Payments", "We do not take payment on this website, and we do not store card numbers."],
+  ["Use", "We reply and keep records the service requires."],
   ["Sharing", "We do not sell personal information."],
   ["Cookies", "No analytics script loads. The banner stores your choice in this browser."],
   ["Rights", `Email ${siteConfig.email} to ask for a copy or deletion.`],
@@ -36,7 +36,7 @@ export default function Page() {
           <dl className="mt-3 space-y-3 text-sm text-ink-soft">
             <div>
               <dt className="text-ink">Vendors</dt>
-              <dd>Stripe if you pay. Resend if we email. Vercel hosts this site.</dd>
+              <dd>Resend if we email. Vercel hosts this site.</dd>
             </div>
             <div>
               <dt className="text-ink">AI</dt>
