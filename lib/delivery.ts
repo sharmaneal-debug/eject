@@ -27,12 +27,12 @@ export function buildDelivery(order: Order, report: ComplexityReport, snapshot: 
   const llm = process.env.ANTHROPIC_API_KEY ? "queued" : "absent";
   const mode = llm === "queued" ? "queued" : "manual";
   const slug = slugFromUrl(snapshot.finalUrl || order.siteUrl || "site");
-  const kitPath = order.token ? `/kit?token=${encodeURIComponent(order.token)}` : "/kit";
+  const handoffPath = "/how-it-works";
   const hostingSteps = [
     "Create a git repository from the files in this handoff.",
     "Push it to GitHub, GitLab, or a host you control.",
     "Connect Cloudflare Pages, Vercel, or Netlify and use their free tier if it fits the traffic.",
-    "Set the build to the Next.js app once a person (or you, with the kit) has turned the content snapshot into pages.",
+    "Set the build to the Next.js app once the content snapshot has been turned into pages.",
     "Point the domain only after you have reviewed a deployment. Eject does not cut DNS over automatically.",
   ];
   const offer = tierConfig(order.tier);
@@ -60,7 +60,7 @@ export function buildDelivery(order: Order, report: ComplexityReport, snapshot: 
   const readme = `# ${slug}\n\n## Edit it by chatting\n\nOpen this folder in Cursor, Claude, or ChatGPT. The agent follows AGENTS.md. You can also run \`node scripts/chat-edit.mjs "your change"\` to queue a sentence in edits/inbox.md.\n\n${tierNote}\n\n## What was automated\n\n- Public pages were fetched and scored.\n- Eligibility: ${report.eligibility}.\n- Assets look ${report.assetsPullable ? "pullable" : "hard to pull"} (${report.assetCount} found).\n- Rebuild ease: ${report.rebuildEase}.\n\n## What is reviewed\n\n${order.tier === "done_for_you" ? "A person builds and reviews the pages before you see them." : "The automated tier does not publish a preview by itself. A visual pass still happens before anything is called done."} PageSpeed gains are not measured or promised.\n\n## Commands\n\nFrom the Eject repository:\n\n\`\`\`sh\npnpm crawl ${snapshot.finalUrl} --max-pages=${simpleSiteScope.maxPages}\npnpm rebuild data/snapshots/${slug}\npnpm editor ./out/orders/${order.id}\n\`\`\`\n\n\`pnpm rebuild\` and \`pnpm editor\` need ANTHROPIC_API_KEY. Without that key, use AGENTS.md with your own agent.\n`;
 
   const hosting = `# Hosting\n\n${hostingSteps.map((step, index) => `${index + 1}. ${step}`).join("\n")}\n\nEject does not host the customer site and does not publish a preview URL on its own.\n`;
-  const editor = `# Editor\n\n${editorNote}\n\nKit: ${kitPath}\n\nYour agent: read AGENTS.md in this folder.\n\nOptional CLI, from the Eject repo:\n\n\`\`\`sh\npnpm editor ./out/orders/${order.id}\n\`\`\`\n`;
+  const editor = `# Editor\n\n${editorNote}\n\nHow it works: ${handoffPath}\n\nYour agent: read AGENTS.md in this folder.\n\nOptional CLI, from the Eject repo:\n\n\`\`\`sh\npnpm editor ./out/orders/${order.id}\n\`\`\`\n`;
   const notes = JSON.stringify(
     {
       orderId: order.id,
@@ -86,7 +86,7 @@ export function buildDelivery(order: Order, report: ComplexityReport, snapshot: 
     hostingSteps,
     editor: {
       cli: `pnpm editor ./out/orders/${order.id}`,
-      kitPath,
+      kitPath: handoffPath,
       note: editorNote,
     },
     repoFiles: [

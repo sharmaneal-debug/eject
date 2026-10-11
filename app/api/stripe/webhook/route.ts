@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { checkoutOpen } from "@/lib/checkout-gate";
 import { getStripe } from "@/lib/stripe";
 import { markOrderPaidFromSession, sendKickoffOnce, publicOrigin } from "@/lib/fulfillment";
 
@@ -26,6 +27,10 @@ export async function POST(req: Request) {
 
   if (event.livemode) {
     return NextResponse.json({ ok: false, error: "live mode events are refused" }, { status: 400 });
+  }
+
+  if (!checkoutOpen()) {
+    return NextResponse.json({ ok: true, ignored: true });
   }
 
   if (event.type === "checkout.session.completed") {

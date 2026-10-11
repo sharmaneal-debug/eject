@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Section, Eyebrow } from "@/components/section";
 import { isMockStripe } from "@/lib/checkout";
+import { checkoutOpen } from "@/lib/checkout-gate";
 import { getOrderStore } from "@/lib/orders";
 import { pageMetadata } from "@/lib/seo";
 import { tierConfig } from "@/lib/stripe";
@@ -18,6 +19,7 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ order?: string }> }) {
+  if (!checkoutOpen()) redirect("/early-access");
   if (!isMockStripe()) notFound();
   const { order: orderId } = await searchParams;
   if (!orderId) notFound();

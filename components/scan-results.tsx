@@ -35,7 +35,7 @@ export function ScanResults({ data }: { data: ScanData }) {
  // Three-year figure uses the automated offer. Domain renewal is paid to
  // the registrar either way, so it is not counted. A simple static host
  // can be $0 after that.
- const ejectExpress3yr = siteConfig.pricing.express.price;
+ const movePrice = siteConfig.pricing.express.price;
  const automated = siteConfig.pricing.express;
  const byHand = siteConfig.pricing.concierge;
 
@@ -88,19 +88,19 @@ export function ScanResults({ data }: { data: ScanData }) {
  Same site, {automated.name}
  </p>
  <p className="text-4xl md:text-5xl h-display tracking-tightest text-signal">
- ${ejectExpress3yr.toLocaleString()}
+ ${movePrice.toLocaleString()}
  </p>
  <p className="text-xs text-ink-muted mt-1 font-mono">
  {`$${automated.price} once. Then you edit by chatting with your own AI. Hosting after that is your host's bill, often $0 for a static site.`}
  </p>
  </div>
  </div>
- {data.threeYearCostEstimate > ejectExpress3yr && (
+ {data.threeYearCostEstimate > movePrice && (
  <div className="mt-6 pt-6 border-t border-line">
  <p className="text-sm">
  You&apos;d save{" "}
  <span className="font-semibold text-signal">
- ${(data.threeYearCostEstimate - ejectExpress3yr).toLocaleString()}
+ ${(data.threeYearCostEstimate - movePrice).toLocaleString()}
  </span>{" "}
  over 3 years. Forever after that, it&apos;s just the cost of your domain.
  </p>

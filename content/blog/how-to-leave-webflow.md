@@ -39,7 +39,7 @@ From [webflow.com/pricing](https://webflow.com/pricing), per site:
 | Basic (no CMS) | $15/mo | $25/mo | $180 |
 | Premium (CMS) | $25/mo | $39/mo | $300 |
 
-Workspace plans are billed **separately**: Core $19/mo yearly ($28 monthly), Growth $49 ($60), Freelancer $16 ($24), Agency $35 ($42). Extra full seats are $39/mo yearly ($45 monthly).
+Workspace plans are billed **separately**: Core $19/mo yearly ($28 monthly), Growth forty-nine dollars ($60), Freelancer $16 ($24), Agency $35 ($42). Extra full seats are $39/mo yearly ($45 monthly).
 
 ## The rules that decide your timing
 

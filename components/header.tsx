@@ -16,7 +16,7 @@ const links = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function Header() {
+export function Header({ buyHref }: { buyHref: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -42,7 +42,7 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <Link
-            href="/checkout?tier=express"
+            href={buyHref}
             className="inline-flex min-h-11 items-center rounded-lg bg-ink px-4 text-base font-medium text-paper hover:bg-signal"
           >
             Buy now

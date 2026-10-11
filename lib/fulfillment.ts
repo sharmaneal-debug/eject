@@ -214,7 +214,7 @@ export async function runPaidIntake(
     await sendOrderMail(updated, "delivery", deliveryEmail({
       name: updated.name || "",
       siteUrl: snapshot.finalUrl,
-      kitUrl: `${publicOrigin()}/kit?token=${encodeURIComponent(updated.token)}`,
+      kitUrl: `${publicOrigin()}/how-it-works`,
     }));
   }
   if (!eligible) {

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Order } from "@/lib/orders";
-import { kitHref } from "@/lib/kit-access";
 import { siteConfig } from "@/lib/site";
 
 function money(n: number) {
@@ -64,8 +63,8 @@ export function ScoreReport({ order }: { order: Order }) {
             Rebuild ease: {score.rebuildEase}.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href={kitHref(order.token)} className="rounded-xl bg-ink text-paper px-5 py-3 text-sm font-medium">
-              Open the kit
+            <Link href="/how-it-works" className="inline-flex min-h-11 items-center rounded-xl bg-ink px-5 text-base font-medium text-paper">
+              How the handoff works
             </Link>
           </div>
           {order.delivery?.repoDir && (

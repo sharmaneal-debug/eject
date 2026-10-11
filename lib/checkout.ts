@@ -1,3 +1,4 @@
+import { checkoutOpen } from "./checkout-gate";
 import { getStripe, priceIdForTier, stripeConfigError, tierConfig, type Tier } from "./stripe";
 import { getOrderStore } from "./orders";
 import { logLead } from "./leads";
@@ -20,6 +21,9 @@ export async function createCheckoutSession(input: {
   /** Done for you is not a public checkout. Only the operator view may pass "operator". */
   channel?: "self_serve" | "operator";
 }): Promise<CheckoutResult> {
+  if (!checkoutOpen()) {
+    return { kind: "unavailable", reason: "Checkout is closed." };
+  }
   const channel = input.channel ?? "self_serve";
   if (input.tier === "done_for_you" && channel !== "operator") {
     return {

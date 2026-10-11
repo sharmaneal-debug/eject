@@ -9,6 +9,7 @@ import { runPaidIntake } from "../lib/fulfillment";
 import { requirePaidKit } from "../lib/kit-access";
 import { getOrderStore, resetOrderStoreForTests } from "../lib/orders";
 import { deliveryDirFor } from "../lib/delivery";
+import { POST as checkoutPost } from "../app/api/checkout/route";
 import { POST as mockComplete } from "../app/api/checkout/mock-complete/route";
 import { POST as webhook } from "../app/api/stripe/webhook/route";
 
@@ -27,6 +28,7 @@ const saved = {
   BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
   POSTGRES_URL: process.env.POSTGRES_URL,
   DATABASE_URL: process.env.DATABASE_URL,
+  CHECKOUT_OPEN: process.env.CHECKOUT_OPEN,
 };
 
 function restoreEnv() {
@@ -79,8 +81,40 @@ test("file store round-trips an order", async () => {
   }
 });
 
+test("closed checkout creates no order and no session", async () => {
+  const dir = await useFileStore();
+  delete process.env.CHECKOUT_OPEN;
+  process.env.EJECT_STRIPE_MODE = "mock";
+  resetOrderStoreForTests();
+  try {
+    const result = await createCheckoutSession({
+      tier: "automated",
+      origin: "http://localhost:3000",
+      channel: "operator",
+    });
+    assert.equal(result.kind, "unavailable");
+    assert.equal((await getOrderStore().list()).length, 0);
+    const response = await checkoutPost(
+      new Request("http://localhost:3000/api/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ tier: "automated", email: "a@b.co" }),
+      }),
+    );
+    assert.equal(response.status, 303);
+    const location = response.headers.get("location") ?? "";
+    assert.match(location, /\/early-access$/);
+    assert.equal(location.includes("cs_"), false);
+    assert.equal((await getOrderStore().list()).length, 0);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+    restoreEnv();
+  }
+});
+
 test("mock checkout, intake, and kit gate", async () => {
   const dir = await useFileStore();
+  process.env.CHECKOUT_OPEN = "true";
   process.env.EJECT_STRIPE_MODE = "mock";
   resetOrderStoreForTests();
   const written: string[] = [];

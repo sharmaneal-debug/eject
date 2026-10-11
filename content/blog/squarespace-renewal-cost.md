@@ -23,7 +23,7 @@ From [squarespace.com/pricing](https://www.squarespace.com/pricing):
 |---|---|---|---|---|
 | Basic | $19 | $25 | $228 | $300 |
 | Core | $29 | $39 | $348 | $468 |
-| Plus | $49 | $65 | $588 | $780 |
+| Plus | forty-nine dollars | $65 | $588 | $780 |
 | Advanced | $99 | $139 | $1,188 | $1,668 |
 
 Squarespace says it "periodically adjust[s] our plans and pricing." If you got a price-increase email, "you'll pay the updated price on your next scheduled renewal date" ([Manage automatic subscription renewals](https://support.squarespace.com/hc/en-us/articles/230364668-Manage-automatic-subscription-renewals)). If you're on an older plan, check your Billing panel, because your price may differ from the table above. If you cancel a legacy plan, you can't reactivate it later; you'd have to choose a current plan ([Cancel your website subscription](https://support.squarespace.com/hc/en-us/articles/205810508-Cancel-your-website-subscription)).

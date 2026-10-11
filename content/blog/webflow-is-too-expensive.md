@@ -288,7 +288,7 @@ The Starter plan is free, gives you a `webflow.io` subdomain, and **does not inc
 
 ### Are there hidden fees I should know about?
 
-Yes. Beyond the listed plan price, watch for: Workspace seat fees ($19/seat/mo), CMS item overages (forced upgrade to next tier), form submission overages, bandwidth overages (auto-upgrade or per-GB), Localization add-ons ($9–$29/locale/mo), Logic feature gating, advanced SEO controls on higher tiers, and template purchases ($19–$149 one-time).
+Yes. Beyond the listed plan price, watch for: Workspace seat fees ($19/seat/mo), CMS item overages (forced upgrade to next tier), form submission overages, bandwidth overages (auto-upgrade or per-GB), Localization add-ons ($9–$29/locale/mo), Logic feature gating, advanced SEO controls on higher tiers, and template purchases from $19 to one hundred forty-nine dollars, one-time.
 
 ### Is Webflow Enterprise worth it for medium-sized companies?
 
@@ -362,7 +362,7 @@ If you want the technical deep-dive on what the migration actually involves day-
  "name": "Are there hidden fees on Webflow I should know about?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "Yes. Beyond the listed plan price, watch for Workspace seat fees at $19 per seat per month, CMS item overages that force an upgrade to the next tier, form submission overages, bandwidth overages that either auto-upgrade your plan or charge per GB, Localization add-ons at $9 to $29 per locale per month, Logic feature gating, advanced SEO controls on higher tiers, and template purchases ranging from $19 to $149 one-time."
+ "text": "Yes. Beyond the listed plan price, watch for Workspace seat fees at $19 per seat per month, CMS item overages that force an upgrade to the next tier, form submission overages, bandwidth overages that either auto-upgrade your plan or charge per GB, Localization add-ons at $9 to $29 per locale per month, Logic feature gating, advanced SEO controls on higher tiers, and template purchases ranging from $19 to one hundred forty-nine dollars, one-time."
  }
  },
  {

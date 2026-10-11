@@ -255,7 +255,7 @@ export function deliveryEmail(opts: { name: string; siteUrl: string; kitUrl?: st
 
 The handoff for ${opts.siteUrl} is ready. It includes a content snapshot, hosting notes, and editor instructions (AGENTS.md). You edit the site by chatting with your own agent.
 
-${opts.kitUrl ? `Kit: ${opts.kitUrl}` : "Open the kit link from your order email."}
+${opts.kitUrl ? `How it works: ${opts.kitUrl}` : "The editing guide is in the handoff (AGENTS.md and EDITING.md)."}
 
 We do not promise the new pages will match the old site pixel for pixel. You own the code we hand you. DNS and the domain stay your job until you decide to point them.
 

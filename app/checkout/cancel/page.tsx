@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Section } from "@/components/section";
+import { checkoutOpen } from "@/lib/checkout-gate";
 import { pageMetadata } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
   title: "Checkout cancelled",
   description: "Checkout cancelled.",
   path: "/checkout/cancel",
+  index: false,
 });
 
 export default function Page() {
+ if (!checkoutOpen()) redirect("/early-access");
  return (
  <Section>
  <div className="max-w-xl">

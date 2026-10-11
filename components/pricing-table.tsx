@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buyNowHref } from "@/lib/checkout-gate";
 import { siteConfig } from "@/lib/site";
 import { CustomPricingLink } from "./custom-pricing-link";
 
@@ -16,7 +17,7 @@ export function PricingTable() {
           ))}
         </ul>
         <Link
-          href="/checkout?tier=express"
+          href={buyNowHref()}
           className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-ink px-5 text-base font-medium text-paper hover:bg-signal"
         >
           {offer.cta}

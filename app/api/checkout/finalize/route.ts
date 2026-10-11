@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { checkoutOpen } from "@/lib/checkout-gate";
 import { reconcileSession } from "@/lib/fulfillment";
 
 export const runtime = "nodejs";
@@ -10,6 +11,9 @@ function maskEmail(email: string) {
 }
 
 export async function POST(req: Request) {
+  if (!checkoutOpen()) {
+    return NextResponse.json({ ok: false, error: "Checkout is closed." }, { status: 403 });
+  }
   let body: { sessionId?: string };
   try {
     body = await req.json();

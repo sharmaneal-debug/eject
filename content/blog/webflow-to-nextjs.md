@@ -419,7 +419,7 @@ After the move, you edit by chatting with your own AI. An editing guide and agen
 
 ### How much does it cost?
 
-The current prices are $99 (Automated: an automated migration of a simple site, reviewed before DNS) and custom pricing (Done for you: by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff). There is no $1,499 tier. Hosting for a simple static site can be $0 on Cloudflare Pages. A CMS layer is outside this service, so don't add a Sanity project to the plan and assume we migrate it. There is no preview before you pay.
+The current prices are $99 (Automated: an automated migration of a simple site, reviewed before DNS) and custom pricing (Done for you: by hand, up to about 10 pages, 1 form, 2 revision rounds, and a 30-minute handoff). There is no higher automated tier. Hosting for a simple static site can be $0 on Cloudflare Pages. A CMS layer is outside this service, so don't add a Sanity project to the plan and assume we migrate it. There is no preview before you pay.
 
 ### What about my forms?
 
@@ -498,7 +498,7 @@ Or if you're not sure yet: [run the calculator](#cost-calculator). The number te
  "name": "How much does the migration cost?",
  "acceptedAnswer": {
  "@type": "Answer",
- "text": "The migration is $99 for an automated simple-site move you review before DNS, or custom pricing done by hand inside a cap of about 10 pages. There is no $1,499 tier and no CMS migration. After that you edit by chatting with your own AI. Hosting for a simple static site can be free on Cloudflare Pages."
+ "text": "The migration is $99 for an automated simple-site move you review before DNS, or custom pricing done by hand inside a cap of about 10 pages. There is no higher automated tier and no CMS migration. After that you edit by chatting with your own AI. Hosting for a simple static site can be free on Cloudflare Pages."
  }
  },
  {

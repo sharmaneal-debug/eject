@@ -5,10 +5,13 @@ import Link from "next/link";
 
 const KEY = "eject-cookie-choice";
 
-export function cookieChoice(): "analytics" | "essential" | null {
-  if (typeof window === "undefined") return null;
-  const value = window.localStorage.getItem(KEY);
-  if (value === "analytics" || value === "essential") return value;
+function readChoice(): "analytics" | "essential" | null {
+  try {
+    const value = window.localStorage.getItem(KEY);
+    if (value === "analytics" || value === "essential") return value;
+  } catch {
+    return null;
+  }
   return null;
 }
 
@@ -16,33 +19,37 @@ export function CookieBanner() {
   const [choice, setChoice] = useState<"analytics" | "essential" | null | "unknown">("unknown");
 
   useEffect(() => {
-    setChoice(cookieChoice());
+    setChoice(readChoice());
   }, []);
 
   function choose(next: "analytics" | "essential") {
-    window.localStorage.setItem(KEY, next);
+    try {
+      window.localStorage.setItem(KEY, next);
+    } catch {
+      // Private mode can block storage. Hide the notice for this view anyway.
+    }
     setChoice(next);
-    window.dispatchEvent(new Event("eject-cookie-choice"));
   }
 
   if (choice !== null) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white p-4">
-      <p className="text-base text-ink-soft">
-        This choice stays in your browser.{" "}
-        <Link className="text-accent underline-offset-2 hover:underline" href="/privacy">
-          Privacy
-        </Link>
-        .
-      </p>
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        <button type="button" onClick={() => choose("essential")} className="min-h-11 rounded-lg border border-line px-3 text-base">
-          Essential only
-        </button>
-        <button type="button" onClick={() => choose("analytics")} className="min-h-11 rounded-lg bg-ink px-3 text-base text-paper">
-          Allow analytics
-        </button>
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white px-4 py-3">
+      <div className="mx-auto flex w-full max-w-content flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-base leading-snug text-ink">
+          This choice stays in your browser. We do not load advertising or analytics scripts.{" "}
+          <Link className="font-semibold text-ink underline decoration-2 underline-offset-2" href="/privacy">
+            Privacy
+          </Link>
+        </p>
+        <div className="flex shrink-0 gap-2">
+          <button type="button" onClick={() => choose("essential")} className="inline-flex min-h-11 items-center rounded-lg border border-line px-3 text-base text-ink">
+            Essential only
+          </button>
+          <button type="button" onClick={() => choose("analytics")} className="inline-flex min-h-11 items-center rounded-lg bg-ink px-3 text-base text-paper">
+            Allow analytics
+          </button>
+        </div>
       </div>
     </div>
   );

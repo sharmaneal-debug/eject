@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { siteConfig } from "@/lib/site";
 import { Section, Eyebrow } from "@/components/section";
 import { createCheckoutSession, type CheckoutResult } from "@/lib/checkout";
+import { checkoutOpen } from "@/lib/checkout-gate";
 import { pageMetadata } from "@/lib/seo";
 import { normalizeTier, tierConfig, type Tier } from "@/lib/stripe";
 
@@ -15,6 +16,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Checkout",
   description: "One payment for a simple-site migration. Stripe test mode, or a local mock checkout.",
   path: "/checkout",
+  index: false,
 });
 
 async function requestOrigin(): Promise<string> {
@@ -31,6 +33,7 @@ export default async function Page({
 }: {
   searchParams: Promise<{ tier?: string; url?: string }>;
 }) {
+  if (!checkoutOpen()) redirect("/early-access");
   const sp = await searchParams;
   const tier: Tier = normalizeTier(sp.tier) ?? "automated";
   if (tier === "done_for_you") redirect("/book");

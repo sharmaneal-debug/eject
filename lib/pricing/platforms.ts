@@ -241,7 +241,7 @@ export const PLATFORMS: PlatformPricing[] = [
         lastChecked: PRICING_LAST_CHECKED,
         fitsSimpleSite: false,
         notes:
-          "Comparison table: $65/mo month-to-month and $49/mo billed yearly. Commerce-oriented. Outside Eject's scope.",
+          "Comparison table: $65/mo month-to-month and forty-nine dollars a month billed yearly. Commerce-oriented. Outside Eject's scope.",
       },
       {
         id: "advanced",

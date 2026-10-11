@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { FinalizeOnLoad } from "@/components/finalize-on-load";
+import { checkoutOpen } from "@/lib/checkout-gate";
 import { reconcileSession } from "@/lib/fulfillment";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
@@ -21,13 +23,14 @@ const got = [
   { title: "A simple-site score", icon: ScoreIcon },
 ];
 
-const next = ["Submit the URL", "We score the site", "Open the kit if it fits"];
+const next = ["Submit the URL", "We score the site", "Review the handoff if it fits"];
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{ session_id?: string }>;
 }) {
+  if (!checkoutOpen()) redirect("/early-access");
   const sp = await searchParams;
   const order = sp.session_id ? await reconcileSession(sp.session_id).catch(() => null) : null;
 

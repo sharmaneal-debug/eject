@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { markMockOrderPaid, sendKickoffOnce, publicOrigin } from "@/lib/fulfillment";
 import { isMockStripe } from "@/lib/checkout";
+import { checkoutOpen } from "@/lib/checkout-gate";
 
 export const runtime = "nodejs";
 
@@ -15,6 +16,9 @@ async function readOrderId(req: Request): Promise<string> {
 }
 
 export async function POST(req: Request) {
+  if (!checkoutOpen()) {
+    return NextResponse.redirect(new URL("/early-access", req.url), 303);
+  }
   if (!isMockStripe()) {
     return NextResponse.json({ ok: false, error: "mock checkout is disabled" }, { status: 404 });
   }

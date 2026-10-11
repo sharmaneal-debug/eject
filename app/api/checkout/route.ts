@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createCheckoutSession } from "@/lib/checkout";
+import { checkoutOpen } from "@/lib/checkout-gate";
 import { normalizeTier, tierConfig } from "@/lib/stripe";
 import { siteConfig } from "@/lib/site";
 
@@ -13,6 +14,9 @@ type Body = {
 };
 
 export async function POST(req: Request) {
+  if (!checkoutOpen()) {
+    return NextResponse.redirect(new URL("/early-access", req.url), 303);
+  }
   let body: Body;
   try {
     body = (await req.json()) as Body;

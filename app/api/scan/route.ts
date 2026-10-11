@@ -9,13 +9,23 @@ import { costConstants } from "@/lib/cost-constants";
 export const runtime = "nodejs";
 
 const SCAN_WINDOW_MS = 60 * 60 * 1000;
-const SCAN_MAX_PER_IP = 12;
+const SCAN_MAX_PER_IP = 8;
+const SCAN_MAX_GLOBAL = 60;
 
 function friendlyUrl(input: string): string {
   let value = input.trim();
   if (!value) throw new Error("missing url");
+  if (value.length > 300) throw new Error("That URL can't be scanned.");
   if (!/^https?:\/\//i.test(value)) value = `https://${value}`;
-  return value;
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("That URL can't be scanned.");
+  }
+  const host = url.hostname.replace(/\.$/, "");
+  if (!host.includes(".") || host.length < 4) throw new Error("That URL can't be scanned.");
+  return url.toString();
 }
 
 async function countPages(origin: string): Promise<number> {
@@ -58,7 +68,8 @@ export async function POST(req: Request) {
   const started = Date.now();
   const ip = clientIp(req);
   const limit = rateLimit({ key: `scan:${ip}`, windowMs: SCAN_WINDOW_MS, max: SCAN_MAX_PER_IP });
-  if (!limit.ok) {
+  const globalLimit = rateLimit({ key: "scan:global", windowMs: SCAN_WINDOW_MS, max: SCAN_MAX_GLOBAL });
+  if (!limit.ok || !globalLimit.ok) {
     const retryAfter = Math.max(1, Math.ceil((limit.resetAt - Date.now()) / 1000));
     return NextResponse.json(
       { ok: false, error: "you've hit the scan limit for this hour. try again in a bit." },

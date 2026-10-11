@@ -57,6 +57,23 @@ pnpm orders                              # list orders, scores, cost-to-serve
 pnpm deliver <orderId>                   # write the customer repo (no model call)
 ```
 
+## Checkout gate
+
+`CHECKOUT_OPEN` defaults to closed. Leave it unset in production. While it is not the exact string `true`:
+
+- Buy now links go to `/early-access` (free scan, savings calculator, and a short list form).
+- The form stores the lead. An email is sent only when `RESEND_API_KEY` and `RESEND_FROM` are both set. Otherwise the lead is stored only.
+- `/checkout` and `POST /api/checkout` redirect to `/early-access`. They do not create a Stripe session or a mock-paid order, even if a test key or `EJECT_STRIPE_MODE=mock` is set.
+- Live keys (`sk_live_`, `rk_live_`) and live webhook events are refused even when the flag is on.
+
+To exercise test checkout locally or on a preview:
+
+```sh
+CHECKOUT_OPEN=true EJECT_STRIPE_MODE=mock pnpm dev
+```
+
+Or set `CHECKOUT_OPEN=true` with a test secret (`sk_test_` or `rk_test_` only). Do not put a live key in the environment.
+
 ## Pricing
 
 Names and dollar amounts live in `lib/site.ts`. Checkout, kickoff email, delivery, calculators, and the playbooks read that file. Internal checkout ids are `automated` and `done_for_you`. Older links `?tier=express` and `?tier=concierge` still map to those ids.
@@ -75,15 +92,15 @@ No card and no live key. The mock path never talks to Stripe.
 ```sh
 pnpm install
 pnpm test
-EJECT_STRIPE_MODE=mock pnpm dev
+CHECKOUT_OPEN=true EJECT_STRIPE_MODE=mock pnpm dev
 ```
 
-1. Open `http://localhost:3000/checkout?tier=automated` (or `tier=done_for_you`, or the older `express` / `concierge` values).
+1. Open `http://localhost:3000/checkout?tier=automated`. Without `CHECKOUT_OPEN=true` that URL redirects to `/early-access` and does not start a session.
 2. The mock page posts to `/api/checkout/mock-complete`. That marks the order paid and issues a `tok_` access token. Nothing is charged.
 3. Open the intake link from the success page and submit a public `https` URL (not localhost).
 4. The order is scored: eligibility, migration-time estimate, and cost-to-serve. Eligible simple sites get a repo under `out/orders/<orderId>/` with `AGENTS.md`, `EDITING.md`, and `scripts/chat-edit.mjs`.
 5. `pnpm orders` lists the order. `pnpm deliver <orderId>` writes that repo again. Add `--rebuild` only when `ANTHROPIC_API_KEY` is set; otherwise the model is not called.
-6. The kit (`/kit?token=…`) opens after the score says the site is eligible.
+6. Eligible orders get a handoff (AGENTS.md, EDITING.md, and a content snapshot). The public paid kit page is not part of this site.
 
 Renewal watch is `/renewal-watch`. Unsubscribe is `/renewal-watch/unsubscribe`. The daily cron is `GET /api/cron/renewal-reminders` with `Authorization: Bearer $CRON_SECRET`. It sends nothing unless `CRON_SECRET`, `RESEND_API_KEY`, and `RESEND_FROM` are all set.
 

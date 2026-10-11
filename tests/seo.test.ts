@@ -38,7 +38,9 @@ test("sitemap lists public pages and the new posts with their dates", () => {
   const entries = sitemap();
   const urls = entries.map((entry) => entry.url);
   assert.ok(urls.includes(`${siteConfig.url}/pricing`));
+  assert.ok(urls.includes(`${siteConfig.url}/early-access`));
   assert.ok(urls.includes(`${siteConfig.url}/migrate/wix`));
+  assert.equal(urls.some((url) => url.includes("/checkout")), false);
   assert.equal(urls.some((url) => url.includes("/kit")), false);
   assert.equal(urls.some((url) => url.includes("unsubscribe")), false);
   const posts = listPosts();

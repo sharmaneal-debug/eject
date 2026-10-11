@@ -6,4 +6,5 @@ const nextConfig = {
     return [{ source: "/:key.txt", destination: "/api/indexnow/:key" }];
   },
 };
+
 export default nextConfig;
