@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const lines = [
   ["The service", "We help you move a simple public site onto files you can host yourself."],
-  ["Payment", "Payment is by card through Stripe when checkout is open. Custom work has no public price."],
+  ["Payment", "This website does not take payment."],
   ["Your part", "You need rights to the content. Your domain and DNS stay yours."],
   ["Refunds", "We send refunds to the original payment method within 5 business days of approving your request."],
   ["Ownership", "You own the files we deliver. We keep the Eject brand and this website."],

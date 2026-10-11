@@ -46,17 +46,6 @@ const PLATFORM_LABELS: Record<Platform, string> = {
  other: "Custom or unknown",
 };
 
-// Conservative, generous-to-the-customer cost estimates by platform (USD/mo).
-const PLATFORM_MONTHLY_COST: Record<Platform, number> = {
- webflow: 29,
- framer: 30,
- wix: 29,
- squarespace: 23,
- shopify: 39,
- wordpress: 25, // hosting + plugins
- other: 20,
-};
-
 function normalizeUrl(input: string): string {
  let s = input.trim();
  if (!s) throw new Error("missing url");
@@ -186,19 +175,8 @@ export async function POST(req: Request) {
  const title = pickTitle(html);
  const description = pickDescription(html);
 
- // Pages: try sitemap; if zero, return 0 (we'll display "we'll discover this during migration").
  const pageCount = await countPages(origin);
 
- // Cost estimate: monthly + annual + 36-month TCO.
- const monthly = PLATFORM_MONTHLY_COST[platform];
- const annual = monthly * 12;
- const threeYear = annual * 3;
-
- // Eject cost over 3 years: $499 once + ~$15/yr domain.
- const ejectThreeYear = 499 + 15 * 3;
- const savings = Math.max(0, threeYear - ejectThreeYear);
-
- // Log every scan to Google Sheets for funnel tracking. Fire-and-forget.
  logLead({
  event: "scan_completed",
  data: {
@@ -206,8 +184,6 @@ export async function POST(req: Request) {
  hostname: new URL(url).hostname,
  platform,
  pageCount,
- monthlyCostEstimate: monthly,
- annualCostEstimate: annual,
  durationMs: Date.now() - t0,
  userAgent: req.headers.get("user-agent") ?? "",
  referer: req.headers.get("referer") ?? "",
@@ -222,11 +198,6 @@ export async function POST(req: Request) {
  title,
  description,
  pageCount,
- monthlyCostEstimate: monthly,
- annualCostEstimate: annual,
- threeYearCostEstimate: threeYear,
- ejectThreeYearCost: ejectThreeYear,
- threeYearSavings: savings,
  durationMs: Date.now() - t0,
  });
  } catch (err) {

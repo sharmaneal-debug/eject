@@ -28,11 +28,6 @@ export function websiteSchema() {
     url: siteConfig.url,
     description: siteConfig.description,
     publisher: { "@type": "Organization", name: siteConfig.legalEntity.name },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: { "@type": "EntryPoint", urlTemplate: `${siteConfig.url}/blog?q={search_term_string}` },
-      "query-input": "required name=search_term_string",
-    },
   };
 }
 
@@ -41,31 +36,10 @@ export function serviceSchema() {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Website migration",
-    name: "Eject — migrate your site off Webflow, Framer, Wix, Squarespace",
-    description:
-      "Eject rebuilds your no-code site as a self-hosted Next.js codebase you own. Free hosting, edit by chatting with AI.",
+    name: "Eject",
+    description: siteConfig.description,
     provider: { "@type": "Organization", name: siteConfig.legalEntity.name, url: siteConfig.url },
     areaServed: "Worldwide",
-    offers: [
-      {
-        "@type": "Offer",
-        name: siteConfig.pricing.express.name,
-        description: siteConfig.pricing.express.blurb,
-        price: siteConfig.pricing.express.price,
-        priceCurrency: "USD",
-        url: `${siteConfig.url}/checkout?tier=express`,
-        availability: "https://schema.org/InStock",
-      },
-      {
-        "@type": "Offer",
-        name: siteConfig.pricing.concierge.name,
-        description: siteConfig.pricing.concierge.blurb,
-        price: siteConfig.pricing.concierge.price,
-        priceCurrency: "USD",
-        url: `${siteConfig.url}/checkout?tier=concierge`,
-        availability: "https://schema.org/InStock",
-      },
-    ],
   };
 }
 
