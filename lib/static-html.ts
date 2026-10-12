@@ -293,6 +293,9 @@ export function stripEventHandlers(html: string): string {
   return walkStartTags(html, (tag) => tag.replace(/\s+on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s"'>]+)/gi, ""));
 }
 
+/** Keeps relative links and assets working when a host serves index.html without a trailing slash. */
+export const DIRECTORY_BASE_SCRIPT = `<script data-eject="directory-base">(function(){var p=location.pathname;if(location.protocol==="file:"||p.endsWith("/")||/\\.[a-z0-9]+$/i.test(p))return;var b=document.createElement("base");b.href=p+"/";document.head.insertBefore(b,document.head.firstChild);})();</script>`;
+
 export const ENTRANCE_CSS = `/* Platform runtime scripts are gone. These rules undo "hidden until that runtime finishes an entrance animation" without replacing the site's layout CSS. */
 html.w-mod-js:not(.w-mod-ix):not(.w-mod-ix2):not(.w-mod-ix3) [data-w-id] {
   visibility: visible !important;
@@ -370,6 +373,8 @@ export function buildPageHtml(input: PageBuildInput): PageBuildResult {
   const block = extras.join("");
   if (/<\/head>/i.test(html)) html = html.replace(/<\/head>/i, `${block}</head>`);
   else html = html.replace(/<html\b[^>]*>/i, (open) => `${open}<head>${block}</head>`);
+  if (/<head\b[^>]*>/i.test(html)) html = html.replace(/<head\b[^>]*>/i, (head) => `${head}${DIRECTORY_BASE_SCRIPT}`);
+  else html = html.replace(/<html\b[^>]*>/i, (open) => `${open}<head>${DIRECTORY_BASE_SCRIPT}</head>`);
   html = `<!-- Moved by Eject into files you own. Platform runtime scripts were removed. Edit the HTML. See AGENTS.md. -->\n${html}`;
   return {
     html,

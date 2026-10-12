@@ -16,7 +16,7 @@ Then open http://localhost:8080
 
 ## Put it on a host
 
-Upload this folder as-is. Leave the build command empty.
+Upload this folder as-is. Leave the build command empty. A one-line script in each page keeps links and images working if the host drops the trailing slash.
 
 - **Cloudflare Pages.** Create a project from the folder. Build command: none. Output directory: the folder itself (or `.` if you connected git).
 - **Netlify.** Drag the folder onto the deploy drop zone, or set the publish directory to `.` and the build command to empty.

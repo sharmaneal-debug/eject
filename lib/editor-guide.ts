@@ -99,6 +99,7 @@ Constraints:
   - Never modify AGENTS.md, README.md, or MIGRATION.md unless the owner asks
   - Never add a package.json, a bundler, or a framework unless the owner asks
   - Never paste the old Framer, Webflow, Wix, or Squarespace runtime back in
+  - Leave the script marked data-eject="directory-base" in place. It keeps relative links and images working when a host serves the page without a trailing slash
   - Keep the site's own responsive CSS. Do not freeze the desktop layout into inline pixel widths
   - Make the smallest change that satisfies the request
   - When uncertain, read the file first, then propose
@@ -152,7 +153,7 @@ Then open http://localhost:8080
 
 ## Put it on a host
 
-Upload this folder as-is. Leave the build command empty.
+Upload this folder as-is. Leave the build command empty. A one-line script in each page keeps links and images working if the host drops the trailing slash.
 
 - **Cloudflare Pages.** Create a project from the folder. Build command: none. Output directory: the folder itself (or \`.\` if you connected git).
 - **Netlify.** Drag the folder onto the deploy drop zone, or set the publish directory to \`.\` and the build command to empty.

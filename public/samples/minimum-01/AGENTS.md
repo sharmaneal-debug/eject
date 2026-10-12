@@ -13,6 +13,7 @@ Constraints:
   - Never modify AGENTS.md, README.md, or MIGRATION.md unless the owner asks
   - Never add a package.json, a bundler, or a framework unless the owner asks
   - Never paste the old Framer, Webflow, Wix, or Squarespace runtime back in
+  - Leave the script marked data-eject="directory-base" in place. It keeps relative links and images working when a host serves the page without a trailing slash
   - Keep the site's own responsive CSS. Do not freeze the desktop layout into inline pixel widths
   - Make the smallest change that satisfies the request
   - When uncertain, read the file first, then propose

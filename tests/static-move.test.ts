@@ -87,6 +87,8 @@ test("internal links rewrite to local pages, external and mail stay, scripts sta
   assert.deepEqual(home.embeds, ["www.youtube.com"]);
   assert.match(home.html, /<!DOCTYPE html>/i);
   assert.equal(/name="robots"/i.test(home.html), false);
+  assert.match(home.html, /<head><script data-eject="directory-base">/);
+  assert.ok(home.html.indexOf('data-eject="directory-base"') < home.html.indexOf('rel="stylesheet"'));
 
   const nested = buildPageHtml({
     html: `<html><head></head><body>
