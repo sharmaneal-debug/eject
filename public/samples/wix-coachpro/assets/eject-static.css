@@ -1,0 +1,8 @@
+/* Platform runtime scripts are gone. These rules undo "hidden until that runtime finishes an entrance animation" without replacing the site's layout CSS. */
+html.w-mod-js:not(.w-mod-ix):not(.w-mod-ix2):not(.w-mod-ix3) [data-w-id] {
+  visibility: visible !important;
+}
+[data-framer-appear-id] {
+  opacity: 1 !important;
+  transform: none !important;
+}

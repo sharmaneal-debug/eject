@@ -1,0 +1,31 @@
+{
+  "slug": "clean-landing",
+  "url": "https://clean-landing-page-template.webflow.io/",
+  "platform": "Webflow",
+  "pages": 2,
+  "routes": [
+    "/",
+    "/landing-page-template"
+  ],
+  "rating": "High",
+  "edgeSsimDesktop": 0.9998,
+  "edgeSsimDesktopFold": 1.0,
+  "edgeSsimMobile": 0.6232,
+  "edgeSsimMobileFold": 1.0,
+  "textRecall": 1.0,
+  "heightRatioDesktop": 1.0,
+  "heightRatioMobile": 0.842,
+  "origHeightDesktop": 6075,
+  "movedHeightDesktop": 6075,
+  "origHeightMobile": 7042,
+  "movedHeightMobile": 5932,
+  "wallMs": 35455,
+  "outputBytes": 1916971,
+  "forms": 1,
+  "videos": 0,
+  "iframes": 0,
+  "embeds": [],
+  "scriptsRemoved": 14,
+  "hotlinkedStylesheets": 2,
+  "breaks": "Desktop matches. Mobile edge-SSIM is 0.623 and the height ratio is 0.842, inside the High band. One form is flagged."
+}

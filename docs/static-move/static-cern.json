@@ -1,0 +1,30 @@
+{
+  "slug": "static-cern",
+  "url": "https://info.cern.ch/",
+  "platform": "Static HTML",
+  "pages": 1,
+  "routes": [
+    "/"
+  ],
+  "rating": "High",
+  "edgeSsimDesktop": 0.9224,
+  "edgeSsimDesktopFold": 0.9224,
+  "edgeSsimMobile": 0.7704,
+  "edgeSsimMobileFold": 0.5342,
+  "textRecall": 1.0,
+  "heightRatioDesktop": 1.0,
+  "heightRatioMobile": 1.0,
+  "origHeightDesktop": 900,
+  "movedHeightDesktop": 900,
+  "origHeightMobile": 844,
+  "movedHeightMobile": 844,
+  "wallMs": 12826,
+  "outputBytes": 6272,
+  "forms": 0,
+  "videos": 0,
+  "iframes": 0,
+  "embeds": [],
+  "scriptsRemoved": 0,
+  "hotlinkedStylesheets": 0,
+  "breaks": "A one-page unstyled document. Edge-SSIM 0.922 desktop and 0.770 mobile, text recall 1, height 1. No images and no scripts to remove."
+}

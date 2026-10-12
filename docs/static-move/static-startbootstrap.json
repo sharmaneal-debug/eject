@@ -1,0 +1,30 @@
+{
+  "slug": "static-startbootstrap",
+  "url": "https://startbootstrap.github.io/startbootstrap-landing-page/",
+  "platform": "Static (Bootstrap)",
+  "pages": 1,
+  "routes": [
+    "/"
+  ],
+  "rating": "High",
+  "edgeSsimDesktop": 0.8568,
+  "edgeSsimDesktopFold": 0.9845,
+  "edgeSsimMobile": 0.7893,
+  "edgeSsimMobileFold": 0.807,
+  "textRecall": 1.0,
+  "heightRatioDesktop": 1.0,
+  "heightRatioMobile": 1.004,
+  "origHeightDesktop": 3701,
+  "movedHeightDesktop": 3701,
+  "origHeightMobile": 5800,
+  "movedHeightMobile": 5824,
+  "wallMs": 27129,
+  "outputBytes": 2559295,
+  "forms": 2,
+  "videos": 0,
+  "iframes": 0,
+  "embeds": [],
+  "scriptsRemoved": 3,
+  "hotlinkedStylesheets": 1,
+  "breaks": "High, with the softest passing desktop edge-SSIM in the set (0.857). Mobile edge 0.789, heights match, text recall 1. Two forms are flagged. Bootstrap's collapse and scroll scripts are gone."
+}

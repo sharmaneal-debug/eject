@@ -28,7 +28,7 @@ python3 -m http.server 8080 --directory out/example-com
 
 ## `pnpm parity`
 
-Runs crawl, static move, screenshots (1440 and 390), and `scripts/harness/compare.py` for `scripts/harness/sites.tsv`. Output stays in `out/parity/` (not committed). The rating rule in `compare.py` is the one from the 2026-10-10 run.
+Runs crawl, static move, screenshots (1440 and 390), and `scripts/harness/compare.py` for `scripts/harness/sites.tsv`. Output stays in `out/parity/` (not committed). The moved-site screenshot passes `--local`, which blocks requests that are not the local server, so a live CDN cannot fill in a missing image or font. The rating rule in `compare.py` is the one from the 2026-10-10 run, unchanged.
 
 ```
 pip install -r scripts/harness/requirements.txt

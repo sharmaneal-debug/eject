@@ -1,0 +1,30 @@
+{
+  "slug": "wix-daycare",
+  "url": "https://shelleyworsham490.wixsite.com/daycare-websites",
+  "platform": "Wix",
+  "pages": 1,
+  "routes": [
+    "/"
+  ],
+  "rating": "High",
+  "edgeSsimDesktop": 0.9736,
+  "edgeSsimDesktopFold": 0.9998,
+  "edgeSsimMobile": 0.9446,
+  "edgeSsimMobileFold": 0.9335,
+  "textRecall": 1.0,
+  "heightRatioDesktop": 1.0,
+  "heightRatioMobile": 1.0,
+  "origHeightDesktop": 6497,
+  "movedHeightDesktop": 6497,
+  "origHeightMobile": 6497,
+  "movedHeightMobile": 6497,
+  "wallMs": 28385,
+  "outputBytes": 2238191,
+  "forms": 1,
+  "videos": 1,
+  "iframes": 0,
+  "embeds": [],
+  "scriptsRemoved": 80,
+  "hotlinkedStylesheets": 0,
+  "breaks": "The harness shots match at 1440 and at 390 with a desktop user agent. A separate load of the live site with an iPhone user agent was a different document (scroll height 7611 vs 6497), and that phone layout is not in these files. One form is flagged. One video element still points at Wix; the file was not copied."
+}

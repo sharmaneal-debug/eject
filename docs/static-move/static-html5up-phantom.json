@@ -1,0 +1,32 @@
+{
+  "slug": "static-html5up-phantom",
+  "url": "https://html5up.net/uploads/demos/phantom/",
+  "platform": "Static (HTML5 UP)",
+  "pages": 3,
+  "routes": [
+    "/",
+    "/generic",
+    "/elements"
+  ],
+  "rating": "High",
+  "edgeSsimDesktop": 1.0,
+  "edgeSsimDesktopFold": 1.0,
+  "edgeSsimMobile": 0.9625,
+  "edgeSsimMobileFold": 0.9997,
+  "textRecall": 1.0,
+  "heightRatioDesktop": 1.0,
+  "heightRatioMobile": 1.001,
+  "origHeightDesktop": 2787,
+  "movedHeightDesktop": 2787,
+  "origHeightMobile": 5447,
+  "movedHeightMobile": 5456,
+  "wallMs": 40977,
+  "outputBytes": 1021067,
+  "forms": 4,
+  "videos": 0,
+  "iframes": 0,
+  "embeds": [],
+  "scriptsRemoved": 18,
+  "hotlinkedStylesheets": 1,
+  "breaks": "Desktop and mobile match. Three pages (home, generic, elements). Four form tags are flagged and do not submit. The template's menu script is gone; the resting layout is what matched."
+}
