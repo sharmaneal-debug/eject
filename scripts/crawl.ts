@@ -47,6 +47,10 @@ type CapturedPage = {
   /** Slice screenshots saved under <out>/shots (relative names). */
   shots?: { desktop: string[]; mobile: string[] };
   docHeight?: number;
+  /** Filename under <out>/css for adopted stylesheets (no <link> in the DOM). */
+  adoptedCss?: string;
+  /** document.baseURI after load. Relative URLs in the HTML resolve against this. */
+  baseUrl?: string;
 };
 
 type AssetRecord = { url: string; file: string; bytes: number; type: string; kind: "image" | "font" | "media" | "stylesheet" };
@@ -272,6 +276,31 @@ async function capturePage(page: Page, url: string, timeoutMs: number, outDir: s
   }
   if (vp) await page.setViewportSize(vp);
 
+  // Styles the platform attached with adoptedStyleSheets never show up as <link> or <style>.
+  let adoptedCss: string | undefined;
+  const adopted = await page
+    .evaluate(() => {
+      const sheets = (document as unknown as { adoptedStyleSheets?: CSSStyleSheet[] }).adoptedStyleSheets ?? [];
+      const parts: string[] = [];
+      for (const sheet of sheets) {
+        try {
+          parts.push(Array.from(sheet.cssRules).map((rule) => rule.cssText).join("\n"));
+        } catch {
+          /* unreadable sheet */
+        }
+      }
+      return parts.join("\n\n");
+    })
+    .catch(() => "");
+  if (adopted.trim()) {
+    await mkdir(path.join(outDir, "css"), { recursive: true });
+    const file = `${stem}-adopted.css`;
+    await writeFile(path.join(outDir, "css", file), adopted, "utf8");
+    adoptedCss = file;
+  }
+
+  const baseUrl = await page.evaluate(() => document.baseURI).catch(() => url);
+
   return {
     url,
     path: u.pathname || "/",
@@ -286,6 +315,8 @@ async function capturePage(page: Page, url: string, timeoutMs: number, outDir: s
     clean,
     shots,
     docHeight: result.docHeight,
+    adoptedCss,
+    baseUrl,
   };
 }
 
@@ -373,8 +404,10 @@ async function crawl(opts: CrawlOptions) {
   // serve its own copies after the customer cancels the old platform.
   const assets = new Map<string, AssetRecord>();
   const stylesheets = new Map<string, string>();
+  const styleFiles = new Map<string, string>();
   const pendingAssets: Promise<void>[] = [];
   await mkdir(path.join(opts.out, "assets"), { recursive: true });
+  await mkdir(path.join(opts.out, "styles"), { recursive: true });
   // Subresources (images, fonts, stylesheets) are not re-checked here. The document URL
   // was already limited to a public host, and DNS-checking every CDN response would drop
   // the assets Wix, Squarespace, and Framer pages actually render.
@@ -385,19 +418,34 @@ async function crawl(opts: CrawlOptions) {
         const type = req.resourceType();
         const ct = (res.headers()["content-type"] ?? "").split(";")[0]!.trim();
         const url = res.url();
+        const requestUrl = req.url();
         if (!res.ok() || url.startsWith("data:")) return;
-        const kind = type === "image" ? "image" : type === "font" ? "font" : type === "stylesheet" ? "stylesheet" : type === "media" ? "media" : null;
-        if (!kind || assets.has(url)) return;
+        const kind =
+          type === "image" ? "image" : type === "font" ? "font" : type === "stylesheet" || ct === "text/css" ? "stylesheet" : type === "media" ? "media" : null;
+        if (!kind || assets.has(url) || styleFiles.has(url)) return;
         if (kind === "media") return; // video/audio are not pulled automatically (size); reported as skipped by the scorer
         const body = await res.body();
         if (body.length > 6_000_000) return;
-        if (kind === "stylesheet") { stylesheets.set(url, body.toString("utf8")); return; }
+        if (kind === "stylesheet") {
+          const css = body.toString("utf8");
+          const file = createHash("sha1").update(url).digest("hex").slice(0, 14) + ".css";
+          await writeFile(path.join(opts.out, "styles", file), body);
+          stylesheets.set(url, css);
+          styleFiles.set(url, file);
+          if (requestUrl !== url) {
+            stylesheets.set(requestUrl, css);
+            styleFiles.set(requestUrl, file);
+          }
+          return;
+        }
         const byType: Record<string, string> = { "image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp", "image/avif": ".avif", "image/gif": ".gif", "image/svg+xml": ".svg", "image/x-icon": ".ico", "font/woff2": ".woff2", "font/woff": ".woff", "font/ttf": ".ttf", "font/otf": ".otf", "application/font-woff2": ".woff2", "application/font-woff": ".woff", "application/vnd.ms-fontobject": ".eot" };
         // Prefer the real content type: Framer/Webflow serve AVIF/WebP bytes from ".png"/".jpg" URLs.
         const ext = byType[ct] ?? ((path.extname(new URL(url).pathname) || "").slice(0, 6) || ".bin");
         const file = createHash("sha1").update(url).digest("hex").slice(0, 14) + ext;
         await writeFile(path.join(opts.out, "assets", file), body);
-        assets.set(url, { url, file, bytes: body.length, type: ct, kind });
+        const record: AssetRecord = { url, file, bytes: body.length, type: ct, kind };
+        assets.set(url, record);
+        if (requestUrl !== url) assets.set(requestUrl, record);
       } catch {
         /* response body unavailable (redirect, aborted) */
       }
@@ -481,7 +529,15 @@ async function crawl(opts: CrawlOptions) {
     }
   }
   await writeFile(path.join(opts.out, "fonts.css"), fontFaces.join("\n") + "\n", "utf8");
-  await writeFile(path.join(opts.out, "assets.json"), JSON.stringify({ count: assets.size, bytes: [...assets.values()].reduce((n, a) => n + a.bytes, 0), byKind: Object.fromEntries(["image", "font"].map((k) => [k, [...assets.values()].filter((a) => a.kind === k).length])), fontFaceRules: fontFaces.length, items: [...assets.values()] }, null, 2), "utf8");
+  const uniqueAssets = new Map<string, AssetRecord>();
+  for (const rec of assets.values()) if (!uniqueAssets.has(rec.file)) uniqueAssets.set(rec.file, rec);
+  const assetItems = [...assets.entries()].map(([url, rec]) => ({ url, file: rec.file, bytes: rec.bytes, type: rec.type, kind: rec.kind }));
+  await writeFile(path.join(opts.out, "assets.json"), JSON.stringify({ count: uniqueAssets.size, bytes: [...uniqueAssets.values()].reduce((n, a) => n + a.bytes, 0), byKind: Object.fromEntries(["image", "font"].map((k) => [k, [...uniqueAssets.values()].filter((a) => a.kind === k).length])), fontFaceRules: fontFaces.length, items: assetItems }, null, 2), "utf8");
+  const styleSeen = new Set<string>();
+  const styleItems = [...styleFiles.entries()].filter(([, file]) => (styleSeen.has(file) ? false : (styleSeen.add(file), true))).map(([url, file]) => ({ url, file }));
+  // Keep every URL key, including aliases, so the static move can match the href the page used.
+  await writeFile(path.join(opts.out, "stylesheets.json"), JSON.stringify([...styleFiles.entries()].map(([url, file]) => ({ url, file })), null, 2), "utf8");
+  console.log(`  stylesheets: ${styleItems.length}`);
 
   await writeFile(
     path.join(opts.out, "manifest.json"),
@@ -516,6 +572,7 @@ async function crawl(opts: CrawlOptions) {
   console.log(`  platform: ${platform}`);
   console.log(`  snapshot: ${opts.out}`);
   console.log(`\nNext: pnpm rebuild ${opts.out}`);
+  console.log(`  or:  pnpm static-move ${opts.out}`);
 }
 
 async function main() {
