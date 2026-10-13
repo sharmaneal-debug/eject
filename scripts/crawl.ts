@@ -12,11 +12,12 @@
  */
 
 import { chromium, type Browser, type Page } from "playwright";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { assertCrawlDocument } from "../lib/crawl-guard";
+import { collectFontFileUrls, MAX_EXTRA_FONTS, saveMissingFontFiles } from "../lib/font-assets";
 import { loadRobots, type RobotsRules } from "../lib/robots";
 import { SsrfError } from "../lib/ssrf";
 
@@ -505,13 +506,38 @@ async function crawl(opts: CrawlOptions) {
   }
 
   // Build fonts.css from @font-face rules found in inline <style> and fetched stylesheets,
-  // pointing at the local copies of the font files.
+  // pointing at the local copies of the font files. Fonts named in that CSS but missing
+  // from the browser capture (Flowbase Inter is the usual case) are fetched here.
   const fontFaces: string[] = [];
   const faceRe = /@font-face\s*\{[^}]*\}/gi;
-  const sources: Array<{ base: string; css: string }> = [...stylesheets.entries()].map(([u, css]) => ({ base: u, css }));
+  const sheetSources: Array<{ base: string; css: string }> = [...stylesheets.entries()].map(([u, css]) => ({ base: u, css }));
+  const inlineSources: Array<{ base: string; css: string }> = [];
   for (const c of captured) {
-    for (const m of c.html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)) sources.push({ base: c.url, css: m[1] ?? "" });
+    const base = c.baseUrl || c.url;
+    for (const m of c.html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)) inlineSources.push({ base, css: m[1] ?? "" });
+    if (c.adoptedCss) {
+      try {
+        inlineSources.push({ base, css: await readFile(path.join(opts.out, "css", c.adoptedCss), "utf8") });
+      } catch {
+        /* adopted file missing */
+      }
+    }
   }
+  const sources = [...sheetSources, ...inlineSources];
+  const missingFonts = [...collectFontFileUrls(inlineSources), ...collectFontFileUrls(sheetSources)].filter((url, index, all) => all.indexOf(url) === index && !assets.has(url));
+  if (missingFonts.length > MAX_EXTRA_FONTS) {
+    console.log(`  fonts: ${missingFonts.length - MAX_EXTRA_FONTS} extra files left remote (cap ${MAX_EXTRA_FONTS})`);
+  }
+  const savedFonts = await saveMissingFontFiles({
+    urls: missingFonts,
+    destDir: path.join(opts.out, "assets"),
+  });
+  for (const font of savedFonts) {
+    const record: AssetRecord = { url: font.url, file: font.file, bytes: font.bytes, type: font.type, kind: "font" };
+    assets.set(font.url, record);
+    if (font.finalUrl !== font.url) assets.set(font.finalUrl, record);
+  }
+  if (savedFonts.length) console.log(`  fonts saved from CSS: ${savedFonts.length}`);
   const seenFace = new Set<string>();
   for (const { base, css } of sources) {
     for (const m of css.matchAll(faceRe)) {

@@ -4,7 +4,7 @@ Operator scripts: `crawl`, `rebuild`, `site-audit`, `orders`, `deliver`, `editor
 
 ## `pnpm crawl <url>`
 
-Walks every internal link of the URL with Playwright. Captures rendered DOM, meta tags, image / link / font lists, and design tokens (colors, fonts, sizes, radii). Output goes to `data/snapshots/<hostname>/`. The start URL is checked before the browser launches (public http(s) only, and robots.txt). A crawl that saves zero pages exits with code 3. `--pages=/a,/b` captures only those paths.
+Walks every internal link of the URL with Playwright. Captures rendered DOM, meta tags, image / link / font lists, and design tokens (colors, fonts, sizes, radii). Font files named in the captured CSS (for example Flowbase Inter) are saved into the snapshot even when the browser response body was not readable. Output goes to `data/snapshots/<hostname>/`. The start URL is checked before the browser launches (public http(s) only, and robots.txt). A crawl that saves zero pages exits with code 3. `--pages=/a,/b` captures only those paths.
 
 ```
 pnpm crawl https://example.com --max-pages=20
@@ -70,9 +70,9 @@ Prints orders from the configured store: id, status, tier, amount, eligibility, 
 
 ## `pnpm deliver <orderId>`
 
-Writes `out/orders/<orderId>/` from the stored delivery packet (README, AGENTS.md, EDITING.md, and `scripts/chat-edit.mjs`). Does not call a model.
+Writes `out/orders/<orderId>/` as a static site. If the order has a site URL and `data/snapshots/<host>/` is missing, it crawls first, then runs static-move into that folder (HTML, CSS, assets, `AGENTS.md`, hosting README). It does not call a model. An order with no site URL and no snapshot still gets the stored text extract.
 
-`pnpm deliver <orderId> --rebuild` also runs `pnpm crawl` and `pnpm rebuild` when `ANTHROPIC_API_KEY` is set. Without that key it writes the snapshot and stops.
+`pnpm deliver <orderId> --llm` (or `--rebuild`) also runs `pnpm rebuild` into `out/orders/<orderId>-llm` when `ANTHROPIC_API_KEY` is set. Without that key the model step is skipped and the static site is still written.
 
 ## `pnpm indexnow`
 

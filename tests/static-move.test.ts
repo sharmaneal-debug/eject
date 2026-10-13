@@ -111,6 +111,23 @@ test("relative page hrefs", () => {
   assert.equal(relativePageHref("/a/b", "/pricing"), "../../pricing/");
 });
 
+test("an inline Flowbase font face points at the local file", () => {
+  const html = `<html><head><style>@font-face{font-family:"Flowbase Inter";font-weight:400;src:url("https://assets.flowbase.co/fonts/Inter-Regular.woff2") format("woff2");}</style></head><body>Hi</body></html>`;
+  const built = buildPageHtml({
+    html,
+    ctx: ctx({
+      pageUrl: "https://safia-light.webflow.io/",
+      pageRoute: "/",
+      origin: "https://safia-light.webflow.io",
+      rootPrefix: "",
+      routes: new Set(["/"]),
+    }),
+    assets: new Map([["https://assets.flowbase.co/fonts/Inter-Regular.woff2", "inter-regular.woff2"]]),
+  });
+  assert.match(built.html, /url\("assets\/inter-regular\.woff2"\)/);
+  assert.equal(built.html.includes("assets.flowbase.co"), false);
+});
+
 test("stylesheet urls are rewritten next to the css file", () => {
   const css = rewriteStylesheet(
     `@import "extra.css"; @font-face{src:url("https://cdn.example.com/font.woff2")} .a{background:url('../img/hero.png')}`,

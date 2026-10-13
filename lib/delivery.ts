@@ -32,7 +32,7 @@ export function buildDelivery(order: Order, report: ComplexityReport, snapshot: 
     "Create a git repository from the files in this handoff.",
     "Push it to GitHub, GitLab, or a host you control.",
     "Connect Cloudflare Pages, Vercel, or Netlify and use their free tier if it fits the traffic.",
-    "Set the build to the Next.js app once the content snapshot has been turned into pages.",
+    "Leave the build command empty. pnpm deliver writes HTML and CSS.",
     "Point the domain only after you have reviewed a deployment. Eject does not cut DNS over automatically.",
   ];
   const offer = tierConfig(order.tier);
@@ -56,8 +56,8 @@ export function buildDelivery(order: Order, report: ComplexityReport, snapshot: 
   const tierNote =
     order.tier === "done_for_you"
       ? `Custom migration. We handle the migration for you, step by step.`
-      : `Automated ($${offer.price}). The migration run is queued or manual depending on whether ANTHROPIC_API_KEY is set. Editing afterwards is yours.`;
-  const readme = `# ${slug}\n\n## Edit it by chatting\n\nOpen this folder in Cursor, Claude, or ChatGPT. The agent follows AGENTS.md. You can also run \`node scripts/chat-edit.mjs "your change"\` to queue a sentence in edits/inbox.md.\n\n${tierNote}\n\n## What was automated\n\n- Public pages were fetched and scored.\n- Eligibility: ${report.eligibility}.\n- Assets look ${report.assetsPullable ? "pullable" : "hard to pull"} (${report.assetCount} found).\n- Rebuild ease: ${report.rebuildEase}.\n\n## What is reviewed\n\n${order.tier === "done_for_you" ? "A person builds and reviews the pages before you see them." : "The automated tier does not publish a preview by itself. A visual pass still happens before anything is called done."} PageSpeed gains are not measured or promised.\n\n## Commands\n\nFrom the Eject repository:\n\n\`\`\`sh\npnpm crawl ${snapshot.finalUrl} --max-pages=${simpleSiteScope.maxPages}\npnpm rebuild data/snapshots/${slug}\npnpm editor ./out/orders/${order.id}\n\`\`\`\n\n\`pnpm rebuild\` and \`pnpm editor\` need ANTHROPIC_API_KEY. Without that key, use AGENTS.md with your own agent.\n`;
+      : `Automated ($${offer.price}). \`pnpm deliver\` writes a static HTML site and does not call a model. \`--llm\` is optional and does nothing unless ANTHROPIC_API_KEY is set. Editing afterwards is yours.`;
+  const readme = `# ${slug}\n\n## Edit it by chatting\n\nOpen this folder in Cursor, Claude, or ChatGPT. The agent follows AGENTS.md. You can also run \`node scripts/chat-edit.mjs "your change"\` to queue a sentence in edits/inbox.md.\n\n${tierNote}\n\n## What was automated\n\n- Public pages were fetched and scored.\n- Eligibility: ${report.eligibility}.\n- Assets look ${report.assetsPullable ? "pullable" : "hard to pull"} (${report.assetCount} found).\n- Rebuild ease: ${report.rebuildEase}.\n\n## What is reviewed\n\n${order.tier === "done_for_you" ? "A person builds and reviews the pages before you see them." : "The automated tier does not publish a preview by itself. A visual pass still happens before anything is called done."} PageSpeed gains are not measured or promised.\n\n## Commands\n\nFrom the Eject repository:\n\n\`\`\`sh\npnpm deliver ${order.id}\n\`\`\`\n\nThat crawls if needed and writes HTML, CSS, and assets. It does not call a model. \`pnpm deliver ${order.id} --llm\` is the optional model rebuild and does nothing when ANTHROPIC_API_KEY is missing. \`pnpm editor\` also needs that key. Without it, use AGENTS.md with your own agent.\n`;
 
   const hosting = `# Hosting\n\n${hostingSteps.map((step, index) => `${index + 1}. ${step}`).join("\n")}\n\nEject does not host the customer site and does not publish a preview URL on its own.\n`;
   const editor = `# Editor\n\n${editorNote}\n\nHow it works: ${handoffPath}\n\nYour agent: read AGENTS.md in this folder.\n\nOptional CLI, from the Eject repo:\n\n\`\`\`sh\npnpm editor ./out/orders/${order.id}\n\`\`\`\n`;
@@ -107,9 +107,7 @@ export function buildDelivery(order: Order, report: ComplexityReport, snapshot: 
       ...pages,
     ],
     note:
-      mode === "queued"
-        ? "ANTHROPIC_API_KEY is set. The model was not called during checkout. Run `pnpm deliver <orderId> --rebuild` locally, or follow the commands in the handoff README."
-        : "ANTHROPIC_API_KEY is not set. The handoff is a content snapshot plus hosting and editor instructions. A visual rebuild stays manual.",
+      "Checkout stored this text extract. `pnpm deliver <orderId>` writes the static HTML/CSS site when a site URL or crawl snapshot is available. It does not call a model. `--llm` or `--rebuild` opts into the model and does nothing if ANTHROPIC_API_KEY is missing.",
   };
 }
 
