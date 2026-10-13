@@ -15,7 +15,7 @@ Wall time below is crawl, static move, screenshot of the moved site, and compare
 | smoke | Framer | 6 | Medium | 0.9981 | 0.6337 | 1.000 | 1.000 | 1.739 | 78.4s | 6.37 MB |
 | one-template | Webflow | 6 | High | 0.9996 | 0.6382 | 1.000 | 1.000 | 1.000 | 42.2s | 6.94 MB |
 | clean-landing | Webflow | 2 | High | 0.9998 | 0.6232 | 1.000 | 1.000 | 0.842 | 35.5s | 1.92 MB |
-| safia | Webflow | 1 | Medium | 0.5555 | 0.4110 | 1.000 | 0.981 | 0.986 | 31.9s | 5.54 MB |
+| safia | Webflow | 1 | Medium | 0.5555 | 0.4109 | 1.000 | 0.981 | 0.986 | 33.5s | 5.61 MB |
 | wix-daycare | Wix | 1 | High | 0.9736 | 0.9446 | 1.000 | 1.000 | 1.000 | 28.4s | 2.24 MB |
 | wix-coachpro | Wix | 1 | High | 0.9808 | 0.9507 | 1.000 | 1.000 | 1.000 | 58.0s | 1.66 MB |
 | wix-grove | Wix | 7 | High | 1.0000 | 0.7753 | 1.000 | 1.000 | 1.000 | 122.1s | 5.98 MB |
@@ -34,7 +34,7 @@ The rating rule uses desktop edge-SSIM, text recall, desktop height, and mobile 
 ## What breaks
 
 - **Phone layout that is not in the CSS.** Smoke's desktop page matches and its mobile page is 1.74 times too tall. Squarespace mobile edge-SSIM is 0.47 and 0.28 even when the height matches. Wix matched the harness at 390px, and that harness uses a desktop user agent. Loading the live daycare site with an iPhone user agent produced a different document (scroll height 7611 vs 6497). That phone document is not in the static files.
-- **Fonts the browser never saved.** Safia keeps the words and the height, and misses the picture (desktop edge-SSIM 0.556). Inter Regular and Bold still point at `assets.flowbase.co` and were blocked for the shot. Illustrations on that page are local SVGs.
+- **The Flowbase bar, not the font files.** Safia was remeasured on 2026-10-13 after the crawl started saving font files named in CSS. Inter Regular, Medium, and Bold from `assets.flowbase.co` are local woff2 files, and no stylesheet still has a remote `url()`. Desktop edge-SSIM stayed 0.556 (fold 0.363). The page text uses Sora, which was already local. The Flowbase bar is an empty `div` in the captured HTML; the script that paints it is removed, so the bar is missing from the moved shot. Illustrations are local SVGs.
 - **Forms.** Flagged `data-eject-form="needs-endpoint"`. They do not submit. Counts are in the per-site JSON (one on most brochure templates, five on Hayden, twelve on ztekinc).
 - **Video and embeds.** The daycare template has a video element that still points at Wix. Hayden embeds Acuity. Those hosts were blocked in the moved-site screenshot.
 - **Menus and entrance motion.** Platform scripts are removed. A Webflow hamburger stays closed. The closed header is what both screenshots show, so the score does not punish it. Entrance animations that waited for the runtime are flattened so the page stays visible.
@@ -66,7 +66,7 @@ Desktop matches. The mobile page runs long.
 
 ### safia (Webflow, Medium)
 
-Same text, softer picture. Remote fonts were blocked.
+Same text and almost the same height. Inter is local. The Flowbase bar at the bottom is missing because the script that paints it is gone. Desktop edge-SSIM stayed 0.556.
 
 ![safia original and static move](shots/safia.png)
 
