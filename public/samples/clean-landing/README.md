@@ -37,7 +37,7 @@ That writes `edits/inbox.md`.
 
 ## Forms
 
-1 form is marked `data-eject-form="needs-endpoint"`. The fields and labels are here. Nothing is submitted until you point `action` at your own form endpoint.
+1 form is marked `data-eject-form="needs-endpoint"`. The fields and labels are here. The action is `#` and the method is `dialog`, so a native submit does not post to the previous host. Nothing is sent until you point `action` at your own form endpoint, set `method` to `post` or `get`, and remove the `onsubmit="return false"` guard. The original action is in MIGRATION.md.
 
 ## What was removed
 

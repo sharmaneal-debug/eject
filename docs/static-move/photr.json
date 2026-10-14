@@ -35,5 +35,5 @@
   "embeds": [],
   "scriptsRemoved": 70,
   "hotlinkedStylesheets": 0,
-  "breaks": "Desktop and mobile match closely. One form is flagged and does not submit. Ten pages."
+  "breaks": "Desktop and mobile match closely. One form is flagged. Native submit is blocked, so it does not post to the previous host. Ten pages."
 }

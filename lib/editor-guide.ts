@@ -104,7 +104,7 @@ Constraints:
   - Make the smallest change that satisfies the request
   - When uncertain, read the file first, then propose
 
-Forms marked data-eject-form="needs-endpoint" do not send anywhere. Do not pretend a form works. Wire an action only when the owner names an endpoint.
+Forms marked data-eject-form="needs-endpoint" cannot submit. The action is "#", the method is "dialog", and onsubmit returns false, so a native submit does not post to the previous host and does not reload the page. The original action is in MIGRATION.md. Do not pretend a form works. When the owner names an endpoint, set action and method and remove the onsubmit="return false" guard.
 
 After making changes, summarize what you did in one sentence so the owner can verify.`;
 
@@ -133,7 +133,7 @@ They either type in the chat, or they leave a note in \`edits/inbox.md\` (the \`
 export function staticHostingReadme(opts: { sourceUrl: string; platform: string; capturedAt: string; formCount: number }): string {
   const forms =
     opts.formCount > 0
-      ? `\n## Forms\n\n${opts.formCount} form${opts.formCount === 1 ? "" : "s"} ${opts.formCount === 1 ? "is" : "are"} marked \`data-eject-form="needs-endpoint"\`. The fields and labels are here. Nothing is submitted until you point \`action\` at your own form endpoint.\n`
+      ? `\n## Forms\n\n${opts.formCount} form${opts.formCount === 1 ? "" : "s"} ${opts.formCount === 1 ? "is" : "are"} marked \`data-eject-form="needs-endpoint"\`. The fields and labels are here. The action is \`#\` and the method is \`dialog\`, so a native submit does not post to the previous host. Nothing is sent until you point \`action\` at your own form endpoint, set \`method\` to \`post\` or \`get\`, and remove the \`onsubmit="return false"\` guard. The original action is in MIGRATION.md.\n`
       : "";
   return `# Your site
 

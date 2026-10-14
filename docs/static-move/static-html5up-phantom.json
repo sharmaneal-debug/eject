@@ -28,5 +28,5 @@
   "embeds": [],
   "scriptsRemoved": 18,
   "hotlinkedStylesheets": 1,
-  "breaks": "Desktop and mobile match. Three pages (home, generic, elements). Four form tags are flagged and do not submit. The template's menu script is gone; the resting layout is what matched."
+  "breaks": "Desktop and mobile match. Three pages (home, generic, elements). Four form tags are flagged. Native submit is blocked, so they do not post to the previous host. The template's menu script is gone; the resting layout is what matched."
 }

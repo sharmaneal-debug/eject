@@ -24,7 +24,7 @@
   "assetsCopied": 20,
   "missingAssetFiles": 0,
   "notes": [
-    "1 form flagged data-eject-form=\"needs-endpoint\". They do not submit anywhere.",
+    "1 form flagged data-eject-form=\"needs-endpoint\". The action is \"#\" and native submit is blocked, so it does not post to the previous host. Original actions are listed below.",
     "14 runtime scripts removed (analytics and platform JS). CSS animations that do not need that JS still run. Scroll-triggered and menu JS does not.",
     "2 stylesheets still reference a remote url() or were not in the snapshot.",
     "Entrance animations that waited for the platform runtime are flattened so the captured layout stays visible.",

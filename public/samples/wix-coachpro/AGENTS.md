@@ -18,7 +18,7 @@ Constraints:
   - Make the smallest change that satisfies the request
   - When uncertain, read the file first, then propose
 
-Forms marked data-eject-form="needs-endpoint" do not send anywhere. Do not pretend a form works. Wire an action only when the owner names an endpoint.
+Forms marked data-eject-form="needs-endpoint" cannot submit. The action is "#", the method is "dialog", and onsubmit returns false, so a native submit does not post to the previous host and does not reload the page. The original action is in MIGRATION.md. Do not pretend a form works. When the owner names an endpoint, set action and method and remove the onsubmit="return false" guard.
 
 After making changes, summarize what you did in one sentence so the owner can verify.
 

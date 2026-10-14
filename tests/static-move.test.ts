@@ -8,6 +8,7 @@ import { test } from "node:test";
 import { buildStaticSite } from "../lib/static-move";
 import {
   buildPageHtml,
+  flagForms,
   relativePageHref,
   rewriteStylesheet,
   stripRuntimeScripts,
@@ -83,6 +84,11 @@ test("internal links rewrite to local pages, external and mail stay, scripts sta
   assert.match(home.html, /data-eject-form="needs-endpoint"/);
   assert.equal(home.forms.length, 1);
   assert.equal(home.forms[0]?.action, "https://example.com/daycare-websites/submit");
+  assert.equal(home.html.includes("daycare-websites/submit"), false);
+  assert.match(home.html, /<form\b[^>]*\baction="#"/);
+  assert.match(home.html, /<form\b[^>]*\bmethod="dialog"/);
+  assert.match(home.html, /<form\b[^>]*\bonsubmit="return false"/);
+  assert.equal(/<form\b[^>]*\baction\s*=\s*["']https?:/i.test(home.html), false);
   assert.equal(home.iframes, 1);
   assert.deepEqual(home.embeds, ["www.youtube.com"]);
   assert.match(home.html, /<!DOCTYPE html>/i);
@@ -102,6 +108,43 @@ test("internal links rewrite to local pages, external and mail stay, scripts sta
   assert.match(nested.html, /href="\.\.\/"/);
   assert.match(nested.html, /href="#cost"/);
   assert.match(nested.html, /src="\.\.\/assets\/pic\.png"/);
+});
+
+test("flagForms blocks native submit for absolute, empty, and already-flagged forms", () => {
+  const html = [
+    `<form action="https://webflow.com/api/v1/form/site" method="post"><input name="email"><button type="submit" formaction="https://api.framer.com/forms" formmethod="post">Send</button></form>`,
+    `<form action=""><input name="q"></form>`,
+    `<form><input name="bare"></form>`,
+    `<form data-eject-form="needs-endpoint" action="https://www.wix.com/_api/form-submit" method="post"></form>`,
+    `<form action='//www.squarespace.com/api/form/submit'></form>`,
+  ].join("");
+  const { html: out, forms } = flagForms(html, "/contact");
+  assert.equal(forms.length, 5);
+  assert.equal(forms[0]?.pageRoute, "/contact");
+  assert.equal(forms[0]?.action, "https://webflow.com/api/v1/form/site");
+  assert.equal(forms[1]?.action, "");
+  assert.equal(forms[2]?.action, "");
+  assert.equal(forms[3]?.action, "https://www.wix.com/_api/form-submit");
+  assert.equal(forms[4]?.action, "//www.squarespace.com/api/form/submit");
+  assert.equal(out.includes("webflow.com"), false);
+  assert.equal(out.includes("framer.com"), false);
+  assert.equal(out.includes("wix.com"), false);
+  assert.equal(out.includes("squarespace.com"), false);
+  assert.equal(/action\s*=\s*["']https?:/i.test(out), false);
+  assert.equal(/action\s*=\s*["']\/\//i.test(out), false);
+  assert.equal(/formaction\s*=\s*["']https?:/i.test(out), false);
+  assert.equal(/formmethod\s*=\s*["']post["']/i.test(out), false);
+  const tags = out.match(/<form\b[^>]*>/gi) ?? [];
+  assert.equal(tags.length, 5);
+  for (const tag of tags) {
+    assert.match(tag, /data-eject-form="needs-endpoint"/);
+    assert.match(tag, /\baction="#"/);
+    assert.match(tag, /\bmethod="dialog"/);
+    assert.match(tag, /\bonsubmit="return false"/);
+  }
+  assert.equal(out.match(/data-eject-form="needs-endpoint"/g)?.length, 5);
+  assert.match(out, /formaction="#"/);
+  assert.match(out, /formmethod="dialog"/);
 });
 
 test("relative page hrefs", () => {
@@ -205,9 +248,17 @@ test("static move writes a hostable site and the editing guide", async () => {
     const agents = await readFile(path.join(out, "AGENTS.md"), "utf8");
     assert.match(agents, /plain HTML and CSS/);
     assert.match(agents, /data-eject-form/);
+    assert.match(agents, /does not post to the previous host/);
     const readme = await readFile(path.join(out, "README.md"), "utf8");
     assert.match(readme, /python3 -m http\.server/);
     assert.match(readme, /Cloudflare Pages/);
+    assert.match(readme, /onsubmit="return false"/);
+    assert.equal(home.includes('action="/send"'), false);
+    assert.equal(/<form\b[^>]*\baction\s*=\s*["']https?:/i.test(home), false);
+    assert.match(home, /<form\b[^>]*\baction="#"/);
+    const migration = await readFile(path.join(out, "MIGRATION.md"), "utf8");
+    assert.match(migration, /does not post to the previous host/);
+    assert.match(migration, /action `\/send`/);
     const { stdout } = await execFileAsync(process.execPath, ["scripts/chat-edit.mjs", "Change the hero headline to Spring workshops."], { cwd: out });
     assert.match(stdout, /edits\/inbox\.md/);
     const inbox = await readFile(path.join(out, "edits", "inbox.md"), "utf8");

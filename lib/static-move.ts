@@ -210,7 +210,13 @@ export async function buildStaticSite(snapshotDir: string, outDir: string, opts:
 
   if (writtenRoutes.length === 0) throw new Error("static move wrote 0 pages");
 
-  if (forms.length) notes.push(`${forms.length} form${forms.length === 1 ? "" : "s"} flagged data-eject-form="needs-endpoint". They do not submit anywhere.`);
+  if (forms.length) {
+    const noun = forms.length === 1 ? "form" : "forms";
+    const pronoun = forms.length === 1 ? "it does" : "they do";
+    notes.push(
+      `${forms.length} ${noun} flagged data-eject-form="needs-endpoint". The action is "#" and native submit is blocked, so ${pronoun} not post to the previous host. Original actions are listed below.`,
+    );
+  }
   if (videos) notes.push(`${videos} video element${videos === 1 ? "" : "s"} left pointing at the original host. Video files are not copied.`);
   if (audios) notes.push(`${audios} audio element${audios === 1 ? "" : "s"} left pointing at the original host.`);
   if (iframes) notes.push(`${iframes} iframe${iframes === 1 ? "" : "s"} kept. Third-party embeds still load from ${[...embeds].slice(0, 6).join(", ") || "their original hosts"}.`);

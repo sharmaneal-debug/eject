@@ -276,14 +276,33 @@ export function rewriteInternalLinks(html: string, ctx: LinkContext, assets: Ass
   });
 }
 
+/**
+ * Mark every form as unwired and stop a native submit.
+ * The original action is kept on the FormNote for MIGRATION.md.
+ * `action="#"` drops any captured platform URL. `method="dialog"` does not
+ * navigate or POST when JavaScript is off. `onsubmit="return false"` is the
+ * same guard when JavaScript is on. This runs after stripEventHandlers, so
+ * that handler stays. A submit button's formaction/formmethod is cleared too,
+ * because those override the form.
+ */
 export function flagForms(html: string, pageRoute: string): { html: string; forms: FormNote[] } {
   const forms: FormNote[] = [];
   const next = walkStartTags(html, (tag) => {
-    if (tagNameOf(tag) !== "form") return tag;
-    const action = getAttr(tag, "action") ?? "";
-    forms.push({ pageRoute, action });
+    const name = tagNameOf(tag);
+    if (name === "form") {
+      const action = getAttr(tag, "action") ?? "";
+      forms.push({ pageRoute, action });
+      let out = tag;
+      if (!getAttr(out, "data-eject-form")) out = setAttr(out, "data-eject-form", "needs-endpoint");
+      out = setAttr(out, "action", "#");
+      out = setAttr(out, "method", "dialog");
+      out = setAttr(out, "onsubmit", "return false");
+      return out;
+    }
+    if (name !== "button" && name !== "input") return tag;
     let out = tag;
-    if (!getAttr(out, "data-eject-form")) out = setAttr(out, "data-eject-form", "needs-endpoint");
+    if (getAttr(out, "formaction") != null) out = setAttr(out, "formaction", "#");
+    if (getAttr(out, "formmethod") != null) out = setAttr(out, "formmethod", "dialog");
     return out;
   });
   return { html: next, forms };
