@@ -64,7 +64,7 @@ So the only clean exit from an annual plan is **before** it renews.
 |---|---|---|
 | Website plan | $348 × 3 = $1,044 | $0 hosting on Cloudflare Pages ("unlimited sites, seats, requests, and bandwidth", [pages.cloudflare.com](https://pages.cloudflare.com/)) |
 | Domain | Squarespace's standard rate after year one | Your registrar's rate (keep it at Squarespace or transfer) |
-| One-time | $0 | Eject Automated $99 (self-serve) or custom migration |
+| One-time | $0 | Eject automated move, $99 one time. Custom work has no public price. |
 | **3-year total, excluding domain** | **$1,044** | **$99, or ask for custom pricing** |
 
 Run your own plan and billing cycle in the [renewal savings calculator](/calculator?p=squarespace).
@@ -90,7 +90,7 @@ After cancellation, visitors to the old Squarespace address see "Website expired
 
 ## Set a renewal alert, move before you're charged
 
-Don't wait for the 15-day email, and if you're on monthly billing, don't wait at all. Put your renewal date in your calendar with a reminder 45 days before. Or forward your Squarespace billing emails to Eject's Renewal Watch: your agent reads them, works out your real deadline, and plans the move so the site is live before the charge.
+Don't wait for the 15-day email, and if you're on monthly billing, don't wait at all. Put your renewal date in your calendar with a reminder 45 days before. Or paste the billing email into [Renewal Watch](/renewal-watch). It reads the date from that text.
 
 **Run your numbers:** [renewal savings calculator](/calculator?p=squarespace) · **Get moved before renewal:** [pricing](/pricing)
 
@@ -136,4 +136,4 @@ No. Your domain subscription stays active and keeps billing. You can keep it, po
 
 ## Where to go next
 
-Automated is $99 and you can buy it on the spot. Custom migration, for a simple site. See [renewal watch](/renewal-watch), [contact us for custom pricing](/book).
+The automated move is $99, one time, for a simple site of about 10 pages. You pay first, we build a preview, and if you don't approve the preview before any DNS change, you get a full refund. Custom work has no public price. See [renewal watch](/renewal-watch) or [contact us](/book).

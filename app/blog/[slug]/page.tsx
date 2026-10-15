@@ -10,6 +10,7 @@ import { CostCalculator } from "@/components/cost-calculator";
 import { CustomPricingLink } from "@/components/custom-pricing-link";
 import { JsonLd } from "@/components/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
+import { AUTOMATED_REFUND_PROMISE } from "@/lib/legal";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
@@ -162,7 +163,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <Section>
         <article className="max-w-[680px]">
           <aside className="mb-10 rounded-xl border border-line bg-paper-warm p-4 text-base leading-relaxed text-ink-soft">
-            <p>Automated ${siteConfig.pricing.express.price}.</p>
+            <p>Automated ${siteConfig.pricing.express.price}, one time. About 10 pages.</p>
+            <p className="mt-2">{AUTOMATED_REFUND_PROMISE}</p>
             <p className="mt-2">We handle the migration for you, step by step.</p>
             <CustomPricingLink />
           </aside>
@@ -213,18 +215,16 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       {/* Final CTA */}
       <Section className="bg-paper-warm">
         <div className="rounded-2xl bg-ink p-5 text-paper sm:p-8">
-          <p className="text-xs font-mono uppercase tracking-widest text-paper/50 mb-3">Ready to migrate?</p>
+          <p className="text-xs font-mono uppercase tracking-widest text-paper/50 mb-3">$99, one time</p>
           <h2 className="h-section text-3xl md:text-4xl mb-4 max-w-2xl">
-            Paste your URL. See what we&apos;d build for you.
+            A simple site. About 10 pages.
           </h2>
-          <p className="text-paper/70 max-w-xl mb-7">
-            Free, instant scan. Real platform detection. Real annual cost. No email needed.
-          </p>
+          <p className="text-paper/70 max-w-xl mb-7">{AUTOMATED_REFUND_PROMISE}</p>
           <Link
-            href="/"
+            href="/pricing"
             className="inline-flex min-h-12 items-center justify-center rounded-lg bg-signal px-6 text-base font-medium text-paper hover:bg-paper hover:text-ink"
           >
-            Scan my site →
+            See pricing
           </Link>
         </div>
       </Section>

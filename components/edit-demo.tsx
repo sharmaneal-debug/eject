@@ -7,7 +7,7 @@ type Bubble = { kind: "user" | "ai"; text: string };
 
 const SCRIPT: Bubble[] = [
   { kind: "user", text: "Change the headline." },
-  { kind: "ai", text: "Done. The preview updated." },
+  { kind: "ai", text: "Done. The headline changed." },
   { kind: "user", text: "Move the button up." },
   { kind: "ai", text: "Moved." },
 ];

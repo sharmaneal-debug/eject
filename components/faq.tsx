@@ -1,12 +1,13 @@
 import Link from "next/link";
+import { AUTOMATED_REFUND_PROMISE } from "@/lib/legal";
 
 export const faqItems = [
-  { q: "What is $99?", a: "An automated move of a simple site. You own the files." },
+  { q: "What is $99?", a: "A one-time automated move of a simple site, about 10 pages. You own the files." },
   { q: "Need it done for you?", a: "We handle the migration for you, step by step." },
   { q: "Will it look the same?", a: "We do not promise a visual match." },
-  { q: "What is out of scope?", a: "Stores, and sites past about 10 pages." },
+  { q: "What is out of scope?", a: "Stores, and sites past about 10 pages. We do not move a CMS or a shop." },
   { q: "Domain?", a: "The domain stays yours. DNS changes only when you ask." },
-  { q: "Refund?", a: "Email us within 14 days of delivery." },
+  { q: "Refund?", a: `${AUTOMATED_REFUND_PROMISE} You can also email us within 14 days of delivery.` },
 ];
 
 export function Faq() {

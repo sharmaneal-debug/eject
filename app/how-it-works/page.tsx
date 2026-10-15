@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { EditDemo } from "@/components/edit-demo";
 import { Steps } from "@/components/steps";
+import { AUTOMATED_REFUND_PROMISE } from "@/lib/legal";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -14,7 +15,8 @@ export default function Page() {
   return (
     <section className="mx-auto max-w-content min-w-0 px-4 py-10 sm:px-6 md:py-16">
       <h1 className="h-display text-4xl lg:text-6xl">How it works</h1>
-      <p className="mt-4 text-lg text-ink-soft">Three steps. Simple sites only.</p>
+      <p className="mt-4 max-w-xl text-lg text-ink-soft">Three steps. Simple sites only. The automated move is $99, one time.</p>
+      <p className="mt-3 max-w-xl text-lg text-ink-soft">{AUTOMATED_REFUND_PROMISE}</p>
       <div className="mt-8">
         <Steps />
       </div>
