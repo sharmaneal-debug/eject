@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buyNowHref } from "@/lib/checkout-gate";
+import { AUTOMATED_REFUND_PROMISE } from "@/lib/legal";
 import { siteConfig } from "@/lib/site";
 import { CustomPricingLink } from "./custom-pricing-link";
 
@@ -10,6 +11,7 @@ export function PricingTable() {
       <article className="max-w-md rounded-2xl border border-line bg-white p-6">
         <h2 className="text-lg font-semibold">{offer.name}</h2>
         <p className="mt-3 text-5xl font-semibold tabular-nums tracking-tight">${offer.price}</p>
+        <p className="mt-1 text-base text-ink-muted">One-time</p>
         <p className="mt-3 text-base text-ink-soft">{offer.blurb}</p>
         <ul className="mt-4 space-y-1 text-base">
           {offer.bullets.map((bullet) => (
@@ -23,7 +25,8 @@ export function PricingTable() {
           {offer.cta}
         </Link>
       </article>
-      <p className="mt-6 max-w-md text-base text-ink-soft">We handle the migration for you, step by step.</p>
+      <p className="mt-6 max-w-md text-base text-ink-soft">{AUTOMATED_REFUND_PROMISE}</p>
+      <p className="mt-3 max-w-md text-base text-ink-soft">We handle the migration for you, step by step.</p>
       <CustomPricingLink />
     </div>
   );

@@ -40,7 +40,7 @@ export default async function Page({
         {order ? (
           <>
             <h1 className="h-display text-4xl md:text-6xl">Payment received.</h1>
-            <p className="mt-4 text-lg text-ink-soft">Charged ${(order.amountCents / 100).toFixed(2)}.</p>
+            {order.amountCents === 9900 ? <p className="mt-4 text-lg text-ink-soft">Charged $99.00.</p> : null}
 
             <h2 className="mb-4 mt-10 text-xs font-medium uppercase tracking-widest text-ink-muted">What you get</h2>
             <ul className="grid gap-4 lg:grid-cols-3">

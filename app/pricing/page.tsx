@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Pricing",
-  description: `Automated move of a simple site for $${siteConfig.pricing.express.price}.`,
+  description: `One-time automated move of a simple site for $${siteConfig.pricing.express.price}.`,
   path: "/pricing",
 });
 

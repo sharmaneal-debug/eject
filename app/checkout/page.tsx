@@ -61,7 +61,7 @@ export default async function Page({
       <Eyebrow>Checkout</Eyebrow>
       <div className="max-w-xl">
         <h1 className="h-display text-4xl md:text-5xl tracking-tightest mb-5">
-          {cfg.name} · ${cfg.price}
+          {cfg.name} · ${cfg.price} one-time
         </h1>
         <p className="text-ink-soft text-lg leading-relaxed mb-8">{result.reason}</p>
         <div className="rounded-2xl border border-line bg-paper-warm p-6 mb-8">

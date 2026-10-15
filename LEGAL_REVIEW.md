@@ -1,6 +1,6 @@
 # Legal review list
 
-This file is for a lawyer. The pages in this pull request are plain-language descriptions of the public website as it works on `main` today. They are not a finished legal opinion.
+This file is for a lawyer. The pages in this pull request are plain-language descriptions of the public website. They are not a finished legal opinion. A lawyer should review them before they are treated as final. Public legal pages were last updated October 15, 2026.
 
 Checkout on the public site is not fully working. A payment does not start an automatic rebuild. This branch does not add a booking page, renewal reminders, or new order-email templates.
 
@@ -18,7 +18,7 @@ Checkout on the public site is not fully working. A payment does not start an au
 3. **CCPA / CPRA.** Confirm whether the business meets the thresholds, and whether "we do not sell personal information" stays accurate if a lead webhook or analytics is turned on later.
 4. **Tax and merchant of record.** Stripe is the intended card processor. The terms say sales tax may be added. Confirm who is merchant of record, whether Stripe Tax is on, and where the business has nexus. Checkout may not complete on the live site yet.
 5. **Liability cap and indemnity.** The terms cap liability at fees paid in the prior 12 months and include an indemnity. Confirm enforceability and consumer exceptions.
-6. **Refund law.** The public pages say we send refunds to the original payment method within 5 business days of approving a request, including when nothing was delivered, within 14 days of delivery, or the site is out of scope. The website does not call Stripe to refund by itself. Confirm this against card-network rules and state law. Eject is not a subscription. The customer's old platform may be.
+6. **Refund law.** For the $99 automated move, the public pages say you pay first, we build a preview, and if you do not approve that preview before any DNS change, you get a full refund. The pages also say we send refunds to the original payment method within 5 business days of approving a request, including when nothing was delivered, within 14 days of delivery, or the site is out of scope. The website does not call Stripe to refund by itself. Confirm this against card-network rules and state law. A lawyer should review this wording before it is treated as final. Eject is not a subscription. The customer's old platform may be.
 7. **Copying third-party sites and IP.** The customer must have rights to the text, images, and brand. Platform terms (Framer, Webflow, Wix, Squarespace, and others) may restrict export. Confirm what we may keep after delivery or a refund.
 8. **AI disclosures.** The public scan does not send page content to an AI model. A person might use an AI vendor later for a specific order. Confirm disclosure, subprocessors, and training language before that is a normal step.
 9. **Cookies.** The banner stores `eject-cookie-choice` in localStorage. No analytics script loads. "Allow analytics" only saves the preference. Confirm whether that storage needs consent in the EU, and update the privacy page before any analytics vendor is added.

@@ -51,11 +51,11 @@ So if your Wix plan "renews on December 1", your card can be charged around **No
 | Domain | Whatever your registrar charges | You pay for a domain on Wix too. At-cost registrars like Cloudflare "do not mark up domain prices at all" ([Cloudflare Registrar](https://www.cloudflare.com/products/registrar/)) |
 | Contact form | Often $0 on a form service's free tier | Check the provider's current limits |
 | Editing | Your AI assistant | No builder subscription needed |
-| One-time move | DIY (your time) or a service | Eject: Automated $99 or custom migration |
+| One-time move | DIY (your time) or a service | Eject: automated move $99, one time. Custom work has no public price. |
 
 Since you pay for a domain either way, set it aside and compare what's left:
 
-| Over 3 years | Stay on Wix Light | Stay on Wix Core | Move (Automated) | Move (Done for you) |
+| Over 3 years | Stay on Wix Light | Stay on Wix Core | Automated move | Custom work |
 |---|---|---|---|---|
 | Builder / hosting | $612 | $1,044 | $0 | $0 |
 | One-time move | $0 | $0 | $99 | custom pricing |
@@ -94,7 +94,7 @@ If your domain is registered through Wix, decide separately whether to keep rene
 
 ## Set a renewal alert, move before you're charged
 
-Most people find their Wix renewal date from the charge itself. Instead, look up your date in **Premium Subscriptions → Upcoming payment** today, subtract three weeks, and put that in your calendar. Eject's Renewal Watch can also read your forwarded Wix billing emails and plan the move for you.
+Most people find their Wix renewal date from the charge itself. Instead, look up your date in **Premium Subscriptions → Upcoming payment** today, subtract three weeks, and put that in your calendar. You can also paste the billing email into [Renewal Watch](/renewal-watch). It reads the date from that text.
 
 **Run your numbers:** [renewal savings calculator](/calculator?p=wix) · **Get moved before the charge:** [pricing](/pricing)
 
@@ -140,4 +140,4 @@ No. Wix says services purchased during a sale renew at the standard rate.
 
 ## Where to go next
 
-Automated is $99 and you can buy it on the spot. Custom migration, for a simple site. See [renewal watch](/renewal-watch), [contact us for custom pricing](/book).
+The automated move is $99, one time, for a simple site of about 10 pages. You pay first, we build a preview, and if you don't approve the preview before any DNS change, you get a full refund. Custom work has no public price. See [renewal watch](/renewal-watch) or [contact us](/book).

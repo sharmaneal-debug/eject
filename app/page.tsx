@@ -20,7 +20,7 @@ export default function HomePage() {
       <JsonLd data={[organizationSchema(), websiteSchema(), productSchema()]} />
       <section className="mx-auto max-w-content min-w-0 px-4 pb-2 pt-10 sm:px-6 md:pt-16">
         <h1 className="h-display max-w-3xl text-4xl sm:text-5xl lg:text-6xl">Move a simple site. $99.</h1>
-        <p className="mt-4 text-lg text-ink-soft">You own the files.</p>
+        <p className="mt-4 text-lg text-ink-soft">One-time. You own the files.</p>
       </section>
       <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
         <CostCalculator initialPlatform="framer" initialPlanId="pro" />

@@ -3,7 +3,7 @@ import { listPosts } from "./posts";
 import { siteConfig } from "./site";
 
 /** Last content change for public pages that are not blog posts. */
-export const PUBLIC_CONTENT_UPDATED = "2026-10-10";
+export const PUBLIC_CONTENT_UPDATED = "2026-10-15";
 
 /** Indexable pages. Noindex routes (kit, intake, ops, checkout receipts, unsubscribe) stay off the sitemap. */
 const STATIC_PATHS = [

@@ -35,22 +35,22 @@ export function CookieBanner() {
 
   return (
     <>
-      <div className="h-14" aria-hidden="true" />
+      <div className="h-11" aria-hidden="true" />
       <div data-cookie-banner className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white">
-        <div className="mx-auto flex h-14 w-full max-w-content items-center gap-2 px-3 sm:px-6">
-          <p className="min-w-0 flex-1 text-sm leading-tight text-ink">
-            Stored in this browser.
-            <br className="sm:hidden" /> No ad scripts.{" "}
-            <Link className="underline underline-offset-2" href="/privacy">
+        <div className="mx-auto flex min-h-11 w-full max-w-content items-center gap-2 px-3 sm:px-6">
+          <p className="min-w-0 flex-1 text-sm leading-none text-ink">
+            <span className="sm:hidden">No ad scripts. </span>
+            <span className="hidden sm:inline">Saved in this browser. No ad scripts. </span>
+            <Link className="inline-flex min-h-11 items-center underline underline-offset-2" href="/privacy">
               Privacy
             </Link>
           </p>
-          <div className="flex shrink-0 gap-1">
+          <div className="flex shrink-0 items-center gap-1">
             <button
               type="button"
               aria-label="Essential only"
               onClick={() => choose("essential")}
-              className="inline-flex h-8 items-center rounded-md border border-line px-2 text-xs text-ink"
+              className="inline-flex h-11 min-w-11 items-center justify-center rounded-md border border-line px-2 text-sm text-ink"
             >
               Essential
             </button>
@@ -58,7 +58,7 @@ export function CookieBanner() {
               type="button"
               aria-label="Allow analytics"
               onClick={() => choose("analytics")}
-              className="inline-flex h-8 items-center rounded-md bg-ink px-2 text-xs text-paper"
+              className="inline-flex h-11 min-w-11 items-center justify-center rounded-md bg-ink px-2 text-sm text-paper"
             >
               Allow
             </button>

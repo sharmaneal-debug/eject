@@ -142,4 +142,4 @@ Basic is $120/year billed yearly ($180 if monthly). Pro is $360/year billed year
 
 ## Where to go next
 
-Automated is $99 and you can buy it on the spot. Custom migration, for a simple site. See [renewal watch](/renewal-watch), [contact us for custom pricing](/book).
+The automated move is $99, one time, for a simple site of about 10 pages. You pay first, we build a preview, and if you don't approve the preview before any DNS change, you get a full refund. Custom work has no public price. See [renewal watch](/renewal-watch) or [contact us](/book).

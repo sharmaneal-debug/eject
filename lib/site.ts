@@ -12,7 +12,7 @@ export const siteConfig = {
   url: "https://ejectfrom.com",
   tagline: "Move a simple site. $99.",
   shortTagline: "You own the files.",
-  description: "Move a simple site for $99. You own the files.",
+  description: "Move a simple site for $99, one time. You own the files.",
   email: "hi@ejectfrom.com",
   twitter: "@useeject",
 

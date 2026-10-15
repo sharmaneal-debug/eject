@@ -286,7 +286,7 @@ export function RenewalWatchForm({
           )}
           <p className="mt-4 text-xs text-ink-muted">
             Checked {plan.lastChecked}.{" "}
-            <a className="text-accent hover:text-signal" href={plan.sourceUrl} target="_blank" rel="noreferrer">
+            <a className="inline-flex min-h-11 min-w-11 items-center px-1 text-base text-accent hover:text-signal" href={plan.sourceUrl} target="_blank" rel="noreferrer">
               Source
             </a>
             . {plan.fitsSimpleSite ? "Can be a simple site." : "Usually outside a 10-page site."}

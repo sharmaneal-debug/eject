@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section, Eyebrow } from "@/components/section";
-import { LEGAL_UPDATED } from "@/lib/legal";
+import { AUTOMATED_REFUND_PROMISE, LEGAL_UPDATED } from "@/lib/legal";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
@@ -18,6 +18,10 @@ export default function Page() {
       <h1 className="h-display text-4xl md:text-6xl tracking-tightest mb-2">Refunds</h1>
       <p className="text-ink-soft mb-8">Last updated: {LEGAL_UPDATED}.</p>
       <div className="max-w-2xl">
+        <div className="border-t border-line py-4">
+          <h2 className="text-lg text-ink">The $99 move</h2>
+          <p className="text-sm text-ink-soft mt-1">{AUTOMATED_REFUND_PROMISE}</p>
+        </div>
         <div className="border-t border-line py-4">
           <h2 className="text-lg text-ink">Ask</h2>
           <p className="text-sm text-ink-soft mt-1">Email {siteConfig.email} with the site URL and the charge date.</p>

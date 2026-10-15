@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section, Eyebrow } from "@/components/section";
-import { LEGAL_UPDATED } from "@/lib/legal";
+import { AUTOMATED_REFUND_PROMISE, LEGAL_UPDATED } from "@/lib/legal";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
@@ -15,7 +15,7 @@ const lines = [
   ["The service", "We help you move a simple public site onto files you can host yourself."],
   ["Payment", "This website does not take payment."],
   ["Your part", "You need rights to the content. Your domain and DNS stay yours."],
-  ["Refunds", "We send refunds to the original payment method within 5 business days of approving your request."],
+  ["Refunds", `${AUTOMATED_REFUND_PROMISE} We send refunds to the original payment method within 5 business days of approving your request.`],
   ["Ownership", "You own the files we deliver. We keep the Eject brand and this website."],
   ["Limits", "We do not promise a visual match or a ranking change."],
   ["Liability", "Liability is capped at what you paid us in the prior 12 months, except where the law forbids a cap."],
@@ -36,7 +36,7 @@ export default function Page() {
           </div>
         ))}
         <details className="border-t border-line py-4">
-          <summary className="text-lg text-ink cursor-pointer">More</summary>
+          <summary className="flex min-h-11 cursor-pointer items-center text-lg text-ink">More</summary>
           <dl className="mt-3 space-y-3 text-sm text-ink-soft">
             <div>
               <dt className="text-ink">Old platform</dt>
