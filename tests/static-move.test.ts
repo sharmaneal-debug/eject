@@ -5,10 +5,14 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { test } from "node:test";
+import { staticAgentsMarkdown, staticEditingGuideMarkdown, staticHostingReadme } from "../lib/editor-guide";
 import { buildStaticSite } from "../lib/static-move";
 import {
   buildPageHtml,
   flagForms,
+  getAttr,
+  removeAttr,
+  setAttr,
   relativePageHref,
   rewriteStylesheet,
   stripRuntimeScripts,
@@ -132,8 +136,8 @@ test("flagForms blocks native submit for absolute, empty, and already-flagged fo
   assert.equal(out.includes("squarespace.com"), false);
   assert.equal(/action\s*=\s*["']https?:/i.test(out), false);
   assert.equal(/action\s*=\s*["']\/\//i.test(out), false);
-  assert.equal(/formaction\s*=\s*["']https?:/i.test(out), false);
-  assert.equal(/formmethod\s*=\s*["']post["']/i.test(out), false);
+  assert.equal(/formaction\s*=/i.test(out), false);
+  assert.equal(/formmethod\s*=/i.test(out), false);
   const tags = out.match(/<form\b[^>]*>/gi) ?? [];
   assert.equal(tags.length, 5);
   for (const tag of tags) {
@@ -143,8 +147,79 @@ test("flagForms blocks native submit for absolute, empty, and already-flagged fo
     assert.match(tag, /\bonsubmit="return false"/);
   }
   assert.equal(out.match(/data-eject-form="needs-endpoint"/g)?.length, 5);
-  assert.match(out, /formaction="#"/);
-  assert.match(out, /formmethod="dialog"/);
+  const submitter = out.match(/<button\b[^>]*>/i)?.[0] ?? "";
+  assert.equal(getAttr(submitter, "formaction"), null);
+  assert.equal(getAttr(submitter, "formmethod"), null);
+  assert.equal(effectiveNativeSubmit(out).action, "#");
+  assert.equal(effectiveNativeSubmit(out).method, "dialog");
+  assert.equal(effectiveNativeSubmit(out).cancelled, true);
+});
+
+/**
+ * The re-enable AGENTS.md and the hosting README describe: set the form
+ * action, set the form method, and remove onsubmit="return false".
+ * Button attributes are not part of that edit.
+ */
+function applyDocumentedFormReenable(html: string, action: string, method: "post" | "get"): string {
+  return html.replace(/<form\b[^>]*>/gi, (tag) => {
+    let out = setAttr(tag, "action", action);
+    out = setAttr(out, "method", method);
+    out = removeAttr(out, "onsubmit");
+    return out;
+  });
+}
+
+/** What a browser would submit: a submitter's formaction/formmethod win when present. */
+function effectiveNativeSubmit(html: string): { action: string; method: string; cancelled: boolean } {
+  const form = html.match(/<form\b[^>]*>/i)?.[0] ?? "";
+  const submitter =
+    html.match(/<(?:button|input)\b[^>]*>/gi)?.find((tag) => {
+      const type = (getAttr(tag, "type") ?? "").toLowerCase();
+      return /^<button\b/i.test(tag) ? type !== "button" && type !== "reset" : type === "submit" || type === "image";
+    }) ?? "";
+  const action = getAttr(submitter, "formaction") ?? getAttr(form, "action") ?? "";
+  const method = (getAttr(submitter, "formmethod") ?? getAttr(form, "method") ?? "get").toLowerCase();
+  const cancelled = /return\s+false/i.test(getAttr(form, "onsubmit") ?? "");
+  return { action, method, cancelled };
+}
+
+test("documented form re-enable submits to the new endpoint", () => {
+  const fixture = `<form action="https://webflow.com/api/v1/form/site" method="post"><label>Email <input name="email" type="email"></label><button type="submit" formaction="https://api.framer.com/forms" formmethod="post">Send</button></form>`;
+  const { html, forms } = flagForms(fixture, "/contact");
+  assert.equal(forms[0]?.action, "https://webflow.com/api/v1/form/site");
+  assert.equal(html.includes("webflow.com"), false);
+  assert.equal(html.includes("framer.com"), false);
+  const blocked = effectiveNativeSubmit(html);
+  assert.equal(blocked.cancelled, true);
+  assert.equal(blocked.method, "dialog");
+  assert.equal(blocked.action, "#");
+  assert.equal(/https?:\/\//i.test(blocked.action), false);
+
+  const agents = staticAgentsMarkdown();
+  const readme = staticHostingReadme({
+    sourceUrl: "https://example.com/",
+    platform: "webflow",
+    capturedAt: "2026-10-15T00:00:00.000Z",
+    formCount: 1,
+  });
+  for (const doc of [agents, readme]) {
+    assert.match(doc, /set the form action and method|point the form `action`/i);
+    assert.match(doc, /onsubmit="return false"/);
+    assert.match(doc, /do not keep formaction or formmethod|do not keep `formaction` or `formmethod`/i);
+  }
+
+  const endpoint = "https://forms.example.com/contact";
+  const reenabled = applyDocumentedFormReenable(html, endpoint, "post");
+  const submit = effectiveNativeSubmit(reenabled);
+  assert.equal(submit.cancelled, false);
+  assert.equal(submit.action, endpoint);
+  assert.equal(submit.method, "post");
+  assert.equal(reenabled.includes("webflow.com"), false);
+  assert.equal(reenabled.includes("framer.com"), false);
+  const button = reenabled.match(/<button\b[^>]*>/i)?.[0] ?? "";
+  assert.equal(getAttr(button, "formaction"), null);
+  assert.equal(getAttr(button, "formmethod"), null);
+  assert.match(button, /type="submit"/);
 });
 
 test("relative page hrefs", () => {
@@ -249,10 +324,18 @@ test("static move writes a hostable site and the editing guide", async () => {
     assert.match(agents, /plain HTML and CSS/);
     assert.match(agents, /data-eject-form/);
     assert.match(agents, /does not post to the previous host/);
+    assert.match(agents, /do not keep formaction or formmethod/i);
     const readme = await readFile(path.join(out, "README.md"), "utf8");
     assert.match(readme, /python3 -m http\.server/);
     assert.match(readme, /Cloudflare Pages/);
     assert.match(readme, /onsubmit="return false"/);
+    assert.match(readme, /EDITING\.md/);
+    const editing = await readFile(path.join(out, "EDITING.md"), "utf8");
+    assert.equal(editing, staticEditingGuideMarkdown());
+    assert.match(editing, /Cursor, Claude Code, or ChatGPT/);
+    assert.match(editing, /Spring workshops open/);
+    assert.match(editing, /http:\/\/localhost:8080/);
+    assert.match(editing, /Cloudflare Pages/);
     assert.equal(home.includes('action="/send"'), false);
     assert.equal(/<form\b[^>]*\baction\s*=\s*["']https?:/i.test(home), false);
     assert.match(home, /<form\b[^>]*\baction="#"/);

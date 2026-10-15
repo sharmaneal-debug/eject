@@ -2,7 +2,7 @@
  * What `pnpm deliver` does.
  *
  * Default: crawl if the snapshot is missing, then static-move into the
- * customer folder (HTML, CSS, assets, AGENTS.md, hosting README). No model.
+ * customer folder (HTML, CSS, assets, AGENTS.md, EDITING.md, hosting README). No model.
  * `--llm` and `--rebuild` opt into `pnpm rebuild`. That step is skipped
  * when ANTHROPIC_API_KEY is missing.
  */

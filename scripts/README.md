@@ -17,7 +17,7 @@ Outputs:
 
 ## `pnpm static-move <snapshot-dir>`
 
-Reads the same snapshot as `pnpm rebuild` and writes a static site: HTML files, the captured CSS, and local images and fonts. No model and no build step. Platform runtime scripts are removed, internal links point at the local pages, and forms are marked `data-eject-form="needs-endpoint"` with action `#` so a native submit does not post to the previous host. The folder includes `AGENTS.md`, `README.md`, and `scripts/chat-edit.mjs`.
+Reads the same snapshot as `pnpm rebuild` and writes a static site: HTML files, the captured CSS, and local images and fonts. No model and no build step. Platform runtime scripts are removed, internal links point at the local pages, and forms are marked `data-eject-form="needs-endpoint"` with action `#` so a native submit does not post to the previous host. The folder includes `AGENTS.md`, `EDITING.md`, `README.md`, and `scripts/chat-edit.mjs`.
 
 ```
 pnpm static-move data/snapshots/example-com --out=out/example-com

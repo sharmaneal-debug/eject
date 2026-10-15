@@ -10,7 +10,7 @@ This site is plain HTML and CSS. There is no build step, no React, and no Tailwi
 
 Constraints:
   - Only modify *.html, assets/**/*.css, assets/**/*.{png,jpg,jpeg,webp,gif,svg,avif,woff,woff2}, and edits/**/*.md
-  - Never modify AGENTS.md, README.md, or MIGRATION.md unless the owner asks
+  - Never modify AGENTS.md, README.md, EDITING.md, or MIGRATION.md unless the owner asks
   - Never add a package.json, a bundler, or a framework unless the owner asks
   - Never paste the old Framer, Webflow, Wix, or Squarespace runtime back in
   - Leave the script marked data-eject="directory-base" in place. It keeps relative links and images working when a host serves the page without a trailing slash
@@ -18,7 +18,7 @@ Constraints:
   - Make the smallest change that satisfies the request
   - When uncertain, read the file first, then propose
 
-Forms marked data-eject-form="needs-endpoint" cannot submit. The action is "#", the method is "dialog", and onsubmit returns false, so a native submit does not post to the previous host and does not reload the page. The original action is in MIGRATION.md. Do not pretend a form works. When the owner names an endpoint, set action and method and remove the onsubmit="return false" guard.
+Forms marked data-eject-form="needs-endpoint" cannot submit. The action is "#", the method is "dialog", and onsubmit returns false, so a native submit does not post to the previous host and does not reload the page. Submit buttons do not keep formaction or formmethod. The original action is in MIGRATION.md. Do not pretend a form works. When the owner names an endpoint, set the form action and method and remove onsubmit="return false". Do not put formaction or formmethod back on the button.
 
 After making changes, summarize what you did in one sentence so the owner can verify.
 

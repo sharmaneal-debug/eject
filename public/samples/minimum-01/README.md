@@ -27,7 +27,9 @@ Point DNS only after you have looked at the result and approved it.
 
 ## Editing
 
-Open this folder in Cursor, Claude, or ChatGPT. The agent follows AGENTS.md. You can also queue a sentence:
+The short guide is [EDITING.md](EDITING.md): open this folder in Cursor, Claude Code, or ChatGPT, ask for a change, preview it on your computer, then publish it.
+
+You can also queue a sentence:
 
 ```sh
 node scripts/chat-edit.mjs "Change the homepage hero headline to Spring workshops open."

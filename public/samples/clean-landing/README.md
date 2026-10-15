@@ -27,7 +27,9 @@ Point DNS only after you have looked at the result and approved it.
 
 ## Editing
 
-Open this folder in Cursor, Claude, or ChatGPT. The agent follows AGENTS.md. You can also queue a sentence:
+The short guide is [EDITING.md](EDITING.md): open this folder in Cursor, Claude Code, or ChatGPT, ask for a change, preview it on your computer, then publish it.
+
+You can also queue a sentence:
 
 ```sh
 node scripts/chat-edit.mjs "Change the homepage hero headline to Spring workshops open."
@@ -37,7 +39,7 @@ That writes `edits/inbox.md`.
 
 ## Forms
 
-1 form is marked `data-eject-form="needs-endpoint"`. The fields and labels are here. The action is `#` and the method is `dialog`, so a native submit does not post to the previous host. Nothing is sent until you point `action` at your own form endpoint, set `method` to `post` or `get`, and remove the `onsubmit="return false"` guard. The original action is in MIGRATION.md.
+1 form is marked `data-eject-form="needs-endpoint"`. The fields and labels are here. The action is `#` and the method is `dialog`, so a native submit does not post to the previous host. Submit buttons do not keep `formaction` or `formmethod`. Nothing is sent until you point the form `action` at your own endpoint, set `method` to `post` or `get`, and remove `onsubmit="return false"`. The original action is in MIGRATION.md.
 
 ## What was removed
 

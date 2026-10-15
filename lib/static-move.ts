@@ -7,7 +7,7 @@
 import { mkdir, readFile, writeFile, copyFile, readdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { lightweightEditorScript, staticAgentsMarkdown, staticHostingReadme } from "./editor-guide";
+import { lightweightEditorScript, staticAgentsMarkdown, staticEditingGuideMarkdown, staticHostingReadme } from "./editor-guide";
 import {
   ENTRANCE_CSS,
   assetHref,
@@ -228,6 +228,7 @@ export async function buildStaticSite(snapshotDir: string, outDir: string, opts:
 
   const capturedAt = manifest.capturedAt || new Date().toISOString();
   await writeFile(path.join(outDir, "AGENTS.md"), staticAgentsMarkdown(), "utf8");
+  await writeFile(path.join(outDir, "EDITING.md"), staticEditingGuideMarkdown(), "utf8");
   await writeFile(
     path.join(outDir, "README.md"),
     staticHostingReadme({ sourceUrl: manifest.sourceUrl, platform: manifest.platform || "unknown", capturedAt, formCount: forms.length }),

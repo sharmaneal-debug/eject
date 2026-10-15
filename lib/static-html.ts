@@ -282,8 +282,13 @@ export function rewriteInternalLinks(html: string, ctx: LinkContext, assets: Ass
  * `action="#"` drops any captured platform URL. `method="dialog"` does not
  * navigate or POST when JavaScript is off. `onsubmit="return false"` is the
  * same guard when JavaScript is on. This runs after stripEventHandlers, so
- * that handler stays. A submit button's formaction/formmethod is cleared too,
- * because those override the form.
+ * that handler stays.
+ *
+ * A submitter's formaction and formmethod override the form. They are removed,
+ * not rewritten to "#" and "dialog". Rewriting them would still override the
+ * form after the owner sets action and method and removes onsubmit. With the
+ * attributes gone, the form-level guards are what block the old host, and
+ * those three edits are enough to submit to the new endpoint.
  */
 export function flagForms(html: string, pageRoute: string): { html: string; forms: FormNote[] } {
   const forms: FormNote[] = [];
@@ -301,8 +306,8 @@ export function flagForms(html: string, pageRoute: string): { html: string; form
     }
     if (name !== "button" && name !== "input") return tag;
     let out = tag;
-    if (getAttr(out, "formaction") != null) out = setAttr(out, "formaction", "#");
-    if (getAttr(out, "formmethod") != null) out = setAttr(out, "formmethod", "dialog");
+    if (/\bformaction\b/i.test(out)) out = removeAttr(out, "formaction");
+    if (/\bformmethod\b/i.test(out)) out = removeAttr(out, "formmethod");
     return out;
   });
   return { html: next, forms };

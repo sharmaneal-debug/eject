@@ -8,7 +8,7 @@
  *
  * The default crawls when the order has a site URL and no snapshot yet,
  * then runs static-move into out/orders/<orderId> (HTML, CSS, assets,
- * AGENTS.md, hosting README). It does not call a model.
+ * AGENTS.md, EDITING.md, hosting README). It does not call a model.
  *
  * `--llm` and `--rebuild` also run `pnpm rebuild` into a sibling folder
  * when ANTHROPIC_API_KEY is set. Without that key the model step is skipped
