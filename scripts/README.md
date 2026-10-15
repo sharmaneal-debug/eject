@@ -17,19 +17,45 @@ Outputs:
 
 ## `pnpm rebuild <snapshot-dir>`
 
-Reads a crawler snapshot and uses Claude to regenerate each page as Next.js + Tailwind. Output goes to `out/<hostname>/` and is a runnable Next.js project (with `package.json`, `app/layout.tsx`, `tailwind.config.ts`).
+**Optional path.** Static move remains the default delivery. This script regenerates each captured page as Next.js + Tailwind when you want a React rebuild.
 
+Output goes to `out/<hostname>/` (runnable Next.js project).
+
+### Preferred: open-weights via OpenAI-compatible API (DeepSeek Flash)
+
+```sh
+export LLM_PROVIDER=openai-compat
+export LLM_BASE_URL=https://api.deepseek.com          # or Together/Fireworks/OpenRouter …/v1
+export LLM_API_KEY=…                                  # never commit; never print
+export LLM_MODEL=deepseek-flash                       # Together: deepseek-ai/DeepSeek-V4-Flash-0731
+export EJECT_REBUILD_SPEND_CAP_USD=2                  # abort if estimated spend exceeds this
+
+pnpm rebuild data/snapshots/example-com
+cd out/example-com && pnpm install && pnpm dev
 ```
-ANTHROPIC_API_KEY from the environment, then: pnpm rebuild data/snapshots/example-com
-cd out/example-com
-pnpm install
-pnpm dev
+
+DeepSeek also exposes an Anthropic-compatible endpoint if you prefer to keep the Messages API shape:
+
+```sh
+export LLM_PROVIDER=anthropic
+export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
+export ANTHROPIC_API_KEY=…   # DeepSeek key
+export ANTHROPIC_MODEL=deepseek-flash
+```
+
+### Optional: Anthropic Claude
+
+```sh
+export ANTHROPIC_API_KEY=…
+pnpm rebuild data/snapshots/example-com
 ```
 
 Notes:
-- Model comes from `--model` or `ANTHROPIC_MODEL`. If neither is set, the script uses its current default. The key is read from `ANTHROPIC_API_KEY` and is not printed.
-- Capped at 10 pages per run by default (`--max-pages=...` to override).
-- Each page becomes a standalone TSX file; reusable layout is the operator's responsibility post-rebuild.
+- Provider resolution lives in `lib/llm.ts` (`LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`). Anthropic remains optional.
+- `--model=` overrides `LLM_MODEL` / `ANTHROPIC_MODEL`. Default openai-compat model is `deepseek-flash`.
+- Capped at 10 pages per run (`--max-pages=...`). Soft USD abort via `EJECT_REBUILD_SPEND_CAP_USD` (default 5).
+- If Flash output fails review, escalate `LLM_MODEL` to a Qwen3 Coder slug on OpenRouter/Fireworks (see `content/llm-open-source-options-2026-10-15.md`).
+- Keys are never printed. `usage.json` in the output records provider, model, tokens, and estimated USD.
 
 ## `pnpm site-audit <url>`
 
