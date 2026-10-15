@@ -36,7 +36,7 @@ export default function Page() {
           </div>
         ))}
         <details className="border-t border-line py-4">
-          <summary className="text-lg text-ink cursor-pointer">More</summary>
+          <summary className="flex min-h-11 cursor-pointer items-center text-lg text-ink">More</summary>
           <dl className="mt-3 space-y-3 text-sm text-ink-soft">
             <div>
               <dt className="text-ink">Old platform</dt>

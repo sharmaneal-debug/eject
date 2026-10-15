@@ -26,7 +26,7 @@ export default function Page() {
       </div>
       <nav className="mt-6 flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-2">
         {platforms.map((item) => (
-          <Link key={item.href} href={item.href} className="inline-flex min-h-11 items-center px-2 text-base text-accent">
+          <Link key={item.href} href={item.href} className="inline-flex min-h-11 min-w-11 items-center px-2 text-base text-accent">
             {item.label}
           </Link>
         ))}

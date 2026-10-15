@@ -64,7 +64,7 @@ const markdownComponents = {
       href={href}
       target={href?.startsWith("http") ? "_blank" : undefined}
       rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
-      className="text-accent underline underline-offset-[3px] decoration-1 hover:text-signal hover:decoration-2"
+      className="inline-block min-h-11 max-w-full break-words py-2 align-middle text-accent underline underline-offset-[3px] decoration-1 hover:text-signal hover:decoration-2"
     >
       {children}
     </a>
