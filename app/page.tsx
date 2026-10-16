@@ -7,7 +7,7 @@ import { faqSchema, organizationSchema, productSchema, websiteSchema } from "@/l
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Move your website",
+  title: "Move your website · Eject",
   description: HOME_DESCRIPTION,
   path: "/",
   image: "/og.jpg",

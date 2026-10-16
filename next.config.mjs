@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Put title and meta description in the first HTML byte for every client.
+  // Dynamic pages otherwise stream those tags, and non-browser crawlers miss them.
+  htmlLimitedBots: /.*/,
   experimental: { typedRoutes: false },
   async rewrites() {
     return [{ source: "/:key.txt", destination: "/api/indexnow/:key" }];
