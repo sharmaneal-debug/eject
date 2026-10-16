@@ -10,6 +10,7 @@ import {
   deliveryRunner,
   gateCrawledDelivery,
   githubDeliveryConfig,
+  finishDeliveredOrder,
   kickDelivery,
   llmRebuildDecision,
   processDeliveryQueue,
@@ -759,6 +760,114 @@ test("a shopify crawl is not packaged", async () => {
     await rm(dir, { recursive: true, force: true });
     await rm(snapshot, { recursive: true, force: true });
     restoreEnv();
+  }
+});
+
+test("intake leaves an in-flight delivery job alone", async () => {
+  const dir = await useFileStore();
+  const written: string[] = [];
+  try {
+    const store = getOrderStore();
+    const created = await store.create({
+      tier: "automated",
+      testMode: "stripe_test",
+      amountCents: 9900,
+      currency: "usd",
+      email: "buyer@example.com",
+      siteUrl: "https://example.com",
+    });
+    const now = new Date().toISOString();
+    await store.update(created.id, {
+      status: "paid",
+      token: "tok_inflight",
+      deliveryJob: { state: "dispatched", attempts: 1, enqueuedAt: now, updatedAt: now, llm: "unset", runner: "github" },
+    });
+    const intake = await runPaidIntake("tok_inflight", "https://example.com/studio", {
+      lookupFn: async () => ["1.1.1.1"],
+      fetchImpl: siteFetch([]),
+    });
+    assert.equal(intake.ok, true);
+    const saved = await store.get(created.id);
+    assert.equal(saved?.deliveryJob?.state, "dispatched");
+    assert.equal(saved?.deliveryJob?.attempts, 1);
+    assert.equal(saved?.status, "paid");
+    written.push(deliveryDirFor(created.id));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+    for (const folder of written) await rm(folder, { recursive: true, force: true });
+    restoreEnv();
+  }
+});
+
+test("a crashed package send can be claimed again after it goes stale", async () => {
+  const dir = await useFileStore();
+  const written: string[] = [];
+  try {
+    const store = getOrderStore();
+    const created = await store.create({
+      tier: "automated",
+      testMode: "stripe_test",
+      amountCents: 9900,
+      currency: "usd",
+      email: "buyer@example.com",
+      siteUrl: "https://example.com",
+    });
+    const now = new Date().toISOString();
+    await store.update(created.id, {
+      status: "paid",
+      emails: { package: `sending:${now}` },
+      deliveryJob: { state: "running", attempts: 1, enqueuedAt: now, updatedAt: now, llm: "unset", runner: "inprocess" },
+    });
+    process.env.RESEND_API_KEY = "re_test";
+    process.env.RESEND_FROM = "Eject <hi@example.com>";
+    await assert.rejects(
+      finishDeliveredOrder(created.id, {
+        repoFiles: [{ path: "index.html", contents: "<h1>Hi</h1>" }],
+        note: "package",
+        siteUrl: "https://example.com",
+        llm: "unset",
+        fetchImpl: async () => new Response(JSON.stringify({ id: "re_test" }), { status: 200, headers: { "content-type": "application/json" } }),
+      }),
+      /already in progress/,
+    );
+    assert.equal((await store.get(created.id))?.status, "paid");
+    const stale = new Date(Date.now() - 3 * 60 * 1000).toISOString();
+    await store.update(created.id, { emails: { package: `sending:${stale}` } });
+    const delivered = await finishDeliveredOrder(created.id, {
+      repoFiles: [{ path: "index.html", contents: "<h1>Hi</h1>" }],
+      note: "package",
+      siteUrl: "https://example.com",
+      llm: "unset",
+      fetchImpl: async () => new Response(JSON.stringify({ id: "re_test" }), { status: 200, headers: { "content-type": "application/json" } }),
+    });
+    assert.equal(delivered.status, "delivered");
+    assert.match(delivered.emails?.package ?? "", /^\d{4}-/);
+    written.push(deliveryDirFor(created.id));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+    for (const folder of written) await rm(folder, { recursive: true, force: true });
+    restoreEnv();
+  }
+});
+
+test("crawl score counts discovered pages and measured scripts", async () => {
+  const snapshot = await mkdtemp(path.join(tmpdir(), "eject-score-"));
+  try {
+    await mkdir(path.join(snapshot, "pages"), { recursive: true });
+    const page = { url: "https://example.com/", html: "<html><body><h1>Hello</h1></body></html>" };
+    await writeFile(path.join(snapshot, "pages", "_root.json"), JSON.stringify(page));
+    const order = { siteUrl: "https://example.com/", tier: "automated" as const, amountCents: 9900 };
+    await writeFile(path.join(snapshot, "discovery.json"), JSON.stringify({ crawledPageCount: 1, discoveredPageCount: 11 }));
+    const wide = await scoreCrawledSnapshot(snapshot, order);
+    assert.equal(wide?.eligibility, "NOT_ELIGIBLE");
+    assert.ok((wide?.pageCount ?? 0) > 10);
+    await writeFile(path.join(snapshot, "discovery.json"), JSON.stringify({ crawledPageCount: 1, discoveredPageCount: 1 }));
+    await writeFile(path.join(snapshot, "scripts.json"), JSON.stringify({ items: [{ url: "https://cdn.example/app.js", bytes: 4_000_000 }] }));
+    const heavy = await scoreCrawledSnapshot(snapshot, order);
+    assert.equal(heavy?.eligibility, "NOT_ELIGIBLE");
+    assert.ok((heavy?.scriptBytes ?? 0) > 3_000_000);
+  } finally {
+    await rm(snapshot, { recursive: true, force: true });
   }
 });
 

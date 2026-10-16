@@ -29,16 +29,49 @@ export async function scoreCrawledSnapshot(
     pages.push({ url: parsed.url, html: parsed.html, bytes: Buffer.byteLength(parsed.html) });
   }
   if (!pages.length) return null;
+  const discovery = await readJson(path.join(dir, "discovery.json"));
+  const scripts = await readJson(path.join(dir, "scripts.json"));
+  const assets = await readJson(path.join(dir, "assets.json"));
+  const discovered = numberField(discovery, "discoveredPageCount");
   const requested = order.siteUrl || pages[0].url;
   return analyzeSnapshot(
     {
       requestedUrl: requested,
       finalUrl: pages[0].url,
       pages,
-      sitemapPageCount: pages.length,
-      scriptSamples: [],
-      assetSamples: [],
+      sitemapPageCount: Math.max(pages.length, discovered ?? pages.length),
+      scriptSamples: samples(scripts),
+      assetSamples: samples(assets),
     },
     { tier: order.tier, amountUsd: order.amountCents / 100 },
   );
+}
+
+async function readJson(file: string): Promise<unknown> {
+  try {
+    return JSON.parse(await readFile(file, "utf8")) as unknown;
+  } catch {
+    return null;
+  }
+}
+
+function numberField(value: unknown, key: string): number | null {
+  if (!value || typeof value !== "object") return null;
+  const raw = (value as Record<string, unknown>)[key];
+  return typeof raw === "number" && Number.isFinite(raw) ? raw : null;
+}
+
+function samples(value: unknown): Array<{ url: string; bytes: number }> {
+  if (!value || typeof value !== "object") return [];
+  const items = (value as { items?: unknown }).items;
+  if (!Array.isArray(items)) return [];
+  const out: Array<{ url: string; bytes: number }> = [];
+  for (const item of items) {
+    if (!item || typeof item !== "object") continue;
+    const url = (item as { url?: unknown }).url;
+    const bytes = (item as { bytes?: unknown }).bytes;
+    if (typeof url !== "string" || !url || typeof bytes !== "number" || bytes < 0) continue;
+    out.push({ url, bytes });
+  }
+  return out;
 }

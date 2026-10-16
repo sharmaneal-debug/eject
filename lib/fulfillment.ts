@@ -207,31 +207,26 @@ export async function runPaidIntake(
   }
 
   const now = new Date().toISOString();
-  const resumeDelivery = order.tier === "automated" && order.deliveryJob && order.deliveryJob.state !== "delivered" && order.deliveryJob.state !== "failed";
-  const deliveryJob = !resumeDelivery || !order.deliveryJob
-    ? order.deliveryJob
-    : eligible
-      ? {
-          ...order.deliveryJob,
-          state: "queued" as const,
-          lastError: undefined,
-          nextAttemptAt: undefined,
-          attempts: order.deliveryJob.lastError === WAITING_FOR_SITE_URL ? 0 : order.deliveryJob.attempts,
-          updatedAt: now,
-        }
-      : {
-          ...order.deliveryJob,
-          state: "skipped" as const,
-          lastError: "not eligible",
-          updatedAt: now,
-        };
-  const updated = await store.update(order.id, {
-    siteUrl: snapshot.finalUrl,
-    score: report,
-    delivery,
-    status: resumeDelivery ? (eligible ? "queued" : "refund_recommended") : eligible ? (repoDir ? "delivered" : "queued") : "refund_recommended",
-    deliveryJob,
-  });
+  const waitingForUrl = order.tier === "automated" && order.deliveryJob?.state === "queued" && order.deliveryJob.lastError === WAITING_FOR_SITE_URL;
+  let updated: Order;
+  if (waitingForUrl && order.deliveryJob) {
+    const claimed = await store.compareAndUpdate(
+      order.id,
+      { deliveryState: "queued", lastError: WAITING_FOR_SITE_URL },
+      {
+        siteUrl: snapshot.finalUrl,
+        score: report,
+        delivery,
+        status: eligible ? "queued" : "refund_recommended",
+        deliveryJob: eligible
+          ? { ...order.deliveryJob, state: "queued", lastError: undefined, nextAttemptAt: undefined, attempts: 0, updatedAt: now }
+          : { ...order.deliveryJob, state: "skipped", lastError: "not eligible", updatedAt: now },
+      },
+    );
+    updated = claimed ?? (await saveIntakeAside(order.id, snapshot.finalUrl, report));
+  } else {
+    updated = await saveIntakeAside(order.id, snapshot.finalUrl, report, { delivery, eligible, repoDir });
+  }
   await sendOrderMail(updated, "intake", intakeReceivedEmail({
     name: updated.name || "",
     siteUrl: snapshot.finalUrl,
@@ -255,6 +250,26 @@ export async function runPaidIntake(
     return { ok: true, order: kicked };
   }
   return { ok: true, order: updated };
+}
+
+async function saveIntakeAside(
+  orderId: string,
+  siteUrl: string,
+  report: Order["score"],
+  extras?: { delivery: Order["delivery"]; eligible: boolean; repoDir?: string },
+): Promise<Order> {
+  const store = getOrderStore();
+  const latest = await store.get(orderId);
+  if (!latest) throw new Error("order not found");
+  const job = latest.deliveryJob;
+  const inFlight = Boolean(job && job.state !== "delivered" && job.state !== "failed" && job.state !== "skipped");
+  if (!extras || inFlight) return store.update(orderId, { siteUrl, score: report });
+  return store.update(orderId, {
+    siteUrl,
+    score: report,
+    delivery: extras.delivery,
+    status: extras.eligible ? (extras.repoDir ? "delivered" : "queued") : "refund_recommended",
+  });
 }
 
 async function sendOrderMail(

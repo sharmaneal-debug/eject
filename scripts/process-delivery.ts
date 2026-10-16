@@ -110,7 +110,7 @@ async function main() {
   const llmDir = path.resolve(llmOutDirFor(order.id));
 
   try {
-    await run(path.join("scripts", "crawl.ts"), [site.toString(), `--max-pages=${simpleSiteScope.maxPages}`, `--out=${snapshotDir}`]);
+    await run(path.join("scripts", "crawl.ts"), [site.toString(), `--max-pages=${simpleSiteScope.maxPages + 1}`, `--out=${snapshotDir}`]);
     const gate = await gateCrawledDelivery(claimed, snapshotDir, site.toString());
     if (!gate.ok) {
       if (gate.reason === "not eligible") {

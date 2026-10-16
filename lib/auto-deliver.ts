@@ -25,7 +25,7 @@ import {
 } from "./email";
 import { crawlSite, type CrawlDeps } from "./http-crawl";
 import { costOf, llmChat, PRICING_USD_PER_MTOK, resolveLlmConfig, type LlmChatResult, type LlmConfig, type LlmMessage } from "./llm";
-import { getOrderStore, type DeliveryJob, type DeliveryLlm, type Order } from "./orders";
+import { getOrderStore, packageSendClaimable, type DeliveryJob, type DeliveryLlm, type Order } from "./orders";
 import { opsStoreWarning } from "./storage/plan";
 import type { LookupFn } from "./ssrf";
 import { zipStore } from "./zip-store";
@@ -359,7 +359,8 @@ async function deliverInProcess(order: Order, nowMs: number, deps: DeliveryDeps)
 }
 
 function packageAlreadySent(value: string | undefined): boolean {
-  return Boolean(value && value !== "sending" && value !== "failed" && value !== "skipped");
+  if (!value || value === "failed" || value === "skipped" || value === "sending" || value.startsWith("sending:")) return false;
+  return true;
 }
 
 export async function markOrderNotEligible(
@@ -435,7 +436,12 @@ export async function finishDeliveredOrder(
   const attached = zipped.length > 0 && zipped.length <= ZIP_BYTE_CAP;
   let emails = order.emails ?? {};
   if (!packageAlreadySent(emails.package)) {
-    const claimed = await store.compareAndUpdate(order.id, { packageEmail: "claimable" }, { emails: { ...emails, package: "sending" } });
+    if (!packageSendClaimable(emails.package)) throw new Error("delivery email is already in progress");
+    const claimed = await store.compareAndUpdate(
+      order.id,
+      { packageEmail: "claimable" },
+      { emails: { ...emails, package: `sending:${new Date().toISOString()}` } },
+    );
     if (!claimed) {
       const current = await store.get(orderId);
       if (current?.deliveryJob?.state === "delivered") return current;

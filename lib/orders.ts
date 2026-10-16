@@ -75,9 +75,23 @@ export type OrderEmailLog = {
 export type OrderExpect = {
   deliveryState?: DeliveryJobState;
   attempts?: number;
-  /** Package email is unset, "failed", or "skipped". */
+  lastError?: string;
+  /** Package email is unset, failed, skipped, or a send claim older than two minutes. */
   packageEmail?: "claimable";
 };
+
+const PACKAGE_SENDING_STALE_MS = 2 * 60 * 1000;
+
+/** True when no live worker holds the customer zip send. */
+export function packageSendClaimable(value: string | undefined, nowMs = Date.now()): boolean {
+  if (!value || value === "failed" || value === "skipped") return true;
+  if (value === "sending") return true;
+  if (value.startsWith("sending:")) {
+    const stamped = Date.parse(value.slice("sending:".length));
+    return !Number.isFinite(stamped) || nowMs - stamped >= PACKAGE_SENDING_STALE_MS;
+  }
+  return false;
+}
 
 export type Order = {
   id: string;
@@ -134,10 +148,8 @@ export function buildPendingOrder(input: NewOrder): Order {
 function expectMatches(order: Order, expect: OrderExpect): boolean {
   if (expect.deliveryState !== undefined && order.deliveryJob?.state !== expect.deliveryState) return false;
   if (expect.attempts !== undefined && order.deliveryJob?.attempts !== expect.attempts) return false;
-  if (expect.packageEmail === "claimable") {
-    const value = order.emails?.package;
-    if (value && value !== "failed" && value !== "skipped") return false;
-  }
+  if (expect.lastError !== undefined && order.deliveryJob?.lastError !== expect.lastError) return false;
+  if (expect.packageEmail === "claimable" && !packageSendClaimable(order.emails?.package)) return false;
   return true;
 }
 
