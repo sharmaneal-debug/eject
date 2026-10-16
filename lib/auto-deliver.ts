@@ -12,7 +12,8 @@
  * and emails it. That path is what the end-to-end test covers.
  */
 
-import { analyzeSnapshot } from "./complexity";
+import { analyzeSnapshot, type ComplexityReport } from "./complexity";
+import { scoreCrawledSnapshot } from "./crawled-snapshot";
 import { buildDelivery, deliveryDirFor, materializeDelivery } from "./delivery";
 import {
   autonomousDeliveryEmail,
@@ -30,6 +31,7 @@ import type { LookupFn } from "./ssrf";
 import { zipStore } from "./zip-store";
 
 export const MAX_DELIVERY_ATTEMPTS = 3;
+export const WAITING_FOR_SITE_URL = "waiting for a site URL";
 const BACKOFF_MS = [60_000, 5 * 60_000, 15 * 60_000];
 const DISPATCH_STALE_MS = 45 * 60 * 1000;
 const RUNNING_STALE_MS = 10 * 60 * 1000;
@@ -116,6 +118,7 @@ export function llmRebuildDecision(
 
 export function isDeliveryDue(job: DeliveryJob, nowMs: number): boolean {
   if (job.state === "delivered" || job.state === "failed" || job.state === "skipped") return false;
+  if (job.state === "queued" && job.lastError === WAITING_FOR_SITE_URL) return false;
   if (job.state === "running") return nowMs - Date.parse(job.updatedAt) > RUNNING_STALE_MS;
   if (job.state === "dispatched") return nowMs - Date.parse(job.dispatchedAt ?? job.updatedAt) > DISPATCH_STALE_MS;
   if (job.nextAttemptAt && Date.parse(job.nextAttemptAt) > nowMs) return false;
@@ -160,27 +163,34 @@ export async function dispatchDeliveryWorkflow(
 }
 
 export async function kickDelivery(order: Order, deps?: DeliveryDeps): Promise<Order> {
-  if (!order.deliveryJob || order.deliveryJob.state !== "queued" || order.deliveryJob.attempts > 0) return order;
-  if (deliveryRunner() !== "github") return order;
+  const job = order.deliveryJob;
+  if (!job || job.state !== "queued" || job.attempts > 0 || job.lastError === WAITING_FOR_SITE_URL) return order;
+  if (deliveryRunner() !== "github" || !order.siteUrl?.trim()) return order;
+  const store = getOrderStore();
+  const updatedAt = new Date().toISOString();
+  const claimed = await store.compareAndUpdate(
+    order.id,
+    { deliveryState: "queued", attempts: 0 },
+    {
+      deliveryJob: {
+        ...job,
+        state: "dispatched",
+        attempts: 1,
+        runner: "github",
+        dispatchedAt: updatedAt,
+        updatedAt,
+        lastError: undefined,
+      },
+    },
+  );
+  if (!claimed) return (await store.get(order.id)) ?? order;
   const runtime = activeDeps(deps);
   const result = await dispatchDeliveryWorkflow(order.id, process.env, runtime.fetchImpl);
-  const updatedAt = new Date().toISOString();
   if (!result.ok) {
-    return getOrderStore().update(order.id, {
-      deliveryJob: { ...order.deliveryJob, lastError: result.error, updatedAt },
-    });
+    await markAttemptFailure(claimed, result.error || "GitHub dispatch failed.", Date.now(), runtime.fetchImpl);
+    return (await store.get(order.id)) ?? claimed;
   }
-  return getOrderStore().update(order.id, {
-    deliveryJob: {
-      ...order.deliveryJob,
-      state: "dispatched",
-      attempts: order.deliveryJob.attempts + 1,
-      runner: "github",
-      dispatchedAt: updatedAt,
-      updatedAt,
-      lastError: undefined,
-    },
-  });
+  return claimed;
 }
 
 function staticHtml(html: string): string {
@@ -243,33 +253,46 @@ async function stampConfig(order: Order, reason: string, nowMs: number): Promise
   return { orderId: order.id, state: job.state, error: reason };
 }
 
+async function markWaitingForSite(order: Order, nowMs: number): Promise<QueueItemResult> {
+  const job = order.deliveryJob;
+  if (!job) return { orderId: order.id, state: "missing", error: WAITING_FOR_SITE_URL };
+  if (job.state === "queued" && job.lastError === WAITING_FOR_SITE_URL) {
+    return { orderId: order.id, state: "queued", error: WAITING_FOR_SITE_URL };
+  }
+  await getOrderStore().update(order.id, {
+    deliveryJob: { ...job, state: "queued", lastError: WAITING_FOR_SITE_URL, updatedAt: new Date(nowMs).toISOString() },
+  });
+  return { orderId: order.id, state: "queued", error: WAITING_FOR_SITE_URL };
+}
+
 async function dispatchQueued(order: Order, nowMs: number, fetchImpl?: typeof fetch): Promise<QueueItemResult> {
   const job = order.deliveryJob;
   if (!job) return { orderId: order.id, state: "missing" };
+  if (!order.siteUrl?.trim()) return markWaitingForSite(order, nowMs);
   if (job.attempts >= MAX_DELIVERY_ATTEMPTS) return markAttemptFailure(order, job.lastError || "delivery attempts exhausted", nowMs, fetchImpl);
   const configError = githubDeliveryConfig()
     ? null
     : "GitHub delivery is not configured. Set EJECT_GITHUB_TOKEN and GITHUB_REPOSITORY. Playwright crawl and static-move cannot run inside a Vercel function.";
   if (configError) return stampConfig(order, configError, nowMs);
-  const result = await dispatchDeliveryWorkflow(order.id, process.env, fetchImpl);
   const updatedAt = new Date(nowMs).toISOString();
-  if (!result.ok) {
-    await getOrderStore().update(order.id, {
-      deliveryJob: { ...job, attempts: job.attempts + 1, runner: "github", updatedAt },
-    });
-    return markAttemptFailure(order, result.error || "GitHub dispatch failed.", nowMs, fetchImpl);
-  }
-  await getOrderStore().update(order.id, {
-    deliveryJob: {
-      ...job,
-      state: "dispatched",
-      attempts: job.attempts + 1,
-      runner: "github",
-      dispatchedAt: updatedAt,
-      updatedAt,
-      lastError: undefined,
+  const claimed = await getOrderStore().compareAndUpdate(
+    order.id,
+    { deliveryState: job.state, attempts: job.attempts },
+    {
+      deliveryJob: {
+        ...job,
+        state: "dispatched",
+        attempts: job.attempts + 1,
+        runner: "github",
+        dispatchedAt: updatedAt,
+        updatedAt,
+        lastError: undefined,
+      },
     },
-  });
+  );
+  if (!claimed) return { orderId: order.id, state: job.state, error: "already claimed" };
+  const result = await dispatchDeliveryWorkflow(order.id, process.env, fetchImpl);
+  if (!result.ok) return markAttemptFailure(claimed, result.error || "GitHub dispatch failed.", nowMs, fetchImpl);
   return { orderId: order.id, state: "dispatched" };
 }
 
@@ -283,39 +306,23 @@ async function deliverInProcess(order: Order, nowMs: number, deps: DeliveryDeps)
     });
     return { orderId: order.id, state: "skipped", error: "no customer email" };
   }
-  if (!order.siteUrl?.trim()) {
-    await store.update(order.id, {
-      deliveryJob: { ...job, state: "skipped", lastError: "waiting for a site URL", updatedAt: new Date(nowMs).toISOString() },
-    });
-    return { orderId: order.id, state: "skipped", error: "waiting for a site URL" };
-  }
+  if (!order.siteUrl?.trim()) return markWaitingForSite(order, nowMs);
   if (job.attempts >= MAX_DELIVERY_ATTEMPTS) return markAttemptFailure(order, job.lastError || "delivery attempts exhausted", nowMs, deps.fetchImpl);
 
   const updatedAt = new Date(nowMs).toISOString();
-  const claimed = await store.update(order.id, {
-    deliveryJob: { ...job, state: "running", attempts: job.attempts + 1, runner: "inprocess", updatedAt, lastError: undefined },
-  });
+  const claimed = await store.compareAndUpdate(
+    order.id,
+    { deliveryState: job.state, attempts: job.attempts },
+    { deliveryJob: { ...job, state: "running", attempts: job.attempts + 1, runner: "inprocess", updatedAt, lastError: undefined } },
+  );
+  if (!claimed?.deliveryJob) return { orderId: order.id, state: job.state, error: "already claimed" };
 
   try {
     const crawlDeps: CrawlDeps = { lookupFn: deps.lookupFn, fetchImpl: deps.fetchImpl, now: deps.now };
     const snapshot = await crawlSite(order.siteUrl, crawlDeps);
     const report = analyzeSnapshot(snapshot, { tier: claimed.tier, amountUsd: claimed.amountCents / 100 });
     if (report.eligibility !== "ELIGIBLE") {
-      const refund = refundFollowupEmail({ name: claimed.name || "", siteUrl: snapshot.finalUrl });
-      await sendEmail({ to: claimed.email!, ...refund, fetchImpl: deps.fetchImpl });
-      await notifyOps(claimed, snapshot.finalUrl, "not eligible", deps.fetchImpl);
-      await store.update(claimed.id, {
-        siteUrl: snapshot.finalUrl,
-        score: report,
-        status: "refund_recommended",
-        deliveryJob: {
-          ...claimed.deliveryJob!,
-          state: "skipped",
-          llm: "unset",
-          lastError: "not eligible",
-          updatedAt: new Date(nowMs).toISOString(),
-        },
-      });
+      await markOrderNotEligible(claimed, report, snapshot.finalUrl, deps.fetchImpl);
       return { orderId: claimed.id, state: "skipped", error: "not eligible" };
     }
 
@@ -346,8 +353,56 @@ async function deliverInProcess(order: Order, nowMs: number, deps: DeliveryDeps)
     return { orderId: claimed.id, state: "delivered" };
   } catch (err) {
     const reason = err instanceof Error ? err.message : "delivery failed";
+    if (reason === "delivery email is already in progress") return { orderId: claimed.id, state: "running", error: reason };
     return markAttemptFailure(claimed, reason, nowMs, deps.fetchImpl);
   }
+}
+
+function packageAlreadySent(value: string | undefined): boolean {
+  return Boolean(value && value !== "sending" && value !== "failed" && value !== "skipped");
+}
+
+export async function markOrderNotEligible(
+  order: Order,
+  report: ComplexityReport,
+  siteUrl: string,
+  fetchImpl?: typeof fetch,
+): Promise<Order> {
+  const store = getOrderStore();
+  const current = (await store.get(order.id)) ?? order;
+  const job = current.deliveryJob ?? order.deliveryJob;
+  let emails = current.emails;
+  if (current.email && !emails?.refund) {
+    const refund = refundFollowupEmail({ name: current.name || "", siteUrl });
+    const result = await sendEmail({ to: current.email, ...refund, fetchImpl });
+    emails = { ...emails, refund: result.ok ? new Date().toISOString() : result.skipped ? "skipped" : "failed" };
+  }
+  await notifyOps(current, siteUrl, "not eligible", fetchImpl);
+  return store.update(current.id, {
+    siteUrl,
+    score: report,
+    status: "refund_recommended",
+    emails,
+    deliveryJob: job
+      ? { ...job, state: "skipped", llm: "unset", lastError: "not eligible", updatedAt: new Date().toISOString() }
+      : undefined,
+  });
+}
+
+/** Shared by the GitHub Actions worker. Refuses to package a crawl that is not a simple site. */
+export async function gateCrawledDelivery(
+  order: Order,
+  snapshotDir: string,
+  siteUrl: string,
+  fetchImpl?: typeof fetch,
+): Promise<{ ok: true; report: ComplexityReport } | { ok: false; reason: "not eligible" | "no pages" }> {
+  const report = await scoreCrawledSnapshot(snapshotDir, order);
+  if (!report) return { ok: false, reason: "no pages" };
+  if (report.eligibility !== "ELIGIBLE") {
+    await markOrderNotEligible(order, report, siteUrl, fetchImpl);
+    return { ok: false, reason: "not eligible" };
+  }
+  return { ok: true, report };
 }
 
 async function notifyOps(order: Order, siteUrl: string, llm: string, fetchImpl?: typeof fetch): Promise<void> {
@@ -378,23 +433,35 @@ export async function finishDeliveredOrder(
   const files = input.repoFiles.filter((file) => file.path && !file.path.split("/").includes(".."));
   const zipped = input.zipBytes ?? zipStore(files.map((file) => ({ path: file.path, contents: Buffer.from(file.contents) })));
   const attached = zipped.length > 0 && zipped.length <= ZIP_BYTE_CAP;
-  const alreadySent = Boolean(order.emails?.delivery && order.emails.delivery !== "skipped" && order.emails.delivery !== "failed");
-  if (!alreadySent) {
-    const message = autonomousDeliveryEmail({
-      name: order.name || "",
-      siteUrl: input.siteUrl,
-      fileCount: files.length,
-      llm: input.llm,
-      attached,
-    });
-    const result = await sendEmail({
-      to: order.email,
-      ...message,
-      fetchImpl: input.fetchImpl,
-      attachments: attached ? [{ filename: `${order.id}.zip`, content: zipped.toString("base64") }] : undefined,
-    });
-    if (!result.ok) throw new Error(result.error || "customer email failed");
-    await notifyOps(order, input.siteUrl, input.llm, input.fetchImpl);
+  let emails = order.emails ?? {};
+  if (!packageAlreadySent(emails.package)) {
+    const claimed = await store.compareAndUpdate(order.id, { packageEmail: "claimable" }, { emails: { ...emails, package: "sending" } });
+    if (!claimed) {
+      const current = await store.get(orderId);
+      if (current?.deliveryJob?.state === "delivered") return current;
+      if (!packageAlreadySent(current?.emails?.package)) throw new Error("delivery email is already in progress");
+      emails = current?.emails ?? emails;
+    } else {
+      emails = claimed.emails ?? emails;
+      const message = autonomousDeliveryEmail({
+        name: order.name || "",
+        siteUrl: input.siteUrl,
+        fileCount: files.length,
+        llm: input.llm,
+        attached,
+      });
+      const result = await sendEmail({
+        to: order.email,
+        ...message,
+        fetchImpl: input.fetchImpl,
+        attachments: attached ? [{ filename: `${order.id}.zip`, content: zipped.toString("base64") }] : undefined,
+      });
+      if (!result.ok) {
+        await store.update(order.id, { emails: { ...emails, package: result.skipped ? "skipped" : "failed" } });
+        throw new Error(result.error || "customer email failed");
+      }
+      await notifyOps(order, input.siteUrl, input.llm, input.fetchImpl);
+    }
   }
   if (!process.env.VERCEL && input.packet) {
     try {
@@ -422,7 +489,7 @@ export async function finishDeliveredOrder(
       repoFiles: files,
       note: input.note,
     },
-    emails: { ...order.emails, delivery: updatedAt },
+    emails: { ...emails, package: packageAlreadySent(emails.package) ? emails.package : updatedAt },
     deliveryJob: {
       ...order.deliveryJob,
       state: "delivered",

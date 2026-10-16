@@ -14,7 +14,7 @@ import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { finishDeliveredOrder, llmRebuildDecision, noteExternalFailure } from "../lib/auto-deliver";
+import { finishDeliveredOrder, gateCrawledDelivery, llmRebuildDecision, noteExternalFailure, WAITING_FOR_SITE_URL } from "../lib/auto-deliver";
 import { deliveryDirFor } from "../lib/delivery";
 import { llmOutDirFor, snapshotDirForSite } from "../lib/deliver-run";
 import { getOrderStore } from "../lib/orders";
@@ -70,7 +70,7 @@ async function main() {
     console.error("Order not found. On GitHub Actions, set the same KV_REST_API_URL and KV_REST_API_TOKEN used on Vercel.");
     process.exit(1);
   }
-  if (!order.deliveryJob || order.deliveryJob.state === "delivered") {
+  if (!order.deliveryJob || order.deliveryJob.state === "delivered" || order.deliveryJob.state === "failed" || order.deliveryJob.state === "skipped") {
     console.log("Nothing to deliver.");
     return;
   }
@@ -84,8 +84,8 @@ async function main() {
     await store.update(order.id, {
       deliveryJob: {
         ...order.deliveryJob,
-        state: "skipped",
-        lastError: "waiting for a site URL",
+        state: "queued",
+        lastError: WAITING_FOR_SITE_URL,
         updatedAt: new Date().toISOString(),
       },
     });
@@ -94,17 +94,32 @@ async function main() {
   }
 
   const updatedAt = new Date().toISOString();
-  await store.update(order.id, {
-    deliveryJob: { ...order.deliveryJob, state: "running", runner: "github", updatedAt },
-  });
+  const attempts = order.deliveryJob.state === "dispatched" ? order.deliveryJob.attempts : order.deliveryJob.attempts + 1;
+  const claimed = await store.compareAndUpdate(
+    order.id,
+    { deliveryState: order.deliveryJob.state, attempts: order.deliveryJob.attempts },
+    { deliveryJob: { ...order.deliveryJob, state: "running", attempts, runner: "github", updatedAt, lastError: undefined } },
+  );
+  if (!claimed?.deliveryJob) {
+    console.log("Another worker owns this order.");
+    return;
+  }
 
   const snapshotDir = snapshotDirForSite(site.toString());
   const outDir = deliveryDirFor(order.id);
   const llmDir = path.resolve(llmOutDirFor(order.id));
-  const decision = llmRebuildDecision(simpleSiteScope.maxPages);
 
   try {
     await run(path.join("scripts", "crawl.ts"), [site.toString(), `--max-pages=${simpleSiteScope.maxPages}`, `--out=${snapshotDir}`]);
+    const gate = await gateCrawledDelivery(claimed, snapshotDir, site.toString());
+    if (!gate.ok) {
+      if (gate.reason === "not eligible") {
+        console.log("Site is not eligible. No package was sent.");
+        return;
+      }
+      throw new Error("crawl produced no pages");
+    }
+    const decision = llmRebuildDecision(gate.report.pageCount);
     await run(path.join("scripts", "static-move.ts"), [snapshotDir, `--out=${outDir}`]);
     if (decision.action === "run") {
       await run(path.join("scripts", "rebuild.ts"), [snapshotDir, `--out=${llmDir}`]);
@@ -122,6 +137,7 @@ async function main() {
     await finishDeliveredOrder(order.id, {
       repoFiles: repoFiles.length ? repoFiles : [{ path: "README.md", contents: `Static site for ${site.toString()}\n` }],
       note: "Packaged by the GitHub Actions delivery worker (Playwright crawl and static-move).",
+      score: gate.report,
       siteUrl: site.toString(),
       llm,
       zipBytes: zipStore(packed),
@@ -129,6 +145,10 @@ async function main() {
     console.log(`Delivered ${order.id}`);
   } catch (err) {
     const reason = err instanceof Error ? err.message : "delivery failed";
+    if (reason === "delivery email is already in progress") {
+      console.log(reason);
+      return;
+    }
     console.error(reason);
     await noteExternalFailure(orderId, reason);
     process.exit(1);

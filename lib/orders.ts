@@ -67,7 +67,16 @@ export type OrderEmailLog = {
   confirmation?: string;
   intake?: string;
   delivery?: string;
+  /** Autonomous zip. Separate from the intake delivery note so that note cannot suppress the package. */
+  package?: string;
   refund?: string;
+};
+
+export type OrderExpect = {
+  deliveryState?: DeliveryJobState;
+  attempts?: number;
+  /** Package email is unset, "failed", or "skipped". */
+  packageEmail?: "claimable";
 };
 
 export type Order = {
@@ -122,12 +131,24 @@ export function buildPendingOrder(input: NewOrder): Order {
   };
 }
 
+function expectMatches(order: Order, expect: OrderExpect): boolean {
+  if (expect.deliveryState !== undefined && order.deliveryJob?.state !== expect.deliveryState) return false;
+  if (expect.attempts !== undefined && order.deliveryJob?.attempts !== expect.attempts) return false;
+  if (expect.packageEmail === "claimable") {
+    const value = order.emails?.package;
+    if (value && value !== "failed" && value !== "skipped") return false;
+  }
+  return true;
+}
+
 export type OrderStore = {
   kind: StoreKind;
   durable: boolean;
   label: string;
   create(input: NewOrder): Promise<Order>;
   update(id: string, patch: Partial<Order>): Promise<Order>;
+  /** Writes patch only when the stored order matches expect. Null means lost the claim. */
+  compareAndUpdate(id: string, expect: OrderExpect, patch: Partial<Order>): Promise<Order | null>;
   get(id: string): Promise<Order | null>;
   getByToken(token: string): Promise<Order | null>;
   getBySession(sessionId: string): Promise<Order | null>;
@@ -210,6 +231,18 @@ function createMemoryApi(load: () => Promise<Db>, save: (db: Db) => Promise<void
         const index = db.orders.findIndex((order) => order.id === id);
         const current = db.orders[index];
         if (!current) throw new Error("order not found");
+        const next = applyPatch(current, patch);
+        db.orders[index] = next;
+        await save(db);
+        return next;
+      });
+    },
+    async compareAndUpdate(id, expect, patch) {
+      return lock(async () => {
+        const db = await load();
+        const index = db.orders.findIndex((order) => order.id === id);
+        const current = db.orders[index];
+        if (!current || !expectMatches(current, expect)) return null;
         const next = applyPatch(current, patch);
         db.orders[index] = next;
         await save(db);
@@ -339,6 +372,22 @@ function kvStore(env: Env, plan: { kind: StoreKind; durable: boolean; label: str
         await index(next);
         return next;
       });
+    },
+    async compareAndUpdate(id, expect, patch) {
+      const token = randomBytes(16).toString("hex");
+      const lockKey = `eject:deliver-lock:${id}`;
+      const acquired = await call(["SET", lockKey, token, "NX", "PX", "120000"]);
+      if (acquired !== "OK") return null;
+      try {
+        const current = await readOrder(id);
+        if (!current || !expectMatches(current, expect)) return null;
+        const next = applyPatch(current, patch);
+        await index(next);
+        return next;
+      } finally {
+        const held = await call(["GET", lockKey]);
+        if (held === token) await call(["DEL", lockKey]);
+      }
     },
     get: readOrder,
     async getByToken(token) {
@@ -470,6 +519,31 @@ function postgresStore(env: Env, plan: { kind: StoreKind; durable: boolean; labe
         ]),
       );
       return next;
+    },
+    async compareAndUpdate(id, expect, patch) {
+      return withClient(async (client) => {
+        await client.query("BEGIN");
+        try {
+          const result = await client.query("SELECT payload FROM eject_orders WHERE id = $1 FOR UPDATE", [id]);
+          const current = (result.rows[0] as { payload: Order } | undefined)?.payload;
+          if (!current || !expectMatches(current, expect)) {
+            await client.query("ROLLBACK");
+            return null;
+          }
+          const next = applyPatch(current, patch);
+          await client.query("UPDATE eject_orders SET token = $2, stripe_session_id = $3, payload = $4::jsonb WHERE id = $1", [
+            id,
+            next.token ?? null,
+            next.stripeSessionId ?? null,
+            JSON.stringify(next),
+          ]);
+          await client.query("COMMIT");
+          return next;
+        } catch (err) {
+          await client.query("ROLLBACK");
+          throw err;
+        }
+      });
     },
     get: (id) => read("id", id),
     getByToken: (token) => read("token", token),

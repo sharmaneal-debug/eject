@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -8,11 +8,16 @@ import { GET as deliverCron } from "../app/api/cron/deliver-orders/route";
 import { POST as webhook } from "../app/api/stripe/webhook/route";
 import {
   deliveryRunner,
+  gateCrawledDelivery,
   githubDeliveryConfig,
+  kickDelivery,
   llmRebuildDecision,
   processDeliveryQueue,
   setDeliveryDepsForTests,
+  WAITING_FOR_SITE_URL,
 } from "../lib/auto-deliver";
+import { scoreCrawledSnapshot } from "../lib/crawled-snapshot";
+import { runPaidIntake } from "../lib/fulfillment";
 import { deliveryDirFor } from "../lib/delivery";
 import { getOrderStore, resetOrderStoreForTests } from "../lib/orders";
 import { buildOpsStatus } from "../lib/ops-status";
@@ -530,6 +535,229 @@ test("closed checkout ignores a signed test event and live events stay refused",
     assert.equal(order?.deliveryJob?.state, "queued");
   } finally {
     await rm(dir, { recursive: true, force: true });
+    restoreEnv();
+  }
+});
+
+test("a missing site URL stays queued and intake resumes delivery", async () => {
+  const dir = await useFileStore();
+  const written: string[] = [];
+  const sent: Array<{ to: string[]; subject: string; attachments?: Array<{ filename: string }> }> = [];
+  try {
+    const store = getOrderStore();
+    const waiting = await store.create({
+      tier: "automated",
+      testMode: "stripe_test",
+      amountCents: 9900,
+      currency: "usd",
+      email: "buyer@example.com",
+    });
+    const queuedAt = new Date().toISOString();
+    await store.update(waiting.id, {
+      status: "paid",
+      token: "tok_waiting_site",
+      emails: { delivery: "2020-01-01T00:00:00.000Z" },
+      deliveryJob: { state: "queued", attempts: 0, enqueuedAt: queuedAt, updatedAt: queuedAt, llm: "unset" },
+    });
+    process.env.RESEND_API_KEY = "re_test";
+    process.env.RESEND_FROM = "Eject <hi@example.com>";
+    process.env.LEAD_NOTIFICATION_TO = "ops@example.com";
+    delete process.env.LLM_API_KEY;
+    delete process.env.ANTHROPIC_API_KEY;
+    setDeliveryDepsForTests({
+      now: () => 1_700_000_000_000,
+      lookupFn: async () => ["1.1.1.1"],
+      fetchImpl: siteFetch(sent),
+    });
+    const held = await processDeliveryQueue();
+    assert.equal(held.results[0]?.state, "queued");
+    assert.equal(held.results[0]?.error, WAITING_FOR_SITE_URL);
+    const parked = await store.get(waiting.id);
+    assert.equal(parked?.deliveryJob?.state, "queued");
+    assert.equal(parked?.deliveryJob?.attempts, 0);
+    assert.equal((await processDeliveryQueue()).results.length, 0);
+
+    const intake = await runPaidIntake("tok_waiting_site", "https://example.com/studio", {
+      lookupFn: async () => ["1.1.1.1"],
+      fetchImpl: siteFetch(sent),
+    });
+    assert.equal(intake.ok, true);
+    const resumed = await store.get(waiting.id);
+    assert.equal(resumed?.deliveryJob?.state, "queued");
+    assert.equal(resumed?.deliveryJob?.lastError, undefined);
+    assert.match(resumed?.siteUrl ?? "", /example\.com/);
+
+    const run = await processDeliveryQueue();
+    assert.equal(run.results[0]?.state, "delivered");
+    const customer = sent.find((mail) => mail.to[0] === "buyer@example.com" && mail.attachments?.length);
+    assert.match(customer?.attachments?.[0]?.filename ?? "", /\.zip$/);
+    written.push(deliveryDirFor(waiting.id));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+    for (const folder of written) await rm(folder, { recursive: true, force: true });
+    restoreEnv();
+  }
+});
+
+test("parallel kickDelivery dispatches GitHub once", async () => {
+  const dir = await useFileStore();
+  let dispatches = 0;
+  try {
+    process.env.VERCEL = "1";
+    process.env.EJECT_GITHUB_TOKEN = "dispatch-test-token";
+    process.env.GITHUB_REPOSITORY = "acme/eject";
+    const store = getOrderStore();
+    const created = await store.create({
+      tier: "automated",
+      testMode: "stripe_test",
+      amountCents: 9900,
+      currency: "usd",
+      email: "buyer@example.com",
+      siteUrl: "https://example.com",
+    });
+    const now = new Date().toISOString();
+    const order = await store.update(created.id, {
+      status: "paid",
+      deliveryJob: { state: "queued", attempts: 0, enqueuedAt: now, updatedAt: now, llm: "unset" },
+    });
+    setDeliveryDepsForTests({
+      fetchImpl: async (input) => {
+        if (!String(input).includes("api.github.com")) return new Response("no", { status: 500 });
+        dispatches += 1;
+        await new Promise((resolve) => setTimeout(resolve, 40));
+        return new Response(null, { status: 204 });
+      },
+    });
+    await Promise.all([kickDelivery(order), kickDelivery(order)]);
+    assert.equal(dispatches, 1);
+    const saved = await store.get(order.id);
+    assert.equal(saved?.deliveryJob?.state, "dispatched");
+    assert.equal(saved?.deliveryJob?.attempts, 1);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+    restoreEnv();
+  }
+});
+
+test("KV compareAndUpdate lets one caller claim the order", async () => {
+  const memory = new Map<string, string>();
+  const sets = new Map<string, Set<string>>();
+  const original = globalThis.fetch;
+  globalThis.fetch = async (input, init) => {
+    const url = String(input);
+    if (!url.startsWith("https://kv.example.test")) return original(input, init);
+    const command = JSON.parse(String(init?.body ?? "[]")) as string[];
+    const [op, key, arg] = command;
+    if (op === "SET") {
+      if (command.includes("NX") && memory.has(key)) return Response.json({ result: null });
+      memory.set(key, arg ?? "");
+      return Response.json({ result: "OK" });
+    }
+    if (op === "GET") return Response.json({ result: memory.has(key) ? memory.get(key) : null });
+    if (op === "DEL") {
+      memory.delete(key);
+      return Response.json({ result: 1 });
+    }
+    if (op === "SADD") {
+      const set = sets.get(key) ?? new Set<string>();
+      set.add(arg ?? "");
+      sets.set(key, set);
+      return Response.json({ result: 1 });
+    }
+    if (op === "SMEMBERS") return Response.json({ result: [...(sets.get(key) ?? [])] });
+    return Response.json({ result: null });
+  };
+  try {
+    delete process.env.ORDERS_STORE;
+    delete process.env.VERCEL;
+    process.env.KV_REST_API_URL = "https://kv.example.test";
+    process.env.KV_REST_API_TOKEN = "token";
+    resetOrderStoreForTests();
+    const store = getOrderStore();
+    const created = await store.create({
+      tier: "automated",
+      testMode: "stripe_test",
+      amountCents: 9900,
+      currency: "usd",
+      email: "buyer@example.com",
+      siteUrl: "https://example.com",
+    });
+    const now = new Date().toISOString();
+    const job = { state: "queued" as const, attempts: 0, enqueuedAt: now, updatedAt: now, llm: "unset" as const };
+    await store.update(created.id, { status: "paid", deliveryJob: job });
+    memory.set(`eject:deliver-lock:${created.id}`, "held");
+    const blocked = await store.compareAndUpdate(created.id, { deliveryState: "queued", attempts: 0 }, {
+      deliveryJob: { ...job, state: "dispatched", attempts: 1, updatedAt: now },
+    });
+    assert.equal(blocked, null);
+    assert.equal((await store.get(created.id))?.deliveryJob?.state, "queued");
+    memory.delete(`eject:deliver-lock:${created.id}`);
+    const [first, second] = await Promise.all([
+      store.compareAndUpdate(created.id, { deliveryState: "queued", attempts: 0 }, {
+        deliveryJob: { ...job, state: "dispatched", attempts: 1, runner: "github", updatedAt: now },
+      }),
+      store.compareAndUpdate(created.id, { deliveryState: "queued", attempts: 0 }, {
+        deliveryJob: { ...job, state: "dispatched", attempts: 1, runner: "github", updatedAt: now },
+      }),
+    ]);
+    assert.equal([first, second].filter(Boolean).length, 1);
+    assert.equal((await store.get(created.id))?.deliveryJob?.attempts, 1);
+    assert.equal((await store.get(created.id))?.deliveryJob?.state, "dispatched");
+  } finally {
+    globalThis.fetch = original;
+    restoreEnv();
+  }
+});
+
+test("a shopify crawl is not packaged", async () => {
+  const dir = await useFileStore();
+  const snapshot = await mkdtemp(path.join(tmpdir(), "eject-snap-"));
+  const sent: Array<{ to: string[]; subject: string; attachments?: Array<{ filename?: string }> }> = [];
+  try {
+    await mkdir(path.join(snapshot, "pages"), { recursive: true });
+    await writeFile(
+      path.join(snapshot, "pages", "_root.json"),
+      JSON.stringify({
+        url: "https://shop.example",
+        html: "<html><script src='https://cdn.shopify.com/shopify.js'></script><a href='/cart'>Cart</a></html>",
+      }),
+    );
+    const store = getOrderStore();
+    const created = await store.create({
+      tier: "automated",
+      testMode: "stripe_test",
+      amountCents: 9900,
+      currency: "usd",
+      email: "buyer@example.com",
+      siteUrl: "https://shop.example",
+    });
+    const now = new Date().toISOString();
+    const order = await store.update(created.id, {
+      status: "paid",
+      deliveryJob: { state: "running", attempts: 1, enqueuedAt: now, updatedAt: now, llm: "unset", runner: "github" },
+    });
+    const plain = await scoreCrawledSnapshot(snapshot, { ...order, siteUrl: "https://shop.example" });
+    assert.equal(plain?.eligibility, "NOT_ELIGIBLE");
+    process.env.RESEND_API_KEY = "re_test";
+    process.env.RESEND_FROM = "Eject <hi@example.com>";
+    process.env.LEAD_NOTIFICATION_TO = "ops@example.com";
+    const gate = await gateCrawledDelivery(order, snapshot, "https://shop.example", async (input, init) => {
+      if (String(input).includes("api.resend.com")) {
+        sent.push(JSON.parse(String(init?.body ?? "{}")) as (typeof sent)[number]);
+        return new Response(JSON.stringify({ id: "re_test" }), { status: 200, headers: { "content-type": "application/json" } });
+      }
+      return new Response("no", { status: 500 });
+    });
+    assert.equal(gate.ok, false);
+    if (!gate.ok) assert.equal(gate.reason, "not eligible");
+    const saved = await store.get(order.id);
+    assert.equal(saved?.status, "refund_recommended");
+    assert.equal(saved?.deliveryJob?.state, "skipped");
+    assert.equal(saved?.deliveryJob?.lastError, "not eligible");
+    assert.equal(sent.some((mail) => mail.attachments?.length), false);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+    await rm(snapshot, { recursive: true, force: true });
     restoreEnv();
   }
 });

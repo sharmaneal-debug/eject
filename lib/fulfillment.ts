@@ -4,7 +4,7 @@ import { crawlSite, type CrawlDeps } from "./http-crawl";
 import { getOrderStore, newOrderToken, type Order } from "./orders";
 import { SsrfError } from "./ssrf";
 import { getStripe, liveStripeAllowed, normalizeTier, tierConfig, type Tier } from "./stripe";
-import { enqueuePaidOrder, kickDelivery } from "./auto-deliver";
+import { enqueuePaidOrder, kickDelivery, WAITING_FOR_SITE_URL } from "./auto-deliver";
 import { isMockSessionId } from "./checkout";
 import { conciergeKickoffEmail, deliveryEmail, expressKickoffEmail, intakeReceivedEmail, refundFollowupEmail, sendEmail, sendPaidLeadNotification } from "./email";
 import { logLead } from "./leads";
@@ -206,11 +206,31 @@ export async function runPaidIntake(
     }
   }
 
+  const now = new Date().toISOString();
+  const resumeDelivery = order.tier === "automated" && order.deliveryJob && order.deliveryJob.state !== "delivered" && order.deliveryJob.state !== "failed";
+  const deliveryJob = !resumeDelivery || !order.deliveryJob
+    ? order.deliveryJob
+    : eligible
+      ? {
+          ...order.deliveryJob,
+          state: "queued" as const,
+          lastError: undefined,
+          nextAttemptAt: undefined,
+          attempts: order.deliveryJob.lastError === WAITING_FOR_SITE_URL ? 0 : order.deliveryJob.attempts,
+          updatedAt: now,
+        }
+      : {
+          ...order.deliveryJob,
+          state: "skipped" as const,
+          lastError: "not eligible",
+          updatedAt: now,
+        };
   const updated = await store.update(order.id, {
     siteUrl: snapshot.finalUrl,
     score: report,
     delivery,
-    status: eligible ? (repoDir ? "delivered" : "queued") : "refund_recommended",
+    status: resumeDelivery ? (eligible ? "queued" : "refund_recommended") : eligible ? (repoDir ? "delivered" : "queued") : "refund_recommended",
+    deliveryJob,
   });
   await sendOrderMail(updated, "intake", intakeReceivedEmail({
     name: updated.name || "",
@@ -229,6 +249,10 @@ export async function runPaidIntake(
       name: updated.name || "",
       siteUrl: snapshot.finalUrl,
     }));
+  }
+  if (eligible && updated.deliveryJob?.state === "queued") {
+    const kicked = await kickDelivery(updated);
+    return { ok: true, order: kicked };
   }
   return { ok: true, order: updated };
 }
