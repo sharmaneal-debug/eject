@@ -64,7 +64,7 @@ pnpm deliver <orderId>                   # static HTML site from the crawl (no m
 - Buy now links go to `/early-access` (free scan, savings calculator, and a short list form).
 - The form stores the lead. An email is sent only when `RESEND_API_KEY` and `RESEND_FROM` are both set. Otherwise the lead is stored only.
 - `/checkout` and `POST /api/checkout` redirect to `/early-access`. They do not create a Stripe session or a mock-paid order, even if a test key or `EJECT_STRIPE_MODE=mock` is set.
-- Live keys (`sk_live_`, `rk_live_`) and live webhook events are refused even when the flag is on.
+- Live keys (`sk_live_`, `rk_live_`) and live webhook events are refused unless `EJECT_STRIPE_MODE=live` and `CHECKOUT_OPEN=true` are both set. Test keys keep working without those switches.
 
 To exercise test checkout locally or on a preview:
 
@@ -72,7 +72,7 @@ To exercise test checkout locally or on a preview:
 CHECKOUT_OPEN=true EJECT_STRIPE_MODE=mock pnpm dev
 ```
 
-Or set `CHECKOUT_OPEN=true` with a test secret (`sk_test_` or `rk_test_` only). Do not put a live key in the environment.
+Or set `CHECKOUT_OPEN=true` with a test secret (`sk_test_` or `rk_test_`). A live secret is accepted only when `EJECT_STRIPE_MODE=live` as well. Leave both unset in production until go-live (`docs/GO-LIVE.md`).
 
 ## Pricing
 
@@ -83,7 +83,7 @@ Names and dollar amounts live in `lib/site.ts`. Checkout, kickoff email, deliver
 | Automated | $99 once | Automated migration of a simple site. You review before DNS. |
 | Custom | No public price | We handle the migration for you, step by step. About 10 pages, 1 form, 2 revision rounds, a 30-minute handoff. |
 
-After either offer, the customer edits by chatting with their own AI. An editing guide and agent instructions are included. Simple sites only. There is no monthly editor and no preview before payment. Stripe stays in test mode.
+After either offer, the customer edits by chatting with their own AI. An editing guide and agent instructions are included. Simple sites only. There is no monthly editor and no preview before payment. Stripe stays in test mode until `EJECT_STRIPE_MODE=live` and `CHECKOUT_OPEN=true`.
 
 ## How to run end to end locally in test mode
 
@@ -107,7 +107,7 @@ Renewal watch is `/renewal-watch`. Unsubscribe is `/renewal-watch/unsubscribe`. 
 To use Stripe's own test checkout instead of the mock:
 
 ```sh
-# test secret only — sk_test_… — never sk_live_
+# test secret — sk_test_… — a live secret also needs EJECT_STRIPE_MODE=live and CHECKOUT_OPEN=true
 pnpm setup-stripe
 ```
 
@@ -118,7 +118,9 @@ Put the printed names in `.env.local` (gitignored). Required names, values stay 
 - `STRIPE_PRICE_AUTOMATED` (legacy fallback: `STRIPE_PRICE_EXPRESS`)
 - `STRIPE_PRICE_DONE_FOR_YOU` (legacy fallback: `STRIPE_PRICE_CONCIERGE`)
 
-Without those price ids, test checkout still starts: the session uses inline `price_data` at the offer amount. Forward webhooks with the Stripe CLI to `POST /api/stripe/webhook`. Live-mode events are rejected. The success page also reconciles the Checkout Session, so a local run works if the webhook is not forwarded.
+Without those price ids, checkout still starts: the session uses inline `price_data` at the offer amount. Forward webhooks with the Stripe CLI to `POST /api/stripe/webhook`. Live-mode events are rejected unless `EJECT_STRIPE_MODE=live` and `CHECKOUT_OPEN=true`. The success page also reconciles the Checkout Session, so a local run works if the webhook is not forwarded.
+
+A paid automated order is queued for delivery. `GET /api/cron/deliver-orders` with `Authorization: Bearer $CRON_SECRET` processes the queue. On Vercel that route dispatches `.github/workflows/deliver-order.yml` (Playwright crawl and static-move do not fit a function). Locally it crawls over HTTP, writes a static package, and emails it when `RESEND_FROM` is set. The model runs only when `LLM_*` or `ANTHROPIC_API_KEY` is set and the estimate is under `EJECT_REBUILD_SPEND_CAP_USD`. `/ops` shows the queue and, on Vercel with no KV/Upstash store, a warning.
 
 `EJECT_STRIPE_MODE=mock` skips Stripe entirely.
 
@@ -132,7 +134,7 @@ Orders, marketing leads, and renewal-watch subscriptions use the same backend. `
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Vercel KV / Upstash. Alternate pair: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`. |
 | `BLOB_READ_WRITE_TOKEN` | Private JSON documents under `eject/`. |
 | `POSTGRES_URL` or `DATABASE_URL` | Tables created on first use. |
-| `CRON_SECRET` | Authorizes the renewal reminder cron. |
+| `CRON_SECRET` | Authorizes the renewal reminder cron and the delivery cron. |
 
 On Vercel, the file store falls back to `/tmp` and is not durable. Set KV, Blob, or Postgres before real orders or renewal reminders.
 

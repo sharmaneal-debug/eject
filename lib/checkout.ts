@@ -1,5 +1,6 @@
 import { checkoutOpen } from "./checkout-gate";
-import { getStripe, priceIdForTier, stripeConfigError, tierConfig, type Tier } from "./stripe";
+import { getStripe, liveStripeAllowed, priceIdForTier, stripeConfigError, tierConfig, type Tier } from "./stripe";
+import type { TestMode } from "./orders";
 import { getOrderStore } from "./orders";
 import { logLead } from "./leads";
 import type Stripe from "stripe";
@@ -10,6 +11,12 @@ export type CheckoutResult =
 
 export function isMockStripe(): boolean {
   return process.env.EJECT_STRIPE_MODE === "mock";
+}
+
+export function checkoutTestMode(): TestMode {
+  if (isMockStripe()) return "mock";
+  if (liveStripeAllowed()) return "stripe_live";
+  return "stripe_test";
 }
 
 export async function createCheckoutSession(input: {
@@ -39,7 +46,7 @@ export async function createCheckoutSession(input: {
     email: input.email,
     name: input.name,
     channel,
-    testMode: isMockStripe() ? "mock" : "stripe_test",
+    testMode: checkoutTestMode(),
     amountCents: cfg.price * 100,
     currency: "usd",
   });
@@ -61,6 +68,7 @@ export async function createCheckoutSession(input: {
   const stripe = getStripe();
   if (!stripe) return { kind: "unavailable", reason: "Stripe test mode is not configured." };
 
+  const live = liveStripeAllowed();
   const priceId = priceIdForTier(input.tier);
   const lineItem: Stripe.Checkout.SessionCreateParams.LineItem = priceId
     ? { price: priceId, quantity: 1 }
@@ -71,7 +79,7 @@ export async function createCheckoutSession(input: {
           unit_amount: cfg.price * 100,
           product_data: {
             name: `Eject ${cfg.name}`,
-            description: "Simple-site migration. Test mode only.",
+            description: live ? "Simple-site migration." : "Simple-site migration. Test mode only.",
           },
         },
       };
@@ -87,8 +95,9 @@ export async function createCheckoutSession(input: {
       billing_address_collection: "auto",
       custom_text: {
         submit: {
-          message:
-            "Test mode. After payment you submit the site URL. We score simple marketing sites only. Stores and heavy CMS sites are refunded or referred out. A preview link is not created automatically.",
+          message: live
+            ? "After payment you submit the site URL. We score simple marketing sites only. Stores and heavy CMS sites are refunded or referred out. A preview link is not created automatically."
+            : "Test mode. After payment you submit the site URL. We score simple marketing sites only. Stores and heavy CMS sites are refunded or referred out. A preview link is not created automatically.",
         },
       },
       metadata: {

@@ -1,0 +1,53 @@
+# Paid-order delivery. Dispatched by the Vercel webhook or
+# /api/cron/deliver-orders. Playwright does not fit a Vercel function.
+name: Deliver order
+
+on:
+  workflow_dispatch:
+    inputs:
+      order_id:
+        description: Order id (ord_…)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: corepack enable && corepack prepare pnpm@10.33.4 --activate && pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Crawl, static move, and email
+        run: pnpm exec tsx scripts/process-delivery.ts
+        env:
+          ORDER_ID: ${{ inputs.order_id }}
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
+          LEAD_NOTIFICATION_TO: ${{ secrets.LEAD_NOTIFICATION_TO }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EJECT_REBUILD_SPEND_CAP_USD: ${{ secrets.EJECT_REBUILD_SPEND_CAP_USD }}
+      - name: Keep the package if email could not attach it
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eject-delivery
+          path: out/orders
+          if-no-files-found: ignore
+          retention-days: 7

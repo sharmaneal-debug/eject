@@ -28,6 +28,22 @@ export function resolveStorePlan(env: Env = process.env): { kind: StoreKind; dur
   return { kind: "file", durable: true, label: "file" };
 }
 
+/** Shown on /ops when this process is on Vercel and orders would not survive a restart. */
+export function opsStoreWarning(env: Env = process.env): string | null {
+  if (!env.VERCEL) return null;
+  const plan = resolveStorePlan(env);
+  const kvReady = Boolean(
+    (env.KV_REST_API_URL && env.KV_REST_API_TOKEN) || (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN),
+  );
+  if (plan.kind === "kv" && !kvReady) {
+    return "KV order store is selected but KV_REST_API_URL and KV_REST_API_TOKEN (or UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN) are missing.";
+  }
+  if (!plan.durable) {
+    return "No durable order store is set on Vercel. Orders would be written to /tmp and lost. Set KV_REST_API_URL and KV_REST_API_TOKEN, or UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.";
+  }
+  return null;
+}
+
 export function fileStoreDir(env: Env = process.env): string {
   if (env.DURABLE_STORE_DIR) return env.DURABLE_STORE_DIR;
   if (env.ORDERS_DIR) return env.ORDERS_DIR;

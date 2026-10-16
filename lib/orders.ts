@@ -3,6 +3,7 @@ import path from "node:path";
 import { randomBytes } from "node:crypto";
 import type { ComplexityReport } from "./complexity";
 import type { Tier } from "./stripe";
+import { liveStripeAllowed } from "./stripe";
 import { fileStoreDir, resolveStorePlan, type StoreKind } from "./storage/plan";
 
 export type { StoreKind } from "./storage/plan";
@@ -23,7 +24,23 @@ export { resolveStorePlan } from "./storage/plan";
  */
 
 export type OrderStatus = "pending" | "paid" | "queued" | "delivered" | "refund_recommended";
-export type TestMode = "mock" | "stripe_test";
+export type TestMode = "mock" | "stripe_test" | "stripe_live";
+export type DeliveryJobState = "queued" | "running" | "dispatched" | "delivered" | "failed" | "skipped";
+export type DeliveryLlm = "unset" | "ran" | "over_cap" | "unpriced";
+
+export type DeliveryJob = {
+  state: DeliveryJobState;
+  attempts: number;
+  enqueuedAt: string;
+  updatedAt: string;
+  nextAttemptAt?: string;
+  lastError?: string;
+  runner?: "inprocess" | "github";
+  dispatchedAt?: string;
+  deliveredAt?: string;
+  llm: DeliveryLlm;
+  alertedAt?: string;
+};
 
 export type DeliveryPacket = {
   mode: "manual" | "queued";
@@ -67,8 +84,10 @@ export type Order = {
   stripeSessionId?: string;
   amountCents: number;
   currency: string;
-  livemode: false;
+  /** True only after a live Stripe event was accepted. Pending orders stay false. */
+  livemode: boolean;
   testMode: TestMode;
+  deliveryJob?: DeliveryJob;
   createdAt: string;
   paidAt?: string;
   kickoffAttemptedAt?: string;
@@ -141,12 +160,18 @@ function emptyDb(): Db {
   return { orders: [], leads: [] };
 }
 
+function nextLivemode(order: Order, patch: Partial<Order>): boolean {
+  if (patch.livemode === true) return order.livemode === true || liveStripeAllowed();
+  if (patch.livemode === false) return false;
+  return order.livemode === true;
+}
+
 function applyPatch(order: Order, patch: Partial<Order>): Order {
   return {
     ...order,
     ...patch,
     id: order.id,
-    livemode: false,
+    livemode: nextLivemode(order, patch),
     createdAt: order.createdAt,
   };
 }

@@ -3,7 +3,8 @@ import { analyzeSnapshot } from "./complexity";
 import { crawlSite, type CrawlDeps } from "./http-crawl";
 import { getOrderStore, newOrderToken, type Order } from "./orders";
 import { SsrfError } from "./ssrf";
-import { getStripe, normalizeTier, tierConfig, type Tier } from "./stripe";
+import { getStripe, liveStripeAllowed, normalizeTier, tierConfig, type Tier } from "./stripe";
+import { enqueuePaidOrder, kickDelivery } from "./auto-deliver";
 import { isMockSessionId } from "./checkout";
 import { conciergeKickoffEmail, deliveryEmail, expressKickoffEmail, intakeReceivedEmail, refundFollowupEmail, sendEmail, sendPaidLeadNotification } from "./email";
 import { logLead } from "./leads";
@@ -29,7 +30,8 @@ type PaidSession = {
 };
 
 export async function markOrderPaidFromSession(session: PaidSession): Promise<Order> {
-  if (session.livemode) {
+  const live = session.livemode === true;
+  if (live && !liveStripeAllowed()) {
     throw new Error("live mode payments are refused");
   }
   if (session.payment_status !== "paid" && session.payment_status !== "no_payment_required") {
@@ -50,7 +52,7 @@ export async function markOrderPaidFromSession(session: PaidSession): Promise<Or
       siteUrl: session.metadata?.siteUrl || undefined,
       email: email || undefined,
       name: name || undefined,
-      testMode: "stripe_test",
+      testMode: live ? "stripe_live" : "stripe_test",
       amountCents,
       currency: session.currency || "usd",
     });
@@ -59,7 +61,8 @@ export async function markOrderPaidFromSession(session: PaidSession): Promise<Or
       paidAt: new Date().toISOString(),
       token: newOrderToken(),
       stripeSessionId: session.id,
-      livemode: false,
+      livemode: live,
+      testMode: live ? "stripe_live" : created.testMode,
     });
   }
 
@@ -74,7 +77,8 @@ export async function markOrderPaidFromSession(session: PaidSession): Promise<Or
       siteUrl: existing.siteUrl || session.metadata?.siteUrl || undefined,
       amountCents,
       currency: session.currency || existing.currency,
-      livemode: false,
+      livemode: live,
+      testMode: live ? "stripe_live" : existing.testMode,
     });
   }
 
@@ -154,9 +158,12 @@ export async function reconcileSession(sessionId: string, origin = publicOrigin(
   const stripe = getStripe();
   if (!stripe) return null;
   const session = await stripe.checkout.sessions.retrieve(sessionId);
-  if (session.livemode || session.payment_status !== "paid") return null;
+  if ((session.livemode && !liveStripeAllowed()) || session.payment_status !== "paid") return null;
   const order = await markOrderPaidFromSession(session);
-  return sendKickoffOnce(order, origin);
+  const kicked = await sendKickoffOnce(order, origin);
+  const queued = await enqueuePaidOrder(kicked.id);
+  if (queued) await kickDelivery(queued);
+  return (await getOrderStore().get(kicked.id)) ?? kicked;
 }
 
 export async function runPaidIntake(
