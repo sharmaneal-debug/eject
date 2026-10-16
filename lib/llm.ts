@@ -20,6 +20,13 @@
  *   ANTHROPIC_API_KEY=…                            (or LLM_API_KEY)
  *   ANTHROPIC_BASE_URL=…                           (optional; DeepSeek anthropic endpoint)
  *   ANTHROPIC_MODEL=… or LLM_MODEL=…
+ *   The Anthropic client never reads LLM_BASE_URL. Unset ANTHROPIC_BASE_URL
+ *   uses the Anthropic SDK default host.
+ *
+ * Screenshots:
+ *   LLM_VISION=1|0                                 (optional override)
+ *   Unset: Claude and slugs with a `vision` token get images. DeepSeek Flash,
+ *   Together Flash, and Qwen3 Coder stay text-only and rebuild from the DOM.
  *
  * Auto-detect when LLM_PROVIDER is unset:
  *   LLM_API_KEY + LLM_BASE_URL  → openai-compat
@@ -76,6 +83,11 @@ export type LlmConfig = {
   apiKey: string;
   baseUrl?: string;
   model: string;
+  /**
+   * Attach crawler screenshots. Set by `resolveLlmConfig` from `LLM_VISION`
+   * or the vision allowlist. Callers that omit it use the allowlist.
+   */
+  vision?: boolean;
 };
 
 /** USD per million tokens. Confirm on the provider page before billing. */
@@ -102,6 +114,40 @@ export const PRICING_USD_PER_MTOK: Record<string, { in: number; out: number }> =
 
 export const DEFAULT_OPENAI_COMPAT_MODEL = "deepseek-flash";
 export const DEFAULT_OPENAI_COMPAT_BASE_URL = "https://api.deepseek.com";
+
+/**
+ * Vision-capable slugs. Text-only defaults (DeepSeek Flash, Together
+ * `DeepSeek-V4-Flash-0731`, Qwen3 Coder) are absent on purpose.
+ * `LLM_VISION=1` opts any other model in; `LLM_VISION=0` forces DOM-only.
+ */
+const VISION_MODEL_RE = [
+  /(?:^|[/])claude-/i,
+  /(?:^|[/._-])vision(?:$|[/._-])/i,
+];
+
+/** True when the slug is on the vision allowlist. Does not read `LLM_VISION`. */
+export function llmModelAcceptsVision(model: string): boolean {
+  const slug = model.trim();
+  if (!slug) return false;
+  return VISION_MODEL_RE.some((re) => re.test(slug));
+}
+
+/**
+ * `LLM_VISION=1|true|yes|on` forces screenshots.
+ * `LLM_VISION=0|false|no|off` (and any other non-empty value) forces DOM-only.
+ * Unset uses `llmModelAcceptsVision`.
+ */
+export function resolveLlmVision(model: string, flag: string | undefined = process.env.LLM_VISION): boolean {
+  const raw = (flag ?? "").trim().toLowerCase();
+  if (!raw) return llmModelAcceptsVision(model);
+  if (raw === "1" || raw === "true" || raw === "yes" || raw === "on") return true;
+  return false;
+}
+
+export function llmConfigUsesVision(config: Pick<LlmConfig, "model" | "vision">): boolean {
+  if (typeof config.vision === "boolean") return config.vision;
+  return llmModelAcceptsVision(config.model);
+}
 
 export function costOf(model: string, inTok: number, outTok: number): number {
   const p = PRICING_USD_PER_MTOK[model];
@@ -144,7 +190,7 @@ export function resolveLlmConfig(opts: { modelFlag?: string; dryRun?: boolean } 
     }
     const baseUrl = (llmBase || DEFAULT_OPENAI_COMPAT_BASE_URL).replace(/\/$/, "");
     const model = modelFromFlag || llmModel || DEFAULT_OPENAI_COMPAT_MODEL;
-    return { provider: "openai-compat", apiKey, baseUrl, model };
+    return { provider: "openai-compat", apiKey, baseUrl, model, vision: resolveLlmVision(model) };
   }
 
   const wantAnthropic =
@@ -157,12 +203,15 @@ export function resolveLlmConfig(opts: { modelFlag?: string; dryRun?: boolean } 
         "anthropic provider needs ANTHROPIC_API_KEY (or set LLM_PROVIDER=openai-compat with LLM_API_KEY). See scripts/README.md.",
       );
     }
-    const model = modelFromFlag || llmModel || resolveAnthropicModel(undefined);
+    const model = modelFromFlag || llmModel || resolveAnthropicModel(undefined) || DEFAULT_ANTHROPIC_MODEL;
     return {
       provider: "anthropic",
       apiKey,
-      baseUrl: anthropicBase || llmBase || undefined,
-      model: model || DEFAULT_ANTHROPIC_MODEL,
+      // Chat Completions LLM_BASE_URL is a different host (api.deepseek.com vs
+      // api.deepseek.com/anthropic). Unset uses the Anthropic SDK default.
+      ...(anthropicBase ? { baseUrl: anthropicBase.replace(/\/$/, "") } : {}),
+      model,
+      vision: resolveLlmVision(model),
     };
   }
 
@@ -367,19 +416,34 @@ async function chatOpenAICompat(
   return parseOpenAICompatChat(data);
 }
 
+/** Drop screenshot parts for text-only models so the host is not sent image_url. */
+export function messagesForVision(config: Pick<LlmConfig, "model" | "vision">, messages: LlmMessage[]): LlmMessage[] {
+  if (llmConfigUsesVision(config)) return messages;
+  return messages.map((message) => {
+    if (typeof message.content === "string") return message;
+    const text = message.content.filter((part) => part.type === "text");
+    if (text.length === message.content.length) return message;
+    return {
+      ...message,
+      content: text.length > 0 ? text : "Rebuild from the DOM. No images are attached.",
+    };
+  });
+}
+
 /** One chat turn (system + messages). Retries stay in the caller. */
 export async function llmChat(
   config: LlmConfig,
   opts: { system: string; messages: LlmMessage[]; maxTokens: number },
 ): Promise<LlmChatResult> {
+  const messages = messagesForVision(config, opts.messages);
   if (config.provider === "openai-compat") {
-    return chatOpenAICompat(config, opts.system, opts.messages, opts.maxTokens);
+    return chatOpenAICompat(config, opts.system, messages, opts.maxTokens);
   }
-  return chatAnthropic(config, opts.system, opts.messages, opts.maxTokens);
+  return chatAnthropic(config, opts.system, messages, opts.maxTokens);
 }
 
 /** Human-readable provider line for logs (no secrets). */
 export function describeLlmConfig(config: LlmConfig): string {
   const host = config.baseUrl ? config.baseUrl.replace(/^https?:\/\//, "").split("/")[0] : "default";
-  return `${config.provider} model=${config.model} host=${host}`;
+  return `${config.provider} model=${config.model} host=${host} vision=${llmConfigUsesVision(config) ? "on" : "off"}`;
 }

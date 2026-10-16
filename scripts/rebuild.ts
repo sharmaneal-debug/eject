@@ -30,6 +30,7 @@ import {
   costOf,
   describeLlmConfig,
   llmChat,
+  llmConfigUsesVision,
   outputBudgetError,
   resolveLlmConfig,
   type LlmConfig,
@@ -206,15 +207,21 @@ async function rebuildPage(
     ? `Design tokens seen on the site: colors ${tokens.colors.slice(0, 8).join(", ")}; fonts ${tokens.fontFamilies.slice(0, 3).join(" | ")}.`
     : "";
   const dom = rewriteAssets(page.clean && page.clean.length > 200 ? page.clean.slice(0, 80_000) : stripHtmlForPrompt(page.html), ctx);
-  const images = await loadPageImages(ctx, page);
+  const useVision = llmConfigUsesVision(config);
+  const images = useVision ? await loadPageImages(ctx, page) : [];
   const system = SYSTEM_PROMPT.replace("FONTS", ctx.fontFamilies.length ? ctx.fontFamilies.join(", ") : "(none captured; use Tailwind font-sans/font-serif)");
+  const shotNote = images.length
+    ? `Screenshots attached: ${page.shots?.desktop.slice(0, 3).length ?? 0} desktop slice(s) (1440px wide, top to bottom, 1400px each), then ${page.shots?.mobile.slice(0, 1).length ?? 0} mobile view (390px).`
+    : useVision
+      ? "No screenshots available."
+      : "Screenshots omitted; this model is text-only. Rebuild from the DOM.";
   const userText = `Rebuild this page.
 
 Route: ${page.path === "/" ? "/" : page.path}
 Title: ${page.title}
 Description: ${page.description}
 ${tokenSummary}
-${images.length ? `Screenshots attached: ${page.shots?.desktop.slice(0, 3).length ?? 0} desktop slice(s) (1440px wide, top to bottom, 1400px each), then ${page.shots?.mobile.slice(0, 1).length ?? 0} mobile view (390px).` : "No screenshots available."}
+${shotNote}
 
 Compact DOM of the rendered page (desktop 1440px):
 
