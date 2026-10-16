@@ -54,7 +54,7 @@ pnpm rebuild data/snapshots/<host>/      # Claude → Next.js project in out/<ho
 pnpm site-audit https://prospect.com     # platform + Lighthouse + cost estimate
 pnpm editor ./out/<host>/                # optional CLI editor (needs ANTHROPIC_API_KEY)
 pnpm orders                              # list orders, scores, cost-to-serve
-pnpm deliver <orderId>                   # write the customer repo (no model call)
+pnpm deliver <orderId>                   # static HTML site from the crawl (no model)
 ```
 
 ## Checkout gate
@@ -99,8 +99,8 @@ CHECKOUT_OPEN=true EJECT_STRIPE_MODE=mock pnpm dev
 2. The mock page posts to `/api/checkout/mock-complete`. That marks the order paid and issues a `tok_` access token. Nothing is charged.
 3. Open the intake link from the success page and submit a public `https` URL (not localhost).
 4. The order is scored: eligibility, migration-time estimate, and cost-to-serve. Eligible simple sites get a repo under `out/orders/<orderId>/` with `AGENTS.md`, `EDITING.md`, and `scripts/chat-edit.mjs`.
-5. `pnpm orders` lists the order. `pnpm deliver <orderId>` writes that repo again. Add `--rebuild` only when `ANTHROPIC_API_KEY` is set; otherwise the model is not called.
-6. Eligible orders get a handoff (AGENTS.md, EDITING.md, and a content snapshot). The public paid kit page is not part of this site.
+5. `pnpm orders` lists the order. `pnpm deliver <orderId>` crawls if needed and writes the static HTML site to `out/orders/<orderId>/`. `--llm` or `--rebuild` opts into the model and does nothing if `ANTHROPIC_API_KEY` is missing.
+6. Eligible orders get that static site (HTML, CSS, AGENTS.md, and a hosting README). Checkout also stores a text extract on the order. The public paid kit page is not part of this site.
 
 Renewal watch is `/renewal-watch`. Unsubscribe is `/renewal-watch/unsubscribe`. The daily cron is `GET /api/cron/renewal-reminders` with `Authorization: Bearer $CRON_SECRET`. It sends nothing unless `CRON_SECRET`, `RESEND_API_KEY`, and `RESEND_FROM` are all set.
 
@@ -145,7 +145,7 @@ On Vercel, the file store falls back to `/tmp` and is not durable. Set KV, Blob,
 | `LEAD_NOTIFICATION_TO` | Internal paid-order notice. Defaults to the site contact address. |
 | `LEADS_WEBHOOK_URL` | Optional extra POST. Leads are stored either way. |
 | `OPS_ACCESS_TOKEN` | Gates `/ops`. |
-| `ANTHROPIC_API_KEY` | Optional. Enables `pnpm rebuild`, `pnpm editor`, and `pnpm deliver --rebuild`. |
+| `ANTHROPIC_API_KEY` | Optional. Enables `pnpm rebuild`, `pnpm editor`, and `pnpm deliver --llm`. |
 | `NEXT_PUBLIC_SITE_URL` | Absolute origin used in emails when the request host is unavailable. |
 
 Still needs a secret or a decision before a deployed test payment: a Stripe test account and webhook secret (or stay on mock); a verified `RESEND_FROM`; a durable store on Vercel. The app does not issue Stripe refunds. Ineligible sites are marked for a person to refund, refer out, or quote an add-on.

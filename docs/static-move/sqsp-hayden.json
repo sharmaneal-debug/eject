@@ -1,0 +1,41 @@
+{
+  "slug": "sqsp-hayden",
+  "url": "https://hayden-demo.squarespace.com/",
+  "platform": "Squarespace",
+  "pages": 10,
+  "routes": [
+    "/",
+    "/about-hayden",
+    "/blog-hayden",
+    "/hire-us-hayden",
+    "/blog-hayden/2014/9/16/inspiration-paris",
+    "/blog-hayden/category/Architecture",
+    "/blog-hayden/2014/9/9/mid-century-classics",
+    "/blog-hayden/category/Interiors",
+    "/blog-hayden/2014/8/25/ceramics",
+    "/blog-hayden/2014/9/16/project-bryant-hill"
+  ],
+  "rating": "High",
+  "edgeSsimDesktop": 0.9959,
+  "edgeSsimDesktopFold": 0.9972,
+  "edgeSsimMobile": 0.2825,
+  "edgeSsimMobileFold": 0.8712,
+  "textRecall": 0.995,
+  "heightRatioDesktop": 1.0,
+  "heightRatioMobile": 0.997,
+  "origHeightDesktop": 15451,
+  "movedHeightDesktop": 15451,
+  "origHeightMobile": 14936,
+  "movedHeightMobile": 14895,
+  "wallMs": 197790,
+  "outputBytes": 9574871,
+  "forms": 5,
+  "videos": 0,
+  "iframes": 2,
+  "embeds": [
+    "app.acuityscheduling.com"
+  ],
+  "scriptsRemoved": 430,
+  "hotlinkedStylesheets": 5,
+  "breaks": "Desktop matches and text recall is 0.995, so the rule says High. Mobile edge-SSIM is 0.283. The mobile fold is 0.87; lower bands diverge (galleries). Five forms are flagged. Two iframes, one of them app.acuityscheduling.com."
+}

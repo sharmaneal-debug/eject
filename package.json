@@ -11,6 +11,8 @@
     "test": "tsx --test tests/*.test.ts",
     "crawl": "tsx scripts/crawl.ts",
     "rebuild": "tsx scripts/rebuild.ts",
+    "static-move": "tsx scripts/static-move.ts",
+    "parity": "tsx scripts/harness/run.ts",
     "site-audit": "tsx scripts/audit.ts",
     "editor": "tsx scripts/editor.ts",
     "orders": "tsx scripts/orders.ts",
