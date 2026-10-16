@@ -37,19 +37,49 @@ pnpm parity --only=static-cern
 
 ## `pnpm rebuild <snapshot-dir>`
 
-Reads a crawler snapshot and uses Claude to regenerate each page as Next.js + Tailwind. Output goes to `out/<hostname>/` and is a runnable Next.js project (with `package.json`, `app/layout.tsx`, `tailwind.config.ts`).
+**Optional path.** Static move remains the default delivery. This script regenerates each captured page as Next.js + Tailwind when you want a React rebuild.
 
+Output goes to `out/<hostname>/` (runnable Next.js project).
+
+### Preferred: open-weights via OpenAI-compatible API (DeepSeek Flash)
+
+```sh
+export LLM_PROVIDER=openai-compat
+export LLM_BASE_URL=https://api.deepseek.com          # or Together/Fireworks/OpenRouter …/v1
+export LLM_API_KEY=…                                  # never commit; never print
+export LLM_MODEL=deepseek-flash                       # Together: deepseek-ai/DeepSeek-V4-Flash-0731
+export EJECT_REBUILD_SPEND_CAP_USD=2                  # abort if estimated spend exceeds this
+
+pnpm rebuild data/snapshots/example-com
+cd out/example-com && pnpm install && pnpm dev
 ```
-ANTHROPIC_API_KEY from the environment, then: pnpm rebuild data/snapshots/example-com
-cd out/example-com
-pnpm install
-pnpm dev
+
+DeepSeek Flash and Pro **think by default** (`thinking.type` defaults to `enabled`). Reasoning tokens are generated first and count toward `max_tokens`, so a capped call can return HTTP 200 with empty or truncated `message.content` and `finish_reason: length`. On `*.deepseek.com` (including the default `https://api.deepseek.com`), `lib/llm.ts` sends `thinking: { "type": "disabled" }` and omits `reasoning_effort`. DeepSeek Chat Completions reject `reasoning_effort: "none"` with HTTP 400; `thinking.type` is the switch that turns thinking off, so the 12k budget, and the one retry at 16k, is entirely for the answer. There is no separate thinking budget on this API. Any `reasoning_content` / `reasoning` / `thinking` text is logged by character count only and is never written as the page. TSX is taken only from `message.content`. A `finish_reason` of `length` (or Anthropic `max_tokens`) with empty or truncated content fails the page instead of saving it. Together, Fireworks, and OpenRouter do not get the DeepSeek `thinking` field.
+
+Screenshots are attached only for vision-capable models: a Claude slug, or a slug with a `vision` token (for example `deepseek-v4-flash-vision-exp`). DeepSeek Flash, Together Flash (`deepseek-ai/DeepSeek-V4-Flash-0731`), and Qwen3 Coder are text-only by default and rebuild from the DOM. `LLM_VISION=1` forces screenshots on; `LLM_VISION=0` forces them off, including for Claude. `llmChat` also drops image parts when vision is off, so a text-only host never receives `image_url`.
+
+DeepSeek also exposes an Anthropic-compatible endpoint. That format documents effort (`output_config.effort`: `low` / `high` / `max`) and does not document a thinking-off switch, so Flash rebuilds should stay on the openai-compat path above. The Messages client reads `ANTHROPIC_BASE_URL` only — it does not reuse `LLM_BASE_URL` (`https://api.deepseek.com` and `https://api.deepseek.com/anthropic` are different hosts). Unset `ANTHROPIC_BASE_URL` uses the Anthropic SDK default. The Messages-shaped alternative is:
+
+```sh
+export LLM_PROVIDER=anthropic
+export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
+export ANTHROPIC_API_KEY=…   # DeepSeek key
+export ANTHROPIC_MODEL=deepseek-flash
+```
+
+### Optional: Anthropic Claude
+
+```sh
+export ANTHROPIC_API_KEY=…
+pnpm rebuild data/snapshots/example-com
 ```
 
 Notes:
-- Model comes from `--model` or `ANTHROPIC_MODEL`. If neither is set, the script uses its current default. The key is read from `ANTHROPIC_API_KEY` and is not printed.
-- Capped at 10 pages per run by default (`--max-pages=...` to override).
-- Each page becomes a standalone TSX file; reusable layout is the operator's responsibility post-rebuild.
+- Provider resolution lives in `lib/llm.ts` (`LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_VISION`). Anthropic remains optional and uses `ANTHROPIC_BASE_URL` or the SDK default, never `LLM_BASE_URL`.
+- `--model=` overrides `LLM_MODEL` / `ANTHROPIC_MODEL`. Default openai-compat model is `deepseek-flash`.
+- Capped at 10 pages per run (`--max-pages=...`). Soft USD abort via `EJECT_REBUILD_SPEND_CAP_USD` (default 5).
+- If Flash output fails review, escalate `LLM_MODEL` to a Qwen3 Coder slug on OpenRouter/Fireworks (see `content/llm-open-source-options-2026-10-15.md`).
+- Keys are never printed. `usage.json` in the output records provider, model, tokens, and estimated USD.
 
 ## `pnpm site-audit <url>`
 

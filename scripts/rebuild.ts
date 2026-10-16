@@ -1,23 +1,42 @@
 #!/usr/bin/env tsx
 /**
- * Eject — AI rebuilder
- * --------------------
+ * Eject — AI rebuilder (optional path)
+ * ------------------------------------
  * Reads a crawler snapshot (`scripts/crawl.ts` output) and generates a Next.js
  * project: `app/` pages, `components/` reusable UI, design tokens in
  * `tailwind.config.ts`, and an opinionated default layout.
+ *
+ * Static move (scripts/deliver + static handoff) is the DEFAULT delivery path.
+ * This script is optional polish for React rebuilds.
  *
  * Usage:
  *   pnpm rebuild data/snapshots/<slug>
  *   pnpm rebuild data/snapshots/<slug> --out=out/<slug>
  *
- * Required env: ANTHROPIC_API_KEY
+ * Preferred env (open-weights via OpenAI-compatible API):
+ *   LLM_PROVIDER=openai-compat
+ *   LLM_BASE_URL=https://api.deepseek.com
+ *   LLM_API_KEY=…
+ *   LLM_MODEL=deepseek-flash
+ *
+ * Optional Anthropic path: ANTHROPIC_API_KEY (+ optional ANTHROPIC_BASE_URL for
+ * DeepSeek's Anthropic-compatible endpoint). See scripts/README.md.
  */
 
-import Anthropic from "@anthropic-ai/sdk";
-import { resolveAnthropicModel } from "../lib/model";
 import { mkdir, readFile, writeFile, readdir, copyFile } from "node:fs/promises";
 import ts from "typescript";
 import path from "node:path";
+import {
+  costOf,
+  describeLlmConfig,
+  llmChat,
+  llmConfigUsesVision,
+  outputBudgetError,
+  resolveLlmConfig,
+  type LlmConfig,
+  type LlmImage,
+  type LlmMessage,
+} from "../lib/llm";
 
 type Manifest = {
   sourceUrl: string;
@@ -67,7 +86,7 @@ function parseArgs(argv: string[]) {
   return {
     snapshot,
     out: String(flags.out ?? snapshot.replace("data/snapshots/", "out/")),
-    model: resolveAnthropicModel(typeof flags.model === "string" ? flags.model : undefined),
+    modelFlag: typeof flags.model === "string" ? flags.model : undefined,
     maxPages: Number(flags["max-pages"] ?? 10),
     concurrency: Number(flags.concurrency ?? 3),
     dryRun: flags["dry-run"] === "true",
@@ -128,17 +147,6 @@ Output only one TSX file. No prose, no markdown fences. The file must:
 - If the page has repeating cards or items, define a typed array constant at the top and map over it.
 - Under 900 lines.`;
 
-// USD per million tokens, from https://docs.anthropic.com/en/docs/about-claude/pricing (checked 2026-10-10).
-const PRICING_USD_PER_MTOK: Record<string, { in: number; out: number }> = {
-  "claude-sonnet-5-5": { in: 2, out: 10 },
-  "claude-sonnet-5": { in: 2, out: 10 },
-  "claude-sonnet-4-5-20250929": { in: 3, out: 15 },
-  "claude-sonnet-4-6": { in: 3, out: 15 },
-  "claude-haiku-4-5-20251001": { in: 1, out: 5 },
-  "claude-haiku-5-5": { in: 0.1, out: 0.5 },
-  "claude-opus-4-8": { in: 5, out: 25 },
-};
-
 type UsageRow = {
   path: string;
   inputTokens: number;
@@ -146,13 +154,9 @@ type UsageRow = {
   costUsd: number;
   ms: number;
   stopReason: string | null;
+  /** Length of ignored reasoning text. The page is never taken from it. */
+  reasoningChars: number;
 };
-
-function costOf(model: string, inTok: number, outTok: number): number {
-  const p = PRICING_USD_PER_MTOK[model];
-  if (!p) return 0;
-  return (inTok * p.in + outTok * p.out) / 1_000_000;
-}
 
 function rewriteAssets(text: string, ctx: PromptContext): string {
   let out = text;
@@ -169,18 +173,18 @@ function rewriteAssets(text: string, ctx: PromptContext): string {
   return out;
 }
 
-async function imageBlocks(ctx: PromptContext, page: CapturedPage): Promise<Anthropic.ImageBlockParam[]> {
+async function loadPageImages(ctx: PromptContext, page: CapturedPage): Promise<LlmImage[]> {
   const names = [...(page.shots?.desktop ?? []).slice(0, 3), ...(page.shots?.mobile ?? []).slice(0, 1)];
-  const blocks: Anthropic.ImageBlockParam[] = [];
+  const images: LlmImage[] = [];
   for (const n of names) {
     try {
       const data = await readFile(path.join(ctx.snapshotDir, "shots", n));
-      blocks.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: data.toString("base64") } });
+      images.push({ mediaType: "image/jpeg", base64: data.toString("base64") });
     } catch {
       /* screenshot missing */
     }
   }
-  return blocks;
+  return images;
 }
 
 function syntaxErrors(code: string): string[] {
@@ -193,8 +197,7 @@ function stripFences(text: string): string {
 }
 
 async function rebuildPage(
-  client: Anthropic,
-  model: string,
+  config: LlmConfig,
   ctx: PromptContext,
   page: CapturedPage,
   tokens: DesignTokens | null,
@@ -204,15 +207,21 @@ async function rebuildPage(
     ? `Design tokens seen on the site: colors ${tokens.colors.slice(0, 8).join(", ")}; fonts ${tokens.fontFamilies.slice(0, 3).join(" | ")}.`
     : "";
   const dom = rewriteAssets(page.clean && page.clean.length > 200 ? page.clean.slice(0, 80_000) : stripHtmlForPrompt(page.html), ctx);
-  const images = await imageBlocks(ctx, page);
+  const useVision = llmConfigUsesVision(config);
+  const images = useVision ? await loadPageImages(ctx, page) : [];
   const system = SYSTEM_PROMPT.replace("FONTS", ctx.fontFamilies.length ? ctx.fontFamilies.join(", ") : "(none captured; use Tailwind font-sans/font-serif)");
+  const shotNote = images.length
+    ? `Screenshots attached: ${page.shots?.desktop.slice(0, 3).length ?? 0} desktop slice(s) (1440px wide, top to bottom, 1400px each), then ${page.shots?.mobile.slice(0, 1).length ?? 0} mobile view (390px).`
+    : useVision
+      ? "No screenshots available."
+      : "Screenshots omitted; this model is text-only. Rebuild from the DOM.";
   const userText = `Rebuild this page.
 
 Route: ${page.path === "/" ? "/" : page.path}
 Title: ${page.title}
 Description: ${page.description}
 ${tokenSummary}
-${images.length ? `Screenshots attached: ${page.shots?.desktop.slice(0, 3).length ?? 0} desktop slice(s) (1440px wide, top to bottom, 1400px each), then ${page.shots?.mobile.slice(0, 1).length ?? 0} mobile view (390px).` : "No screenshots available."}
+${shotNote}
 
 Compact DOM of the rendered page (desktop 1440px):
 
@@ -220,43 +229,66 @@ ${dom}
 
 Return only the .tsx file contents.`;
 
-  const messages: Anthropic.MessageParam[] = [{ role: "user", content: [...images, { type: "text", text: userText }] }];
+  const userParts = [
+    ...images.map((image) => ({ type: "image" as const, image })),
+    { type: "text" as const, text: userText },
+  ];
+  const messages: LlmMessage[] = [{ role: "user", content: userParts }];
   let code = "";
   let lastErr = "";
   for (let attempt = 0; attempt < 2; attempt++) {
     const started = Date.now();
-    const resp = await client.messages.create({
-      model,
-      max_tokens: attempt === 0 ? 12_000 : 16_000,
+    // DeepSeek thinking is disabled in lib/llm.ts, so these caps are content
+    // tokens. The second attempt is the one higher-budget retry.
+    const maxTokens = attempt === 0 ? 12_000 : 16_000;
+    const resp = await llmChat(config, {
       system,
       messages,
+      maxTokens,
     });
     usageRows.push({
       path: page.path + (attempt ? " (retry)" : ""),
-      inputTokens: resp.usage.input_tokens,
-      outputTokens: resp.usage.output_tokens,
-      costUsd: costOf(model, resp.usage.input_tokens, resp.usage.output_tokens),
+      inputTokens: resp.usage.inputTokens,
+      outputTokens: resp.usage.outputTokens,
+      costUsd: costOf(config.model, resp.usage.inputTokens, resp.usage.outputTokens),
       ms: Date.now() - started,
-      stopReason: resp.stop_reason,
+      stopReason: resp.usage.stopReason,
+      reasoningChars: resp.reasoning?.length ?? 0,
     });
-    const text = resp.content
-      .filter((b): b is Anthropic.TextBlock => b.type === "text")
-      .map((b) => b.text)
-      .join("\n");
+    if (resp.reasoning) {
+      console.log(`    · reasoning ignored (${resp.reasoning.length} chars); page TSX is message.content only`);
+    }
+    const text = resp.text;
     code = stripFences(text);
-    const errs = resp.stop_reason === "max_tokens" ? ["output was cut off at max_tokens"] : syntaxErrors(code);
+    const budgetErr = outputBudgetError(code, resp.usage.stopReason);
+    const errs = budgetErr ? [budgetErr] : syntaxErrors(code);
     if (!errs.length && /export\s+default/.test(code)) return code;
     lastErr = errs.join("; ") || "no default export";
-    messages.push({ role: "assistant", content: text }, { role: "user", content: `That file has a problem: ${lastErr}. Return the complete corrected .tsx file only, shorter if needed (merge repeated markup into a mapped array).` });
+    const cutOff = resp.usage.stopReason === "max_tokens" || resp.usage.stopReason === "length";
+    if (attempt === 0 && cutOff) {
+      console.warn(`    ! ${lastErr}; retrying once with max_tokens 16000`);
+    }
+    // An empty completion has no assistant turn to replay. Retry the same
+    // prompt at the higher content budget instead of sending blank content.
+    if (!code.trim()) continue;
+    messages.push(
+      { role: "assistant", content: text },
+      {
+        role: "user",
+        content: `That file has a problem: ${lastErr}. Return the complete corrected .tsx file only, shorter if needed (merge repeated markup into a mapped array).`,
+      },
+    );
   }
   throw new Error(`page ${page.path} failed validation after retry: ${lastErr}`);
 }
 
 async function rebuild() {
   const args = parseArgs(process.argv.slice(2));
-  const apiKey = process.env.ANTHROPIC_API_KEY ?? (args.dryRun ? "dry-run" : undefined);
-  if (!apiKey) {
-    console.error("error: ANTHROPIC_API_KEY is required");
+  let config: LlmConfig;
+  try {
+    config = resolveLlmConfig({ modelFlag: args.modelFlag, dryRun: args.dryRun });
+  } catch (err) {
+    console.error(`error: ${(err as Error).message}`);
     process.exit(1);
   }
 
@@ -274,8 +306,7 @@ async function rebuild() {
   console.log(`  platform:  ${manifest.platform}`);
   console.log(`  pages:     ${Math.min(manifest.pages.length, args.maxPages)} of ${manifest.pages.length}`);
   console.log(`  output:    ${args.out}`);
-
-  const client = new Anthropic({ apiKey });
+  console.log(`  llm:       ${describeLlmConfig(config)}`);
 
   await mkdir(path.join(args.out, "app"), { recursive: true });
   await mkdir(path.join(args.out, "components"), { recursive: true });
@@ -328,7 +359,7 @@ async function rebuild() {
         // --dry-run: no model call. Writes a stub page so scaffolding (assets, fonts, config, build) can be tested for free.
         const tsx = args.dryRun
           ? `export const metadata = { title: ${JSON.stringify(captured.title)} };\nexport default function Page() {\n  return <main><h1>${captured.title.replace(/[<>{}]/g, "")}</h1><p>dry-run stub</p></main>;\n}\n`
-          : await rebuildPage(client, args.model, ctx, captured, tokens, usageRows);
+          : await rebuildPage(config, ctx, captured, tokens, usageRows);
         const filePath = path.join(args.out, pageRouteFromPath(captured.path, ctx.rootPrefix));
         await mkdir(path.dirname(filePath), { recursive: true });
         await writeFile(filePath, tsx, "utf8");
@@ -354,7 +385,9 @@ async function rebuild() {
     path.join(args.out, "usage.json"),
     JSON.stringify(
       {
-        model: args.model,
+        provider: config.provider,
+        model: config.model,
+        baseUrlHost: config.baseUrl ? config.baseUrl.replace(/^https?:\/\//, "").split("/")[0] : null,
         inputTokens: usageRows.reduce((n, r) => n + r.inputTokens, 0),
         outputTokens: usageRows.reduce((n, r) => n + r.outputTokens, 0),
         costUsd: usageRows.reduce((n, r) => n + r.costUsd, 0),
