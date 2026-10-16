@@ -25,9 +25,10 @@ export function pageMetadata(opts: {
   index?: boolean;
   canonical?: string;
   type?: "website" | "article";
+  image?: string;
 }): Metadata {
   const url = new URL(opts.path, siteConfig.url).toString();
-  const image = ogImagePath(opts.title, opts.description);
+  const image = opts.image ?? ogImagePath(opts.title, opts.description);
   const images = [{ url: image, width: 1200, height: 630, alt: opts.title }];
   return {
     title: opts.title,

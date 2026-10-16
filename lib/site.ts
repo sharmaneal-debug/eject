@@ -10,9 +10,10 @@ export const siteConfig = {
   name: "Eject",
   domain: "ejectfrom.com",
   url: "https://ejectfrom.com",
-  tagline: "Move a simple site. $99.",
-  shortTagline: "You own the files.",
-  description: "Move a simple site for $99, one time. You own the files.",
+  tagline: "Move your website.",
+  shortTagline: "Stop paying to host your website.",
+  description:
+    "Stop paying to host your website. Move it to your agent for free. $99 once for a simple Webflow, Framer, Wix, or Squarespace site. You own the code.",
   email: "hi@ejectfrom.com",
   twitter: "@useeject",
 

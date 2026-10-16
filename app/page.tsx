@@ -1,39 +1,41 @@
 import type { Metadata } from "next";
-import { BoxScreen } from "@/components/box-screen";
-import { CostCalculator } from "@/components/cost-calculator";
+import { Faq } from "@/components/faq";
 import { JsonLd } from "@/components/json-ld";
-import { PricingTable } from "@/components/pricing-table";
-import { Steps } from "@/components/steps";
-import { organizationSchema, productSchema, websiteSchema } from "@/lib/schema";
+import { SiteUrlForm } from "@/components/site-url-form";
+import { HOME_DESCRIPTION, HOME_H1, HOME_LEDE, homeFaqItems } from "@/lib/home-copy";
+import { faqSchema, organizationSchema, productSchema, websiteSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
-import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: siteConfig.tagline,
-  description: siteConfig.description,
+  title: "Move your website",
+  description: HOME_DESCRIPTION,
   path: "/",
+  image: "/og.jpg",
 });
 
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={[organizationSchema(), websiteSchema(), productSchema()]} />
-      <section className="mx-auto max-w-content min-w-0 px-4 pb-2 pt-10 sm:px-6 md:pt-16">
-        <h1 className="h-display max-w-3xl text-4xl sm:text-5xl lg:text-6xl">Move a simple site. $99.</h1>
-        <p className="mt-4 text-lg text-ink-soft">One-time. You own the files.</p>
+      <JsonLd data={[organizationSchema(), websiteSchema(), productSchema(), faqSchema([...homeFaqItems])]} />
+      <section className="mx-auto min-w-0 max-w-2xl px-4 pb-4 pt-14 sm:px-6 md:pt-24">
+        <h1 className="h-display max-w-xl text-4xl sm:text-6xl">{HOME_H1}</h1>
+        <p className="mt-4 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl">{HOME_LEDE}</p>
+        <SiteUrlForm />
+        <ul className="mt-8 flex min-w-0 flex-col text-base sm:flex-row sm:flex-wrap sm:gap-x-6">
+          <li className="flex min-h-11 items-center text-ink">You own the code.</li>
+          <li>
+            <a href="/refunds" className="inline-flex min-h-11 items-center text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+              Refund policy
+            </a>
+          </li>
+          <li>
+            <a href="/samples" className="inline-flex min-h-11 items-center text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+              Sample sites
+            </a>
+          </li>
+        </ul>
       </section>
-      <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
-        <CostCalculator initialPlatform="framer" initialPlanId="pro" />
-      </section>
-      <section className="mx-auto max-w-content min-w-0 px-4 py-6 sm:px-6">
-        <Steps />
-        <div className="mt-4">
-          <BoxScreen />
-        </div>
-      </section>
-      <section className="mx-auto max-w-content min-w-0 px-4 py-6 pb-12 sm:px-6">
-        <PricingTable />
-      </section>
+      <Faq items={homeFaqItems} showBlog={false} />
     </>
   );
 }
