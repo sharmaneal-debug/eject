@@ -4,6 +4,7 @@ import { timingSafeEqual } from "node:crypto";
 import { headers } from "next/headers";
 import { Section, Eyebrow } from "@/components/section";
 import { getOrderStore } from "@/lib/orders";
+import { buildOpsStatus } from "@/lib/ops-status";
 import { OpsPaymentLink } from "@/components/ops-payment-link";
 import { pageMetadata } from "@/lib/seo";
 
@@ -43,14 +44,52 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ k
   const store = getOrderStore();
   const orders = await store.list();
   const leads = await store.listLeads();
+  const status = buildOpsStatus(orders);
 
   return (
     <Section>
       <Eyebrow>Orders</Eyebrow>
       <h1 className="h-display text-4xl tracking-tightest mb-2">Orders</h1>
-      <p className="text-sm text-ink-muted mb-8">
-        Store: {store.label}. {store.durable ? "Durable." : "Not durable. Set KV, Blob, or Postgres before relying on this in production."}
+      <p className="text-sm text-ink-muted mb-4">
+        Store: {status.storeLabel}. {status.durable ? "Durable." : "Not durable."}
       </p>
+      {status.warning ? (
+        <p className="mb-8 rounded-xl border border-line bg-paper-warm p-4 text-sm text-ink" role="status">
+          {status.warning}
+        </p>
+      ) : (
+        <p className="text-sm text-ink-muted mb-8">Delivery queue: {status.queue.length}.</p>
+      )}
+      <h2 className="text-lg font-medium mb-3">Delivery queue</h2>
+      <div className="overflow-x-auto rounded-xl border border-line mb-10">
+        <table className="w-full text-sm">
+          <thead className="bg-paper-warm text-left">
+            <tr>
+              {["Order", "State", "Attempts", "Runner", "Model", "Site", "Last error"].map((heading) => (
+                <th key={heading} className="p-3 font-medium whitespace-nowrap">{heading}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {status.queue.map((row) => (
+              <tr key={row.id} className="border-t border-line">
+                <td className="p-3 font-mono text-xs">{row.id}</td>
+                <td className="p-3">{row.state}</td>
+                <td className="p-3">{row.attempts}</td>
+                <td className="p-3">{row.runner ?? "—"}</td>
+                <td className="p-3">{row.llm}</td>
+                <td className="p-3 max-w-[16rem] truncate">{row.siteUrl || row.email || "—"}</td>
+                <td className="p-3 max-w-[20rem] truncate">{row.lastError ?? "—"}</td>
+              </tr>
+            ))}
+            {status.queue.length === 0 && (
+              <tr>
+                <td className="p-3 text-ink-muted" colSpan={7}>Delivery queue is empty.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       <div className="overflow-x-auto rounded-xl border border-line">
         <table className="w-full text-sm">
           <thead className="bg-paper-warm text-left">

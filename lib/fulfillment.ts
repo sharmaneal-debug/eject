@@ -3,7 +3,8 @@ import { analyzeSnapshot } from "./complexity";
 import { crawlSite, type CrawlDeps } from "./http-crawl";
 import { getOrderStore, newOrderToken, type Order } from "./orders";
 import { SsrfError } from "./ssrf";
-import { getStripe, normalizeTier, tierConfig, type Tier } from "./stripe";
+import { getStripe, liveStripeAllowed, normalizeTier, tierConfig, type Tier } from "./stripe";
+import { enqueuePaidOrder, kickDelivery, WAITING_FOR_SITE_URL } from "./auto-deliver";
 import { isMockSessionId } from "./checkout";
 import { conciergeKickoffEmail, deliveryEmail, expressKickoffEmail, intakeReceivedEmail, refundFollowupEmail, sendEmail, sendPaidLeadNotification } from "./email";
 import { logLead } from "./leads";
@@ -29,7 +30,8 @@ type PaidSession = {
 };
 
 export async function markOrderPaidFromSession(session: PaidSession): Promise<Order> {
-  if (session.livemode) {
+  const live = session.livemode === true;
+  if (live && !liveStripeAllowed()) {
     throw new Error("live mode payments are refused");
   }
   if (session.payment_status !== "paid" && session.payment_status !== "no_payment_required") {
@@ -50,7 +52,7 @@ export async function markOrderPaidFromSession(session: PaidSession): Promise<Or
       siteUrl: session.metadata?.siteUrl || undefined,
       email: email || undefined,
       name: name || undefined,
-      testMode: "stripe_test",
+      testMode: live ? "stripe_live" : "stripe_test",
       amountCents,
       currency: session.currency || "usd",
     });
@@ -59,7 +61,8 @@ export async function markOrderPaidFromSession(session: PaidSession): Promise<Or
       paidAt: new Date().toISOString(),
       token: newOrderToken(),
       stripeSessionId: session.id,
-      livemode: false,
+      livemode: live,
+      testMode: live ? "stripe_live" : created.testMode,
     });
   }
 
@@ -74,7 +77,8 @@ export async function markOrderPaidFromSession(session: PaidSession): Promise<Or
       siteUrl: existing.siteUrl || session.metadata?.siteUrl || undefined,
       amountCents,
       currency: session.currency || existing.currency,
-      livemode: false,
+      livemode: live,
+      testMode: live ? "stripe_live" : existing.testMode,
     });
   }
 
@@ -154,9 +158,12 @@ export async function reconcileSession(sessionId: string, origin = publicOrigin(
   const stripe = getStripe();
   if (!stripe) return null;
   const session = await stripe.checkout.sessions.retrieve(sessionId);
-  if (session.livemode || session.payment_status !== "paid") return null;
+  if ((session.livemode && !liveStripeAllowed()) || session.payment_status !== "paid") return null;
   const order = await markOrderPaidFromSession(session);
-  return sendKickoffOnce(order, origin);
+  const kicked = await sendKickoffOnce(order, origin);
+  const queued = await enqueuePaidOrder(kicked.id);
+  if (queued) await kickDelivery(queued);
+  return (await getOrderStore().get(kicked.id)) ?? kicked;
 }
 
 export async function runPaidIntake(
@@ -199,12 +206,37 @@ export async function runPaidIntake(
     }
   }
 
-  const updated = await store.update(order.id, {
-    siteUrl: snapshot.finalUrl,
-    score: report,
-    delivery,
-    status: eligible ? (repoDir ? "delivered" : "queued") : "refund_recommended",
-  });
+  const now = new Date().toISOString();
+  const waitingForUrl = order.tier === "automated" && order.deliveryJob?.state === "queued" && order.deliveryJob.lastError === WAITING_FOR_SITE_URL;
+  let updated: Order;
+  if (!eligible && order.deliveryJob?.state === "queued") {
+    const claimed = await store.compareAndUpdate(
+      order.id,
+      { deliveryState: "queued" },
+      {
+        siteUrl: snapshot.finalUrl,
+        score: report,
+        status: "refund_recommended",
+        deliveryJob: { ...order.deliveryJob, state: "skipped", lastError: "not eligible", updatedAt: now },
+      },
+    );
+    updated = claimed ?? (await saveIntakeAside(order.id, snapshot.finalUrl, report));
+  } else if (waitingForUrl && order.deliveryJob) {
+    const claimed = await store.compareAndUpdate(
+      order.id,
+      { deliveryState: "queued", lastError: WAITING_FOR_SITE_URL },
+      {
+        siteUrl: snapshot.finalUrl,
+        score: report,
+        delivery,
+        status: "queued",
+        deliveryJob: { ...order.deliveryJob, state: "queued", lastError: undefined, nextAttemptAt: undefined, attempts: 0, updatedAt: now },
+      },
+    );
+    updated = claimed ?? (await saveIntakeAside(order.id, snapshot.finalUrl, report));
+  } else {
+    updated = await saveIntakeAside(order.id, snapshot.finalUrl, report, { delivery, eligible, repoDir });
+  }
   await sendOrderMail(updated, "intake", intakeReceivedEmail({
     name: updated.name || "",
     siteUrl: snapshot.finalUrl,
@@ -223,7 +255,39 @@ export async function runPaidIntake(
       siteUrl: snapshot.finalUrl,
     }));
   }
+  if (eligible && updated.deliveryJob?.state === "queued") {
+    const kicked = await kickDelivery(updated);
+    return { ok: true, order: kicked };
+  }
   return { ok: true, order: updated };
+}
+
+async function saveIntakeAside(
+  orderId: string,
+  siteUrl: string,
+  report: Order["score"],
+  extras?: { delivery: Order["delivery"]; eligible: boolean; repoDir?: string },
+): Promise<Order> {
+  const store = getOrderStore();
+  const latest = await store.get(orderId);
+  if (!latest) throw new Error("order not found");
+  const job = latest.deliveryJob;
+  const inFlight = job?.state === "running" || job?.state === "dispatched";
+  if (!extras || inFlight) return store.update(orderId, { siteUrl, score: report });
+  if (job?.state === "queued") {
+    return store.update(orderId, {
+      siteUrl,
+      score: report,
+      delivery: extras.delivery,
+      status: extras.eligible ? "queued" : "refund_recommended",
+    });
+  }
+  return store.update(orderId, {
+    siteUrl,
+    score: report,
+    delivery: extras.delivery,
+    status: extras.eligible ? (extras.repoDir ? "delivered" : "queued") : "refund_recommended",
+  });
 }
 
 async function sendOrderMail(

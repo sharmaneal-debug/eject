@@ -12,6 +12,10 @@ type SendArgs = {
  text: string;
  // Optional: customer name for personalization in the From line.
  customerName?: string;
+ replyTo?: string;
+ /** Base64 file contents. Omitted from the request when empty. */
+ attachments?: Array<{ filename: string; content: string }>;
+ fetchImpl?: typeof fetch;
 };
 
 /** Configured sender. Returns null when RESEND_FROM is unset so we never fall back to onboarding@resend.dev. */
@@ -32,8 +36,9 @@ export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: str
  return { ok: false, skipped: true, error: "RESEND_FROM not set" };
  }
 
+ const attachments = (args.attachments ?? []).filter((file) => file.filename && file.content);
  try {
- const res = await fetch("https://api.resend.com/emails", {
+ const res = await (args.fetchImpl ?? fetch)("https://api.resend.com/emails", {
  method: "POST",
  headers: {
  "Content-Type": "application/json",
@@ -45,7 +50,8 @@ export async function sendEmail(args: SendArgs): Promise<{ ok: boolean; id?: str
  subject: args.subject,
  html: args.html,
  text: args.text,
- reply_to: siteConfig.email,
+ reply_to: args.replyTo || siteConfig.email,
+ ...(attachments.length ? { attachments } : {}),
  }),
  });
  if (!res.ok) {
@@ -109,36 +115,89 @@ export async function sendPaidLeadNotification(args: {
   siteUrl: string;
   amount: number;
   stripeSessionId?: string;
+  fetchImpl?: typeof fetch;
 }): Promise<{ ok: boolean; id?: string; error?: string; skipped?: boolean }> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = resendFromAddress();
-  if (!apiKey || !from) {
-    return { ok: false, skipped: true, error: !apiKey ? "RESEND_API_KEY not set" : "RESEND_FROM not set" };
-  }
   const tpl = paidLeadNotification(args);
   const internalRecipient = process.env.LEAD_NOTIFICATION_TO || siteConfig.email;
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        from,
-        to: [internalRecipient],
-        subject: tpl.subject,
-        html: tpl.html,
-        text: tpl.text,
-        reply_to: tpl.replyTo,
-      }),
-    });
-    if (!res.ok) {
-      const body = await res.text();
-      return { ok: false, error: `resend ${res.status}: ${body.slice(0, 200)}` };
-    }
-    const data = (await res.json()) as { id?: string };
-    return { ok: true, id: data.id };
-  } catch (err) {
-    return { ok: false, error: (err as Error).message };
-  }
+  return sendEmail({
+    to: internalRecipient,
+    subject: tpl.subject,
+    html: tpl.html,
+    text: tpl.text,
+    replyTo: tpl.replyTo,
+    fetchImpl: args.fetchImpl,
+  });
+}
+
+function oneLine(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").slice(0, 180);
+}
+
+export function autonomousDeliveryEmail(opts: {
+  name: string;
+  siteUrl: string;
+  fileCount: number;
+  llm: "unset" | "ran" | "over_cap" | "unpriced";
+  attached: boolean;
+}) {
+  const llmLine =
+    opts.llm === "ran"
+      ? "An optional model rebuild is included in the package."
+      : opts.llm === "over_cap"
+        ? "The model rebuild was skipped because it would pass EJECT_REBUILD_SPEND_CAP_USD. The static site is still included."
+        : opts.llm === "unpriced"
+          ? "The model rebuild was skipped because this model has no spend estimate. The static site is still included."
+          : "No model ran. The static site is the delivery.";
+  const attachLine = opts.attached
+    ? "A zip of the site is attached."
+    : "The zip was too large to attach. The file list is below, and the operator notice has the same status.";
+  const subject = oneLine(`Your Eject site for ${opts.siteUrl} is ready`);
+  const text = `Hi ${opts.name || "there"},
+
+The handoff for ${opts.siteUrl} is ready. ${attachLine}
+
+${fileCountLine(opts.fileCount)} ${llmLine}
+
+You edit the site by chatting with your own agent. AGENTS.md is in the package. DNS stays yours until you point it.
+
+We do not promise the new pages will match the old site pixel for pixel.
+
+Thanks,
+The Eject team
+${supportLine()}
+`;
+  return { subject, text, html: paragraphHtml(text) };
+}
+
+function fileCountLine(count: number): string {
+  return `The package has ${count} file${count === 1 ? "" : "s"}.`;
+}
+
+export function deliveryFailureEmail(opts: { orderId: string; siteUrl?: string; attempts: number; reason: string }) {
+  const subject = oneLine(`Eject delivery failed · ${opts.orderId}`);
+  const text = `Autonomous delivery stopped for ${opts.orderId}.
+
+Site: ${opts.siteUrl || "(none)"}
+Attempts: ${opts.attempts}
+Reason: ${opts.reason}
+
+This does not refund the card. Reply to the customer if a person needs to take the order.
+`;
+  return { subject, text, html: paragraphHtml(text) };
+}
+
+export function deliveryOpsNotice(opts: { orderId: string; email: string; siteUrl: string; llm: string }) {
+  const subject = oneLine(`Delivered · ${opts.siteUrl} · ${opts.email}`);
+  const text = `Autonomous delivery finished.
+
+Order: ${opts.orderId}
+Email: ${opts.email}
+Site: ${opts.siteUrl}
+Model: ${opts.llm}
+
+The customer email was sent from RESEND_FROM.
+`;
+  return { subject, text, html: paragraphHtml(text) };
 }
 
 export function expressKickoffEmail(opts: { name: string; siteUrl: string; intakeUrl?: string }) {

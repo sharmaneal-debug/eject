@@ -16,6 +16,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { discoveredPageCount } from "../lib/crawled-snapshot";
 import { assertCrawlDocument } from "../lib/crawl-guard";
 import { collectFontFileUrls, MAX_EXTRA_FONTS, saveMissingFontFiles } from "../lib/font-assets";
 import { loadRobots, type RobotsRules } from "../lib/robots";
@@ -404,6 +405,7 @@ async function crawl(opts: CrawlOptions) {
   // Pull every image / font / stylesheet the browser actually loads, so the rebuilt site can
   // serve its own copies after the customer cancels the old platform.
   const assets = new Map<string, AssetRecord>();
+  const scripts = new Map<string, { url: string; bytes: number }>();
   const stylesheets = new Map<string, string>();
   const styleFiles = new Map<string, string>();
   const pendingAssets: Promise<void>[] = [];
@@ -421,6 +423,17 @@ async function crawl(opts: CrawlOptions) {
         const url = res.url();
         const requestUrl = req.url();
         if (!res.ok() || url.startsWith("data:")) return;
+        if (type === "script" || /javascript/i.test(ct)) {
+          if (scripts.has(url)) return;
+          const headerLen = Number(res.headers()["content-length"]);
+          if (Number.isFinite(headerLen) && headerLen >= 6_000_000) {
+            scripts.set(url, { url, bytes: headerLen });
+            return;
+          }
+          const scriptBody = await res.body();
+          scripts.set(url, { url, bytes: scriptBody.length });
+          return;
+        }
         const kind =
           type === "image" ? "image" : type === "font" ? "font" : type === "stylesheet" || ct === "text/css" ? "stylesheet" : type === "media" ? "media" : null;
         if (!kind || assets.has(url) || styleFiles.has(url)) return;
@@ -564,6 +577,25 @@ async function crawl(opts: CrawlOptions) {
   // Keep every URL key, including aliases, so the static move can match the href the page used.
   await writeFile(path.join(opts.out, "stylesheets.json"), JSON.stringify([...styleFiles.entries()].map(([url, file]) => ({ url, file })), null, 2), "utf8");
   console.log(`  stylesheets: ${styleItems.length}`);
+
+  const pending: string[] = [];
+  for (const item of queue) {
+    const next = normalizeHref(opts.url, item);
+    if (next) pending.push(next);
+  }
+  await writeFile(
+    path.join(opts.out, "discovery.json"),
+    JSON.stringify(
+      {
+        crawledPageCount: captured.length,
+        discoveredPageCount: discoveredPageCount([visited, captured.map((page) => page.url), pending]),
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
+  await writeFile(path.join(opts.out, "scripts.json"), JSON.stringify({ items: [...scripts.values()] }, null, 2), "utf8");
 
   await writeFile(
     path.join(opts.out, "manifest.json"),

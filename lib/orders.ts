@@ -3,6 +3,7 @@ import path from "node:path";
 import { randomBytes } from "node:crypto";
 import type { ComplexityReport } from "./complexity";
 import type { Tier } from "./stripe";
+import { liveStripeAllowed } from "./stripe";
 import { fileStoreDir, resolveStorePlan, type StoreKind } from "./storage/plan";
 
 export type { StoreKind } from "./storage/plan";
@@ -23,7 +24,23 @@ export { resolveStorePlan } from "./storage/plan";
  */
 
 export type OrderStatus = "pending" | "paid" | "queued" | "delivered" | "refund_recommended";
-export type TestMode = "mock" | "stripe_test";
+export type TestMode = "mock" | "stripe_test" | "stripe_live";
+export type DeliveryJobState = "queued" | "running" | "dispatched" | "delivered" | "failed" | "skipped";
+export type DeliveryLlm = "unset" | "ran" | "over_cap" | "unpriced";
+
+export type DeliveryJob = {
+  state: DeliveryJobState;
+  attempts: number;
+  enqueuedAt: string;
+  updatedAt: string;
+  nextAttemptAt?: string;
+  lastError?: string;
+  runner?: "inprocess" | "github";
+  dispatchedAt?: string;
+  deliveredAt?: string;
+  llm: DeliveryLlm;
+  alertedAt?: string;
+};
 
 export type DeliveryPacket = {
   mode: "manual" | "queued";
@@ -50,8 +67,31 @@ export type OrderEmailLog = {
   confirmation?: string;
   intake?: string;
   delivery?: string;
+  /** Autonomous zip. Separate from the intake delivery note so that note cannot suppress the package. */
+  package?: string;
   refund?: string;
 };
+
+export type OrderExpect = {
+  deliveryState?: DeliveryJobState;
+  attempts?: number;
+  lastError?: string;
+  /** Package email is unset, failed, skipped, or a send claim older than two minutes. */
+  packageEmail?: "claimable";
+};
+
+const PACKAGE_SENDING_STALE_MS = 2 * 60 * 1000;
+
+/** True when no live worker holds the customer zip send. */
+export function packageSendClaimable(value: string | undefined, nowMs = Date.now()): boolean {
+  if (!value || value === "failed" || value === "skipped") return true;
+  if (value === "sending") return true;
+  if (value.startsWith("sending:")) {
+    const stamped = Date.parse(value.slice("sending:".length));
+    return !Number.isFinite(stamped) || nowMs - stamped >= PACKAGE_SENDING_STALE_MS;
+  }
+  return false;
+}
 
 export type Order = {
   id: string;
@@ -67,8 +107,10 @@ export type Order = {
   stripeSessionId?: string;
   amountCents: number;
   currency: string;
-  livemode: false;
+  /** True only after a live Stripe event was accepted. Pending orders stay false. */
+  livemode: boolean;
   testMode: TestMode;
+  deliveryJob?: DeliveryJob;
   createdAt: string;
   paidAt?: string;
   kickoffAttemptedAt?: string;
@@ -103,12 +145,22 @@ export function buildPendingOrder(input: NewOrder): Order {
   };
 }
 
+function expectMatches(order: Order, expect: OrderExpect): boolean {
+  if (expect.deliveryState !== undefined && order.deliveryJob?.state !== expect.deliveryState) return false;
+  if (expect.attempts !== undefined && order.deliveryJob?.attempts !== expect.attempts) return false;
+  if (expect.lastError !== undefined && order.deliveryJob?.lastError !== expect.lastError) return false;
+  if (expect.packageEmail === "claimable" && !packageSendClaimable(order.emails?.package)) return false;
+  return true;
+}
+
 export type OrderStore = {
   kind: StoreKind;
   durable: boolean;
   label: string;
   create(input: NewOrder): Promise<Order>;
   update(id: string, patch: Partial<Order>): Promise<Order>;
+  /** Writes patch only when the stored order matches expect. Null means lost the claim. */
+  compareAndUpdate(id: string, expect: OrderExpect, patch: Partial<Order>): Promise<Order | null>;
   get(id: string): Promise<Order | null>;
   getByToken(token: string): Promise<Order | null>;
   getBySession(sessionId: string): Promise<Order | null>;
@@ -141,12 +193,18 @@ function emptyDb(): Db {
   return { orders: [], leads: [] };
 }
 
+function nextLivemode(order: Order, patch: Partial<Order>): boolean {
+  if (patch.livemode === true) return order.livemode === true || liveStripeAllowed();
+  if (patch.livemode === false) return false;
+  return order.livemode === true;
+}
+
 function applyPatch(order: Order, patch: Partial<Order>): Order {
   return {
     ...order,
     ...patch,
     id: order.id,
-    livemode: false,
+    livemode: nextLivemode(order, patch),
     createdAt: order.createdAt,
   };
 }
@@ -185,6 +243,18 @@ function createMemoryApi(load: () => Promise<Db>, save: (db: Db) => Promise<void
         const index = db.orders.findIndex((order) => order.id === id);
         const current = db.orders[index];
         if (!current) throw new Error("order not found");
+        const next = applyPatch(current, patch);
+        db.orders[index] = next;
+        await save(db);
+        return next;
+      });
+    },
+    async compareAndUpdate(id, expect, patch) {
+      return lock(async () => {
+        const db = await load();
+        const index = db.orders.findIndex((order) => order.id === id);
+        const current = db.orders[index];
+        if (!current || !expectMatches(current, expect)) return null;
         const next = applyPatch(current, patch);
         db.orders[index] = next;
         await save(db);
@@ -314,6 +384,22 @@ function kvStore(env: Env, plan: { kind: StoreKind; durable: boolean; label: str
         await index(next);
         return next;
       });
+    },
+    async compareAndUpdate(id, expect, patch) {
+      const token = randomBytes(16).toString("hex");
+      const lockKey = `eject:deliver-lock:${id}`;
+      const acquired = await call(["SET", lockKey, token, "NX", "PX", "120000"]);
+      if (acquired !== "OK") return null;
+      try {
+        const current = await readOrder(id);
+        if (!current || !expectMatches(current, expect)) return null;
+        const next = applyPatch(current, patch);
+        await index(next);
+        return next;
+      } finally {
+        const held = await call(["GET", lockKey]);
+        if (held === token) await call(["DEL", lockKey]);
+      }
     },
     get: readOrder,
     async getByToken(token) {
@@ -445,6 +531,31 @@ function postgresStore(env: Env, plan: { kind: StoreKind; durable: boolean; labe
         ]),
       );
       return next;
+    },
+    async compareAndUpdate(id, expect, patch) {
+      return withClient(async (client) => {
+        await client.query("BEGIN");
+        try {
+          const result = await client.query("SELECT payload FROM eject_orders WHERE id = $1 FOR UPDATE", [id]);
+          const current = (result.rows[0] as { payload: Order } | undefined)?.payload;
+          if (!current || !expectMatches(current, expect)) {
+            await client.query("ROLLBACK");
+            return null;
+          }
+          const next = applyPatch(current, patch);
+          await client.query("UPDATE eject_orders SET token = $2, stripe_session_id = $3, payload = $4::jsonb WHERE id = $1", [
+            id,
+            next.token ?? null,
+            next.stripeSessionId ?? null,
+            JSON.stringify(next),
+          ]);
+          await client.query("COMMIT");
+          return next;
+        } catch (err) {
+          await client.query("ROLLBACK");
+          throw err;
+        }
+      });
     },
     get: (id) => read("id", id),
     getByToken: (token) => read("token", token),

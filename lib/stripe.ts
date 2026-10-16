@@ -18,27 +18,48 @@ export function stripeKeyMode(key: string | undefined): StripeKeyMode {
   return "unknown";
 }
 
-export function stripeConfigError(): string | null {
-  const key = process.env.STRIPE_SECRET_KEY;
+type Env = Record<string, string | undefined>;
+
+/**
+ * Live keys and live webhook events stay refused unless both switches are on
+ * and the secret is actually a live key. Test keys keep working either way.
+ */
+export function liveStripeAllowed(env: Env = process.env): boolean {
+  return env.EJECT_STRIPE_MODE === "live" && env.CHECKOUT_OPEN === "true" && stripeKeyMode(env.STRIPE_SECRET_KEY) === "live";
+}
+
+export function stripeConfigError(env: Env = process.env): string | null {
+  const key = env.STRIPE_SECRET_KEY;
   if (!key) {
     return "Stripe is not configured. Set STRIPE_SECRET_KEY to a test key (sk_test_…) or set EJECT_STRIPE_MODE=mock for a local no-charge checkout.";
   }
-  if (stripeKeyMode(key) === "live") {
-    return "Live Stripe keys are refused. This checkout is test mode only.";
+  const mode = stripeKeyMode(key);
+  if (mode === "live") {
+    if (!liveStripeAllowed(env)) {
+      return "Live Stripe keys are refused unless EJECT_STRIPE_MODE=live and CHECKOUT_OPEN=true.";
+    }
+    return null;
   }
-  if (stripeKeyMode(key) !== "test") {
-    return "STRIPE_SECRET_KEY must be a Stripe test secret (sk_test_…).";
+  if (mode !== "test") {
+    return "STRIPE_SECRET_KEY must be a Stripe test secret (sk_test_…) or a live secret when live mode is explicitly enabled.";
   }
   return null;
 }
 
-export function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key || stripeKeyMode(key) !== "test") return null;
+function stripeClient(key: string) {
   return new Stripe(key, {
     apiVersion: "2025-02-24.acacia",
     httpClient: Stripe.createFetchHttpClient(),
   });
+}
+
+export function getStripe(env: Env = process.env) {
+  const key = env.STRIPE_SECRET_KEY;
+  const mode = stripeKeyMode(key);
+  if (!key) return null;
+  if (mode === "test") return stripeClient(key);
+  if (mode === "live" && liveStripeAllowed(env)) return stripeClient(key);
+  return null;
 }
 
 export function isValidTier(t: unknown): t is Tier {

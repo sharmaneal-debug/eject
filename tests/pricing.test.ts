@@ -66,16 +66,22 @@ test("scan estimate uses the automated price, not $499", () => {
   assert.equal(scan.includes("499"), false);
 });
 
-test("live Stripe keys are refused", () => {
+test("live Stripe keys are refused unless live mode is enabled", () => {
   assert.equal(stripeKeyMode("sk_test_example"), "test");
   assert.equal(stripeKeyMode("sk_live_example"), "live");
   const previous = process.env.STRIPE_SECRET_KEY;
+  const previousOpen = process.env.CHECKOUT_OPEN;
+  const previousMode = process.env.EJECT_STRIPE_MODE;
   process.env.STRIPE_SECRET_KEY = "sk_live_example";
+  delete process.env.CHECKOUT_OPEN;
+  delete process.env.EJECT_STRIPE_MODE;
   try {
     assert.equal(getStripe(), null);
     assert.match(stripeConfigError() ?? "", /test mode only|refused/i);
   } finally {
     restore("STRIPE_SECRET_KEY", previous);
+    restore("CHECKOUT_OPEN", previousOpen);
+    restore("EJECT_STRIPE_MODE", previousMode);
   }
 });
 
