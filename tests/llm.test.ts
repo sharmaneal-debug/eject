@@ -31,7 +31,7 @@ test("DeepSeek Flash chat body disables thinking so max_tokens is content-only",
   assert.equal(body.model, "deepseek-flash");
   assert.equal(body.max_tokens, 12_000);
   assert.deepEqual(body.thinking, { type: "disabled" });
-  assert.equal(body.reasoning_effort, "none");
+  assert.equal("reasoning_effort" in body, false);
 });
 
 test("non-DeepSeek hosts do not receive DeepSeek thinking switches", () => {
@@ -128,7 +128,7 @@ test("llmChat posts thinking disabled and does not treat reasoning as content", 
     assert.equal(requestUrl, "https://api.deepseek.com/chat/completions");
     assert.equal(authorization, "Bearer test-key");
     assert.deepEqual(requestBody.thinking, { type: "disabled" });
-    assert.equal(requestBody.reasoning_effort, "none");
+    assert.equal("reasoning_effort" in requestBody, false);
     assert.equal(requestBody.max_tokens, 12_000);
     assert.equal(result.text, "");
     assert.equal(result.reasoning, "private reasoning");

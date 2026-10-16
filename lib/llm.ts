@@ -25,12 +25,13 @@
  *   LLM_API_KEY + LLM_BASE_URL  → openai-compat
  *   ANTHROPIC_API_KEY           → anthropic
  *
- * DeepSeek Chat Completions think by default (`thinking.type` = enabled,
- * `reasoning_effort` = high). Reasoning tokens are generated first and count
- * toward `max_tokens`, which can return HTTP 200 with empty `content` and
- * `finish_reason` `length`. On `*.deepseek.com` this client sends
- * `thinking: { type: "disabled" }` and `reasoning_effort: "none"` so the
- * whole `max_tokens` budget is available for `message.content`.
+ * DeepSeek Chat Completions think by default (`thinking.type` = enabled).
+ * Reasoning tokens are generated first and count toward `max_tokens`, which
+ * can return HTTP 200 with empty `content` and `finish_reason` `length`.
+ * On `*.deepseek.com` this client sends `thinking: { type: "disabled" }` so
+ * the whole `max_tokens` budget is available for `message.content`.
+ * `reasoning_effort` is omitted: DeepSeek rejects `"none"` with HTTP 400,
+ * and `thinking.type` is the switch that turns thinking off.
  * `reasoning_content` is returned separately for logs and is never the page.
  */
 
@@ -248,8 +249,9 @@ export function isDeepSeekChatHost(baseUrl?: string): boolean {
 /**
  * Request body for OpenAI-compatible `/chat/completions`.
  * DeepSeek Flash/Pro think by default, and those tokens share `max_tokens`
- * with the answer. Disable both official switches so content is not starved.
- * Other hosts are left unchanged — they do not accept this pair.
+ * with the answer. `thinking: { type: "disabled" }` keeps the budget for
+ * content. `reasoning_effort` is not sent: DeepSeek rejects `"none"` (HTTP 400).
+ * Other hosts are left unchanged.
  */
 export function buildOpenAICompatBody(
   config: LlmConfig,
@@ -270,7 +272,6 @@ export function buildOpenAICompatBody(
   };
   if (isDeepSeekChatHost(config.baseUrl)) {
     body.thinking = { type: "disabled" };
-    body.reasoning_effort = "none";
   }
   return body;
 }
