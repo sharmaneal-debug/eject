@@ -1,0 +1,27 @@
+{
+  "sourceUrl": "https://minimum-01.framer.website/",
+  "platform": "framer",
+  "capturedAt": "2026-10-12T14:21:54.808Z",
+  "pages": 2,
+  "routes": [
+    "/",
+    "/legal"
+  ],
+  "outputBytes": 303691,
+  "forms": [],
+  "videos": 0,
+  "audios": 0,
+  "iframes": 0,
+  "embeds": [],
+  "scriptsRemoved": 14,
+  "stylesheets": 0,
+  "hotlinkedStylesheets": 0,
+  "assetsCopied": 4,
+  "missingAssetFiles": 0,
+  "notes": [
+    "14 runtime scripts removed (analytics and platform JS). CSS animations that do not need that JS still run. Scroll-triggered and menu JS does not.",
+    "Entrance animations that waited for the platform runtime are flattened so the captured layout stays visible.",
+    "Internal links between captured pages are relative. Links to pages that were not captured stay on the original site."
+  ],
+  "elapsedMs": 20
+}

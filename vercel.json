@@ -4,5 +4,15 @@
       "path": "/api/cron/renewal-reminders",
       "schedule": "0 14 * * *"
     }
+  ],
+  "headers": [
+    {
+      "source": "/samples",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
+      "source": "/samples/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
   ]
 }

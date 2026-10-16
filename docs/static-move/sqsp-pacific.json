@@ -1,0 +1,31 @@
+{
+  "slug": "sqsp-pacific",
+  "url": "https://pacific-demo.squarespace.com/",
+  "platform": "Squarespace",
+  "pages": 2,
+  "routes": [
+    "/",
+    "/readme-pacific"
+  ],
+  "rating": "High",
+  "edgeSsimDesktop": 0.965,
+  "edgeSsimDesktopFold": 0.9985,
+  "edgeSsimMobile": 0.4674,
+  "edgeSsimMobileFold": 0.2594,
+  "textRecall": 1.0,
+  "heightRatioDesktop": 1.0,
+  "heightRatioMobile": 1.002,
+  "origHeightDesktop": 5375,
+  "movedHeightDesktop": 5375,
+  "origHeightMobile": 7067,
+  "movedHeightMobile": 7079,
+  "wallMs": 69555,
+  "outputBytes": 2691622,
+  "forms": 0,
+  "videos": 0,
+  "iframes": 0,
+  "embeds": [],
+  "scriptsRemoved": 77,
+  "hotlinkedStylesheets": 1,
+  "breaks": "Desktop matches. Mobile edge-SSIM is 0.467 (fold 0.259) even though the height matches, so the phone view is weaker than the High label. The rating rule does not threshold mobile edge-SSIM. Squarespace sections that move with their script are the likely gap."
+}

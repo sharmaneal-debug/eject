@@ -1,0 +1,352 @@
+import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { promisify } from "node:util";
+import { test } from "node:test";
+import { staticAgentsMarkdown, staticEditingGuideMarkdown, staticHostingReadme } from "../lib/editor-guide";
+import { buildStaticSite } from "../lib/static-move";
+import {
+  buildPageHtml,
+  flagForms,
+  getAttr,
+  removeAttr,
+  setAttr,
+  relativePageHref,
+  rewriteStylesheet,
+  stripRuntimeScripts,
+  type AssetMap,
+  type LinkContext,
+} from "../lib/static-html";
+
+const execFileAsync = promisify(execFile);
+
+const assets: AssetMap = new Map([
+  ["https://cdn.example.com/site.css", "site.css"],
+  ["https://cdn.example.com/hero.png", "hero.png"],
+  ["https://example.com/daycare-websites/pic.png", "pic.png"],
+  ["https://example.com/daycare-websites/pricing/pic.png", "pic.png"],
+]);
+
+function ctx(over: Partial<LinkContext> = {}): LinkContext {
+  return {
+    pageUrl: "https://example.com/daycare-websites/",
+    pageRoute: "/",
+    origin: "https://example.com",
+    rootPrefix: "/daycare-websites",
+    routes: new Set(["/", "/pricing", "/about"]),
+    ...over,
+  };
+}
+
+const PAGE = `<html><head>
+<link rel="stylesheet" href="https://cdn.example.com/site.css" integrity="sha256-abc">
+<script src="https://www.wix.com/runtime.js"></script>
+<script>window.platform = "keep-me-out"</script>
+<script type="application/ld+json">{"@type":"Thing"}</script>
+</head><body>
+<a href="https://example.com/daycare-websites/pricing">Pricing</a>
+<a href="/daycare-websites/about">About</a>
+<a href="mailto:hi@example.com">Mail</a>
+<a href="https://other.test/away">Away</a>
+<a href="#top">Top</a>
+<a href="javascript:void(0)">JS</a>
+<a href="https://example.com/not-captured">Old</a>
+<img src="https://cdn.example.com/hero.png" srcset="https://cdn.example.com/hero.png 2x, pic.png 1x">
+<form action="https://example.com/daycare-websites/submit"><input name="email"></form>
+<iframe src="https://www.youtube.com/embed/abc"></iframe>
+</body></html>`;
+
+test("runtime scripts are removed and JSON-LD stays", () => {
+  const { html, removed } = stripRuntimeScripts(PAGE);
+  assert.equal(removed, 2);
+  assert.equal(html.includes("wix.com/runtime.js"), false);
+  assert.equal(html.includes("keep-me-out"), false);
+  assert.match(html, /application\/ld\+json/);
+  assert.match(html, /"@type":"Thing"/);
+  assert.match(html, /rel="stylesheet"/);
+});
+
+test("internal links rewrite to local pages, external and mail stay, scripts stay gone", () => {
+  const home = buildPageHtml({ html: PAGE, ctx: ctx(), assets });
+  assert.equal(home.scriptsRemoved, 2);
+  assert.match(home.html, /href="pricing\/"/);
+  assert.match(home.html, /href="about\/"/);
+  assert.match(home.html, /href="mailto:hi@example.com"/);
+  assert.match(home.html, /href="https:\/\/other\.test\/away"/);
+  assert.match(home.html, /href="#top"/);
+  assert.match(home.html, /href="#"/);
+  assert.match(home.html, /href="https:\/\/example\.com\/not-captured"/);
+  assert.equal(home.html.includes("<script src="), false);
+  assert.equal(home.html.includes("keep-me-out"), false);
+  assert.match(home.html, /application\/ld\+json/);
+  assert.match(home.html, /href="assets\/site\.css"/);
+  assert.equal(home.html.includes("integrity="), false);
+  assert.match(home.html, /src="assets\/hero\.png"/);
+  assert.match(home.html, /srcset="assets\/hero\.png 2x, assets\/pic\.png 1x"/);
+  assert.match(home.html, /data-eject-form="needs-endpoint"/);
+  assert.equal(home.forms.length, 1);
+  assert.equal(home.forms[0]?.action, "https://example.com/daycare-websites/submit");
+  assert.equal(home.html.includes("daycare-websites/submit"), false);
+  assert.match(home.html, /<form\b[^>]*\baction="#"/);
+  assert.match(home.html, /<form\b[^>]*\bmethod="dialog"/);
+  assert.match(home.html, /<form\b[^>]*\bonsubmit="return false"/);
+  assert.equal(/<form\b[^>]*\baction\s*=\s*["']https?:/i.test(home.html), false);
+  assert.equal(home.iframes, 1);
+  assert.deepEqual(home.embeds, ["www.youtube.com"]);
+  assert.match(home.html, /<!DOCTYPE html>/i);
+  assert.equal(/name="robots"/i.test(home.html), false);
+  assert.match(home.html, /<head><script data-eject="directory-base">/);
+  assert.ok(home.html.indexOf('data-eject="directory-base"') < home.html.indexOf('rel="stylesheet"'));
+
+  const nested = buildPageHtml({
+    html: `<html><head></head><body>
+      <a href="https://example.com/daycare-websites/">Home</a>
+      <a href="https://example.com/daycare-websites/pricing#cost">Cost</a>
+      <img src="pic.png">
+    </body></html>`,
+    ctx: ctx({ pageRoute: "/pricing", pageUrl: "https://example.com/daycare-websites/pricing/" }),
+    assets,
+  });
+  assert.match(nested.html, /href="\.\.\/"/);
+  assert.match(nested.html, /href="#cost"/);
+  assert.match(nested.html, /src="\.\.\/assets\/pic\.png"/);
+});
+
+test("flagForms blocks native submit for absolute, empty, and already-flagged forms", () => {
+  const html = [
+    `<form action="https://webflow.com/api/v1/form/site" method="post"><input name="email"><button type="submit" formaction="https://api.framer.com/forms" formmethod="post">Send</button></form>`,
+    `<form action=""><input name="q"></form>`,
+    `<form><input name="bare"></form>`,
+    `<form data-eject-form="needs-endpoint" action="https://www.wix.com/_api/form-submit" method="post"></form>`,
+    `<form action='//www.squarespace.com/api/form/submit'></form>`,
+  ].join("");
+  const { html: out, forms } = flagForms(html, "/contact");
+  assert.equal(forms.length, 5);
+  assert.equal(forms[0]?.pageRoute, "/contact");
+  assert.equal(forms[0]?.action, "https://webflow.com/api/v1/form/site");
+  assert.equal(forms[1]?.action, "");
+  assert.equal(forms[2]?.action, "");
+  assert.equal(forms[3]?.action, "https://www.wix.com/_api/form-submit");
+  assert.equal(forms[4]?.action, "//www.squarespace.com/api/form/submit");
+  assert.equal(out.includes("webflow.com"), false);
+  assert.equal(out.includes("framer.com"), false);
+  assert.equal(out.includes("wix.com"), false);
+  assert.equal(out.includes("squarespace.com"), false);
+  assert.equal(/action\s*=\s*["']https?:/i.test(out), false);
+  assert.equal(/action\s*=\s*["']\/\//i.test(out), false);
+  assert.equal(/formaction\s*=/i.test(out), false);
+  assert.equal(/formmethod\s*=/i.test(out), false);
+  const tags = out.match(/<form\b[^>]*>/gi) ?? [];
+  assert.equal(tags.length, 5);
+  for (const tag of tags) {
+    assert.match(tag, /data-eject-form="needs-endpoint"/);
+    assert.match(tag, /\baction="#"/);
+    assert.match(tag, /\bmethod="dialog"/);
+    assert.match(tag, /\bonsubmit="return false"/);
+  }
+  assert.equal(out.match(/data-eject-form="needs-endpoint"/g)?.length, 5);
+  const submitter = out.match(/<button\b[^>]*>/i)?.[0] ?? "";
+  assert.equal(getAttr(submitter, "formaction"), null);
+  assert.equal(getAttr(submitter, "formmethod"), null);
+  assert.equal(effectiveNativeSubmit(out).action, "#");
+  assert.equal(effectiveNativeSubmit(out).method, "dialog");
+  assert.equal(effectiveNativeSubmit(out).cancelled, true);
+});
+
+/**
+ * The re-enable AGENTS.md and the hosting README describe: set the form
+ * action, set the form method, and remove onsubmit="return false".
+ * Button attributes are not part of that edit.
+ */
+function applyDocumentedFormReenable(html: string, action: string, method: "post" | "get"): string {
+  return html.replace(/<form\b[^>]*>/gi, (tag) => {
+    let out = setAttr(tag, "action", action);
+    out = setAttr(out, "method", method);
+    out = removeAttr(out, "onsubmit");
+    return out;
+  });
+}
+
+/** What a browser would submit: a submitter's formaction/formmethod win when present. */
+function effectiveNativeSubmit(html: string): { action: string; method: string; cancelled: boolean } {
+  const form = html.match(/<form\b[^>]*>/i)?.[0] ?? "";
+  const submitter =
+    html.match(/<(?:button|input)\b[^>]*>/gi)?.find((tag) => {
+      const type = (getAttr(tag, "type") ?? "").toLowerCase();
+      return /^<button\b/i.test(tag) ? type !== "button" && type !== "reset" : type === "submit" || type === "image";
+    }) ?? "";
+  const action = getAttr(submitter, "formaction") ?? getAttr(form, "action") ?? "";
+  const method = (getAttr(submitter, "formmethod") ?? getAttr(form, "method") ?? "get").toLowerCase();
+  const cancelled = /return\s+false/i.test(getAttr(form, "onsubmit") ?? "");
+  return { action, method, cancelled };
+}
+
+test("documented form re-enable submits to the new endpoint", () => {
+  const fixture = `<form action="https://webflow.com/api/v1/form/site" method="post"><label>Email <input name="email" type="email"></label><button type="submit" formaction="https://api.framer.com/forms" formmethod="post">Send</button></form>`;
+  const { html, forms } = flagForms(fixture, "/contact");
+  assert.equal(forms[0]?.action, "https://webflow.com/api/v1/form/site");
+  assert.equal(html.includes("webflow.com"), false);
+  assert.equal(html.includes("framer.com"), false);
+  const blocked = effectiveNativeSubmit(html);
+  assert.equal(blocked.cancelled, true);
+  assert.equal(blocked.method, "dialog");
+  assert.equal(blocked.action, "#");
+  assert.equal(/https?:\/\//i.test(blocked.action), false);
+
+  const agents = staticAgentsMarkdown();
+  const readme = staticHostingReadme({
+    sourceUrl: "https://example.com/",
+    platform: "webflow",
+    capturedAt: "2026-10-15T00:00:00.000Z",
+    formCount: 1,
+  });
+  for (const doc of [agents, readme]) {
+    assert.match(doc, /set the form action and method|point the form `action`/i);
+    assert.match(doc, /onsubmit="return false"/);
+    assert.match(doc, /do not keep formaction or formmethod|do not keep `formaction` or `formmethod`/i);
+  }
+
+  const endpoint = "https://forms.example.com/contact";
+  const reenabled = applyDocumentedFormReenable(html, endpoint, "post");
+  const submit = effectiveNativeSubmit(reenabled);
+  assert.equal(submit.cancelled, false);
+  assert.equal(submit.action, endpoint);
+  assert.equal(submit.method, "post");
+  assert.equal(reenabled.includes("webflow.com"), false);
+  assert.equal(reenabled.includes("framer.com"), false);
+  const button = reenabled.match(/<button\b[^>]*>/i)?.[0] ?? "";
+  assert.equal(getAttr(button, "formaction"), null);
+  assert.equal(getAttr(button, "formmethod"), null);
+  assert.match(button, /type="submit"/);
+});
+
+test("relative page hrefs", () => {
+  assert.equal(relativePageHref("/", "/pricing"), "pricing/");
+  assert.equal(relativePageHref("/pricing", "/"), "../");
+  assert.equal(relativePageHref("/pricing", "/pricing", "#cost"), "#cost");
+  assert.equal(relativePageHref("/a/b", "/pricing"), "../../pricing/");
+});
+
+test("an inline Flowbase font face points at the local file", () => {
+  const html = `<html><head><style>@font-face{font-family:"Flowbase Inter";font-weight:400;src:url("https://assets.flowbase.co/fonts/Inter-Regular.woff2") format("woff2");}</style></head><body>Hi</body></html>`;
+  const built = buildPageHtml({
+    html,
+    ctx: ctx({
+      pageUrl: "https://safia-light.webflow.io/",
+      pageRoute: "/",
+      origin: "https://safia-light.webflow.io",
+      rootPrefix: "",
+      routes: new Set(["/"]),
+    }),
+    assets: new Map([["https://assets.flowbase.co/fonts/Inter-Regular.woff2", "inter-regular.woff2"]]),
+  });
+  assert.match(built.html, /url\("assets\/inter-regular\.woff2"\)/);
+  assert.equal(built.html.includes("assets.flowbase.co"), false);
+});
+
+test("stylesheet urls are rewritten next to the css file", () => {
+  const css = rewriteStylesheet(
+    `@import "extra.css"; @font-face{src:url("https://cdn.example.com/font.woff2")} .a{background:url('../img/hero.png')}`,
+    "https://cdn.example.com/site.css",
+    new Map([
+      ["https://cdn.example.com/extra.css", "extra.css"],
+      ["https://cdn.example.com/font.woff2", "font.woff2"],
+      ["https://cdn.example.com/img/hero.png", "hero.png"],
+    ]),
+  );
+  assert.match(css, /@import "extra\.css"/);
+  assert.match(css, /url\("font\.woff2"\)/);
+  assert.match(css, /url\("hero\.png"\)/);
+  assert.equal(css.includes("https://cdn.example.com"), false);
+});
+
+test("static move writes a hostable site and the editing guide", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "eject-static-"));
+  const snap = path.join(root, "snap");
+  const out = path.join(root, "out");
+  await mkdir(path.join(snap, "pages"), { recursive: true });
+  await mkdir(path.join(snap, "assets"), { recursive: true });
+  await mkdir(path.join(snap, "styles"), { recursive: true });
+  await writeFile(path.join(snap, "assets", "hero.png"), "png", "utf8");
+  await writeFile(path.join(snap, "styles", "site.css"), "body{background:url('https://cdn.example.com/hero.png')}", "utf8");
+  await writeFile(
+    path.join(snap, "manifest.json"),
+    JSON.stringify({
+      sourceUrl: "https://example.com/daycare-websites",
+      platform: "wix",
+      capturedAt: "2026-10-12T00:00:00.000Z",
+      pageCount: 2,
+      pages: [
+        { url: "https://example.com/daycare-websites", path: "/daycare-websites", title: "Home" },
+        { url: "https://example.com/daycare-websites/pricing", path: "/daycare-websites/pricing", title: "Pricing" },
+      ],
+    }),
+  );
+  await writeFile(
+    path.join(snap, "assets.json"),
+    JSON.stringify({ items: [{ url: "https://cdn.example.com/hero.png", file: "hero.png" }] }),
+  );
+  await writeFile(
+    path.join(snap, "stylesheets.json"),
+    JSON.stringify([{ url: "https://cdn.example.com/site.css", file: "site.css" }]),
+  );
+  const html = `<html><head><link rel="stylesheet" href="https://cdn.example.com/site.css"><script src="https://wix.com/a.js"></script></head><body><a href="https://example.com/daycare-websites/pricing">Pricing</a><img src="https://cdn.example.com/hero.png"><form action="/send"></form></body></html>`;
+  await writeFile(
+    path.join(snap, "pages", "daycare-websites.json"),
+    JSON.stringify({ url: "https://example.com/daycare-websites", baseUrl: "https://example.com/daycare-websites/", path: "/daycare-websites", html }),
+  );
+  await writeFile(
+    path.join(snap, "pages", "daycare-websites__pricing.json"),
+    JSON.stringify({
+      url: "https://example.com/daycare-websites/pricing",
+      baseUrl: "https://example.com/daycare-websites/pricing/",
+      path: "/daycare-websites/pricing",
+      html: `<html><head></head><body><a href="https://example.com/daycare-websites/">Home</a></body></html>`,
+    }),
+  );
+  try {
+    const report = await buildStaticSite(snap, out);
+    assert.deepEqual(report.routes, ["/", "/pricing"]);
+    assert.equal(report.forms.length, 1);
+    assert.equal(report.scriptsRemoved, 1);
+    const home = await readFile(path.join(out, "index.html"), "utf8");
+    assert.match(home, /href="pricing\/"/);
+    assert.match(home, /src="assets\/hero\.png"/);
+    assert.match(home, /href="assets\/site\.css"/);
+    assert.equal(home.includes("wix.com/a.js"), false);
+    const pricing = await readFile(path.join(out, "pricing", "index.html"), "utf8");
+    assert.match(pricing, /href="\.\.\/"/);
+    const css = await readFile(path.join(out, "assets", "site.css"), "utf8");
+    assert.match(css, /url\("hero\.png"\)/);
+    const agents = await readFile(path.join(out, "AGENTS.md"), "utf8");
+    assert.match(agents, /plain HTML and CSS/);
+    assert.match(agents, /data-eject-form/);
+    assert.match(agents, /does not post to the previous host/);
+    assert.match(agents, /do not keep formaction or formmethod/i);
+    const readme = await readFile(path.join(out, "README.md"), "utf8");
+    assert.match(readme, /python3 -m http\.server/);
+    assert.match(readme, /Cloudflare Pages/);
+    assert.match(readme, /onsubmit="return false"/);
+    assert.match(readme, /EDITING\.md/);
+    const editing = await readFile(path.join(out, "EDITING.md"), "utf8");
+    assert.equal(editing, staticEditingGuideMarkdown());
+    assert.match(editing, /Cursor, Claude Code, or ChatGPT/);
+    assert.match(editing, /Spring workshops open/);
+    assert.match(editing, /http:\/\/localhost:8080/);
+    assert.match(editing, /Cloudflare Pages/);
+    assert.equal(home.includes('action="/send"'), false);
+    assert.equal(/<form\b[^>]*\baction\s*=\s*["']https?:/i.test(home), false);
+    assert.match(home, /<form\b[^>]*\baction="#"/);
+    const migration = await readFile(path.join(out, "MIGRATION.md"), "utf8");
+    assert.match(migration, /does not post to the previous host/);
+    assert.match(migration, /action `\/send`/);
+    const { stdout } = await execFileAsync(process.execPath, ["scripts/chat-edit.mjs", "Change the hero headline to Spring workshops."], { cwd: out });
+    assert.match(stdout, /edits\/inbox\.md/);
+    const inbox = await readFile(path.join(out, "edits", "inbox.md"), "utf8");
+    assert.match(inbox, /Spring workshops/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
