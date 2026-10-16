@@ -209,7 +209,19 @@ export async function runPaidIntake(
   const now = new Date().toISOString();
   const waitingForUrl = order.tier === "automated" && order.deliveryJob?.state === "queued" && order.deliveryJob.lastError === WAITING_FOR_SITE_URL;
   let updated: Order;
-  if (waitingForUrl && order.deliveryJob) {
+  if (!eligible && order.deliveryJob?.state === "queued") {
+    const claimed = await store.compareAndUpdate(
+      order.id,
+      { deliveryState: "queued" },
+      {
+        siteUrl: snapshot.finalUrl,
+        score: report,
+        status: "refund_recommended",
+        deliveryJob: { ...order.deliveryJob, state: "skipped", lastError: "not eligible", updatedAt: now },
+      },
+    );
+    updated = claimed ?? (await saveIntakeAside(order.id, snapshot.finalUrl, report));
+  } else if (waitingForUrl && order.deliveryJob) {
     const claimed = await store.compareAndUpdate(
       order.id,
       { deliveryState: "queued", lastError: WAITING_FOR_SITE_URL },
@@ -217,10 +229,8 @@ export async function runPaidIntake(
         siteUrl: snapshot.finalUrl,
         score: report,
         delivery,
-        status: eligible ? "queued" : "refund_recommended",
-        deliveryJob: eligible
-          ? { ...order.deliveryJob, state: "queued", lastError: undefined, nextAttemptAt: undefined, attempts: 0, updatedAt: now }
-          : { ...order.deliveryJob, state: "skipped", lastError: "not eligible", updatedAt: now },
+        status: "queued",
+        deliveryJob: { ...order.deliveryJob, state: "queued", lastError: undefined, nextAttemptAt: undefined, attempts: 0, updatedAt: now },
       },
     );
     updated = claimed ?? (await saveIntakeAside(order.id, snapshot.finalUrl, report));
@@ -262,8 +272,16 @@ async function saveIntakeAside(
   const latest = await store.get(orderId);
   if (!latest) throw new Error("order not found");
   const job = latest.deliveryJob;
-  const inFlight = Boolean(job && job.state !== "delivered" && job.state !== "failed" && job.state !== "skipped");
+  const inFlight = job?.state === "running" || job?.state === "dispatched";
   if (!extras || inFlight) return store.update(orderId, { siteUrl, score: report });
+  if (job?.state === "queued") {
+    return store.update(orderId, {
+      siteUrl,
+      score: report,
+      delivery: extras.delivery,
+      status: extras.eligible ? "queued" : "refund_recommended",
+    });
+  }
   return store.update(orderId, {
     siteUrl,
     score: report,

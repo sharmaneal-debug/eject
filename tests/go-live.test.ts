@@ -17,7 +17,7 @@ import {
   setDeliveryDepsForTests,
   WAITING_FOR_SITE_URL,
 } from "../lib/auto-deliver";
-import { scoreCrawledSnapshot } from "../lib/crawled-snapshot";
+import { discoveredPageCount, scoreCrawledSnapshot } from "../lib/crawled-snapshot";
 import { runPaidIntake } from "../lib/fulfillment";
 import { deliveryDirFor } from "../lib/delivery";
 import { getOrderStore, resetOrderStoreForTests } from "../lib/orders";
@@ -869,6 +869,52 @@ test("crawl score counts discovered pages and measured scripts", async () => {
   } finally {
     await rm(snapshot, { recursive: true, force: true });
   }
+});
+
+test("intake stops a queued order when the site is not eligible", async () => {
+  const dir = await useFileStore();
+  try {
+    const store = getOrderStore();
+    const created = await store.create({
+      tier: "automated",
+      testMode: "stripe_test",
+      amountCents: 9900,
+      currency: "usd",
+      email: "buyer@example.com",
+      siteUrl: "https://shop.example",
+    });
+    const now = new Date().toISOString();
+    await store.update(created.id, {
+      status: "paid",
+      token: "tok_shop",
+      deliveryJob: { state: "queued", attempts: 0, enqueuedAt: now, updatedAt: now, llm: "unset" },
+    });
+    const shopHtml = "<html><script src='https://cdn.shopify.com/shopify.js'></script><a href='/cart'>Cart</a></html>";
+    const intake = await runPaidIntake("tok_shop", "https://shop.example", {
+      lookupFn: async () => ["1.1.1.1"],
+      fetchImpl: async (input) => {
+        const url = String(input);
+        if (url.includes("sitemap") || url.endsWith("/robots.txt")) return new Response("missing", { status: 404 });
+        return new Response(shopHtml, { status: 200, headers: { "content-type": "text/html" } });
+      },
+    });
+    assert.equal(intake.ok, true);
+    const saved = await store.get(created.id);
+    assert.equal(saved?.status, "refund_recommended");
+    assert.equal(saved?.deliveryJob?.state, "skipped");
+    assert.equal(saved?.deliveryJob?.lastError, "not eligible");
+    assert.equal((await processDeliveryQueue()).results.length, 0);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+    restoreEnv();
+  }
+});
+
+test("discovered page count keeps a failed overflow URL", () => {
+  const captured = Array.from({ length: 10 }, (_, index) => `https://example.com/${index || ""}`);
+  const failed = "https://example.com/overflow";
+  assert.equal(discoveredPageCount([captured, [failed], []]), 11);
+  assert.equal(discoveredPageCount([["https://example.com/"], captured, []]), 10);
 });
 
 test("zip store writes a PK archive of the named file", () => {

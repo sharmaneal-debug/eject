@@ -16,6 +16,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { discoveredPageCount } from "../lib/crawled-snapshot";
 import { assertCrawlDocument } from "../lib/crawl-guard";
 import { collectFontFileUrls, MAX_EXTRA_FONTS, saveMissingFontFiles } from "../lib/font-assets";
 import { loadRobots, type RobotsRules } from "../lib/robots";
@@ -577,14 +578,21 @@ async function crawl(opts: CrawlOptions) {
   await writeFile(path.join(opts.out, "stylesheets.json"), JSON.stringify([...styleFiles.entries()].map(([url, file]) => ({ url, file })), null, 2), "utf8");
   console.log(`  stylesheets: ${styleItems.length}`);
 
-  const discovered = new Set(captured.map((page) => page.url));
-  for (const pending of queue) {
-    const next = normalizeHref(opts.url, pending);
-    if (next) discovered.add(next);
+  const pending: string[] = [];
+  for (const item of queue) {
+    const next = normalizeHref(opts.url, item);
+    if (next) pending.push(next);
   }
   await writeFile(
     path.join(opts.out, "discovery.json"),
-    JSON.stringify({ crawledPageCount: captured.length, discoveredPageCount: discovered.size }, null, 2),
+    JSON.stringify(
+      {
+        crawledPageCount: captured.length,
+        discoveredPageCount: discoveredPageCount([visited, captured.map((page) => page.url), pending]),
+      },
+      null,
+      2,
+    ),
     "utf8",
   );
   await writeFile(path.join(opts.out, "scripts.json"), JSON.stringify({ items: [...scripts.values()] }, null, 2), "utf8");

@@ -3,6 +3,15 @@ import path from "node:path";
 import { analyzeSnapshot, type ComplexityReport, type CrawlSnapshot } from "./complexity";
 import type { Order } from "./orders";
 
+/** Pages we tried, pages we saved, and links still waiting. Failed loads stay in the tried set. */
+export function discoveredPageCount(groups: Array<Iterable<string>>): number {
+  const found = new Set<string>();
+  for (const group of groups) {
+    for (const url of group) if (url) found.add(url);
+  }
+  return found.size;
+}
+
 /**
  * Score pages written by scripts/crawl.ts (`pages/*.json` with `url` and `html`)
  * before a worker packages or emails anything.
