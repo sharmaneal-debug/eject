@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SITE_URL_LABEL } from "@/lib/home-copy";
 import type { Platform } from "@/lib/platform";
 
@@ -19,13 +19,16 @@ export function SiteUrlForm() {
   const [error, setError] = useState<string | null>(null);
   const [scan, setScan] = useState<ScanOk | null>(null);
   const [Panel, setPanel] = useState<EstimatePanel | null>(null);
+  const request = useRef(0);
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     const value = url.trim();
     if (!value) return;
+    const id = ++request.current;
     setPending(true);
     setError(null);
+    setScan(null);
     try {
       const response = await fetch("/api/scan", {
         method: "POST",
@@ -33,12 +36,13 @@ export function SiteUrlForm() {
         body: JSON.stringify({ url: value }),
       });
       const json = (await response.json()) as ScanOk | { ok: false; error?: string };
+      if (id !== request.current) return;
       if (!json.ok) {
-        setScan(null);
         setError(json.error || "We couldn't find that website. Check the URL and try again.");
         return;
       }
       const loaded = await import("./move-estimate-panel");
+      if (id !== request.current) return;
       setPanel(() => loaded.MoveEstimatePanel);
       setScan({
         ok: true,
@@ -47,10 +51,10 @@ export function SiteUrlForm() {
         platformLabel: json.platformLabel,
       });
     } catch {
-      setScan(null);
+      if (id !== request.current) return;
       setError("Network hiccup. Try again?");
     } finally {
-      setPending(false);
+      if (id === request.current) setPending(false);
     }
   }
 

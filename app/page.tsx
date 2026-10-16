@@ -11,6 +11,7 @@ export const metadata: Metadata = pageMetadata({
   description: HOME_DESCRIPTION,
   path: "/",
   image: "/og.jpg",
+  absoluteTitle: true,
 });
 
 export default function HomePage() {
