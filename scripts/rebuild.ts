@@ -30,6 +30,7 @@ import {
   costOf,
   describeLlmConfig,
   llmChat,
+  outputBudgetError,
   resolveLlmConfig,
   type LlmConfig,
   type LlmImage,
@@ -152,6 +153,8 @@ type UsageRow = {
   costUsd: number;
   ms: number;
   stopReason: string | null;
+  /** Length of ignored reasoning text. The page is never taken from it. */
+  reasoningChars: number;
 };
 
 function rewriteAssets(text: string, ctx: PromptContext): string {
@@ -228,10 +231,13 @@ Return only the .tsx file contents.`;
   let lastErr = "";
   for (let attempt = 0; attempt < 2; attempt++) {
     const started = Date.now();
+    // DeepSeek thinking is disabled in lib/llm.ts, so these caps are content
+    // tokens. The second attempt is the one higher-budget retry.
+    const maxTokens = attempt === 0 ? 12_000 : 16_000;
     const resp = await llmChat(config, {
       system,
       messages,
-      maxTokens: attempt === 0 ? 12_000 : 16_000,
+      maxTokens,
     });
     usageRows.push({
       path: page.path + (attempt ? " (retry)" : ""),
@@ -240,13 +246,24 @@ Return only the .tsx file contents.`;
       costUsd: costOf(config.model, resp.usage.inputTokens, resp.usage.outputTokens),
       ms: Date.now() - started,
       stopReason: resp.usage.stopReason,
+      reasoningChars: resp.reasoning?.length ?? 0,
     });
+    if (resp.reasoning) {
+      console.log(`    · reasoning ignored (${resp.reasoning.length} chars); page TSX is message.content only`);
+    }
     const text = resp.text;
     code = stripFences(text);
-    const cutOff = resp.usage.stopReason === "max_tokens" || resp.usage.stopReason === "length";
-    const errs = cutOff ? ["output was cut off at max_tokens"] : syntaxErrors(code);
+    const budgetErr = outputBudgetError(code, resp.usage.stopReason);
+    const errs = budgetErr ? [budgetErr] : syntaxErrors(code);
     if (!errs.length && /export\s+default/.test(code)) return code;
     lastErr = errs.join("; ") || "no default export";
+    const cutOff = resp.usage.stopReason === "max_tokens" || resp.usage.stopReason === "length";
+    if (attempt === 0 && cutOff) {
+      console.warn(`    ! ${lastErr}; retrying once with max_tokens 16000`);
+    }
+    // An empty completion has no assistant turn to replay. Retry the same
+    // prompt at the higher content budget instead of sending blank content.
+    if (!code.trim()) continue;
     messages.push(
       { role: "assistant", content: text },
       {

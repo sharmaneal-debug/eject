@@ -34,7 +34,9 @@ pnpm rebuild data/snapshots/example-com
 cd out/example-com && pnpm install && pnpm dev
 ```
 
-DeepSeek also exposes an Anthropic-compatible endpoint if you prefer to keep the Messages API shape:
+DeepSeek Flash and Pro **think by default** (`thinking.type` defaults to `enabled`, `reasoning_effort` defaults to `high`). Reasoning tokens are generated first and count toward `max_tokens`, so a capped call can return HTTP 200 with empty or truncated `message.content` and `finish_reason: length`. On `*.deepseek.com` (including the default `https://api.deepseek.com`), `lib/llm.ts` sends both official Chat Completions switches — `thinking: { "type": "disabled" }` and `reasoning_effort: "none"` — so the 12k budget, and the one retry at 16k, is entirely for the answer. There is no separate thinking budget on this API; disabling is what keeps thinking from starving content. Any `reasoning_content` / `reasoning` / `thinking` text is logged by character count only and is never written as the page. TSX is taken only from `message.content`. A `finish_reason` of `length` (or Anthropic `max_tokens`) with empty or truncated content fails the page instead of saving it. Together, Fireworks, and OpenRouter do not get those DeepSeek fields.
+
+DeepSeek also exposes an Anthropic-compatible endpoint. That format documents effort (`output_config.effort`: `low` / `high` / `max`) and does not document a thinking-off switch, so Flash rebuilds should stay on the openai-compat path above. The Messages-shaped alternative is:
 
 ```sh
 export LLM_PROVIDER=anthropic

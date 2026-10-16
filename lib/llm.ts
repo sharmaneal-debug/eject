@@ -24,6 +24,14 @@
  * Auto-detect when LLM_PROVIDER is unset:
  *   LLM_API_KEY + LLM_BASE_URL  → openai-compat
  *   ANTHROPIC_API_KEY           → anthropic
+ *
+ * DeepSeek Chat Completions think by default (`thinking.type` = enabled,
+ * `reasoning_effort` = high). Reasoning tokens are generated first and count
+ * toward `max_tokens`, which can return HTTP 200 with empty `content` and
+ * `finish_reason` `length`. On `*.deepseek.com` this client sends
+ * `thinking: { type: "disabled" }` and `reasoning_effort: "none"` so the
+ * whole `max_tokens` budget is available for `message.content`.
+ * `reasoning_content` is returned separately for logs and is never the page.
  */
 
 import Anthropic from "@anthropic-ai/sdk";
@@ -52,7 +60,13 @@ export type LlmUsage = {
 };
 
 export type LlmChatResult = {
+  /** Assistant text. Page TSX comes only from this field (`message.content`). */
   text: string;
+  /**
+   * Chain-of-thought when the host returns one (`reasoning_content` and similar).
+   * Logging/debug only. Never treat this as the page.
+   */
+  reasoning?: string;
   usage: LlmUsage;
 };
 
@@ -205,14 +219,114 @@ async function chatAnthropic(
     .filter((b): b is Anthropic.TextBlock => b.type === "text")
     .map((b) => b.text)
     .join("\n");
+  const reasoning = anthropicReasoning(resp.content);
   return {
     text,
+    ...(reasoning ? { reasoning } : {}),
     usage: {
       inputTokens: resp.usage.input_tokens,
       outputTokens: resp.usage.output_tokens,
       stopReason: resp.stop_reason,
     },
   };
+}
+
+function anthropicReasoning(content: Array<{ type: string; thinking?: unknown }>): string {
+  return content
+    .map((block) => (block.type === "thinking" && typeof block.thinking === "string" ? block.thinking : ""))
+    .filter(Boolean)
+    .join("\n");
+}
+
+/** True for DeepSeek's own Chat Completions hosts, including the default base URL. */
+export function isDeepSeekChatHost(baseUrl?: string): boolean {
+  const raw = (baseUrl && baseUrl.trim()) || DEFAULT_OPENAI_COMPAT_BASE_URL;
+  const host = raw.replace(/^https?:\/\//, "").split("/")[0]?.split(":")[0]?.toLowerCase() ?? "";
+  return host === "deepseek.com" || host.endsWith(".deepseek.com");
+}
+
+/**
+ * Request body for OpenAI-compatible `/chat/completions`.
+ * DeepSeek Flash/Pro think by default, and those tokens share `max_tokens`
+ * with the answer. Disable both official switches so content is not starved.
+ * Other hosts are left unchanged — they do not accept this pair.
+ */
+export function buildOpenAICompatBody(
+  config: LlmConfig,
+  system: string,
+  messages: LlmMessage[],
+  maxTokens: number,
+): Record<string, unknown> {
+  const body: Record<string, unknown> = {
+    model: config.model,
+    max_tokens: maxTokens,
+    messages: [
+      { role: "system", content: system },
+      ...messages.map((m) => ({
+        role: m.role,
+        content: partsToOpenAI(m.content),
+      })),
+    ],
+  };
+  if (isDeepSeekChatHost(config.baseUrl)) {
+    body.thinking = { type: "disabled" };
+    body.reasoning_effort = "none";
+  }
+  return body;
+}
+
+function firstNonEmptyString(...values: Array<string | null | undefined>): string {
+  for (const value of values) {
+    if (typeof value === "string" && value.length > 0) return value;
+  }
+  return "";
+}
+
+/** Parse a Chat Completions JSON body. TSX is `message.content` only. */
+export function parseOpenAICompatChat(data: {
+  choices?: Array<{
+    message?: {
+      content?: string | null;
+      reasoning_content?: string | null;
+      reasoning?: string | null;
+      thinking?: string | null;
+    };
+    finish_reason?: string | null;
+  }>;
+  usage?: { prompt_tokens?: number; completion_tokens?: number };
+}): LlmChatResult {
+  const message = data.choices?.[0]?.message;
+  const text = typeof message?.content === "string" ? message.content : "";
+  const reasoning = firstNonEmptyString(message?.reasoning_content, message?.reasoning, message?.thinking);
+  return {
+    text,
+    ...(reasoning ? { reasoning } : {}),
+    usage: {
+      inputTokens: data.usage?.prompt_tokens ?? 0,
+      outputTokens: data.usage?.completion_tokens ?? 0,
+      stopReason: data.choices?.[0]?.finish_reason ?? null,
+    },
+  };
+}
+
+/**
+ * Why a completion cannot be saved as a page. `length` / `max_tokens` with
+ * empty or partial content is a hard failure — the draft is truncated.
+ * Returns null when the caller should syntax-check `text` as usual.
+ */
+export function outputBudgetError(text: string, stopReason: string | null): string | null {
+  const trimmed = text.trim();
+  const cutOff = stopReason === "length" || stopReason === "max_tokens";
+  if (!trimmed && cutOff) {
+    return `finish_reason ${stopReason} with empty content; output budget exhausted before any page TSX`;
+  }
+  if (!trimmed) {
+    return "model returned empty message.content; reasoning is not used as the page";
+  }
+  if (cutOff) {
+    return `finish_reason ${stopReason}; content was truncated at max_tokens and was not written`;
+  }
+  return null;
 }
 
 async function chatOpenAICompat(
@@ -225,18 +339,7 @@ async function chatOpenAICompat(
   // DeepSeek: https://api.deepseek.com/chat/completions
   // Together/Fireworks/OpenRouter: set LLM_BASE_URL to …/v1 so this becomes …/v1/chat/completions
   const endpoint = `${base}/chat/completions`;
-
-  const body = {
-    model: config.model,
-    max_tokens: maxTokens,
-    messages: [
-      { role: "system", content: system },
-      ...messages.map((m) => ({
-        role: m.role,
-        content: partsToOpenAI(m.content),
-      })),
-    ],
-  };
+  const body = buildOpenAICompatBody({ ...config, baseUrl: base }, system, messages, maxTokens);
 
   const res = await fetch(endpoint, {
     method: "POST",
@@ -253,25 +356,14 @@ async function chatOpenAICompat(
     throw new Error(`openai-compat HTTP ${res.status} at ${endpoint.replace(/https?:\/\/[^/]+/, "[host]")}: ${snippet}`);
   }
 
-  let data: {
-    choices?: Array<{ message?: { content?: string | null }; finish_reason?: string | null }>;
-    usage?: { prompt_tokens?: number; completion_tokens?: number };
-  };
+  let data: Parameters<typeof parseOpenAICompatChat>[0];
   try {
     data = JSON.parse(raw);
   } catch {
     throw new Error("openai-compat returned non-JSON body");
   }
 
-  const text = data.choices?.[0]?.message?.content ?? "";
-  return {
-    text,
-    usage: {
-      inputTokens: data.usage?.prompt_tokens ?? 0,
-      outputTokens: data.usage?.completion_tokens ?? 0,
-      stopReason: data.choices?.[0]?.finish_reason ?? null,
-    },
-  };
+  return parseOpenAICompatChat(data);
 }
 
 /** One chat turn (system + messages). Retries stay in the caller. */
