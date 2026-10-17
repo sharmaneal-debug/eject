@@ -1,0 +1,20 @@
+# Eject
+
+> Stop paying to host your website. Move it to your agent for free.
+
+Eject moves a simple website off a website builder. The move is $99 USD, once. You own the code. You can manage the site with a free ChatGPT account or any AI tool. Eject does not charge a monthly hosting fee. You still pay your domain registrar.
+
+Eject takes simple marketing, portfolio, and landing sites on Webflow, Framer, Wix, and Squarespace, about 10 pages. Stores, member areas, and large CMS sites are out. Eject does not promise a visual match.
+
+The public price is $99 USD. Checkout may be a waitlist. There is no second public price.
+
+## Links
+
+- [Home](https://ejectfrom.com/): Move your website
+- [Samples](https://ejectfrom.com/samples): Example moved sites
+- [Refunds](https://ejectfrom.com/refunds): Refund policy
+- [Pricing](https://ejectfrom.com/pricing): The public price
+- [Privacy](https://ejectfrom.com/privacy)
+- [Terms](https://ejectfrom.com/terms)
+- [Disclaimers](https://ejectfrom.com/disclaimers)
+- [Contact](https://ejectfrom.com/contact): hi@ejectfrom.com

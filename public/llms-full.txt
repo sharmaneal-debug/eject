@@ -1,0 +1,76 @@
+# Eject
+
+> Stop paying to host your website. Move it to your agent for free.
+
+Eject (https://ejectfrom.com) moves a simple website off Webflow, Framer, Wix, or Squarespace onto files you own. After the move, you manage the site with a free ChatGPT account or any AI tool. Eject does not charge monthly hosting.
+
+Operator: Laniakea LLC. Contact: hi@ejectfrom.com.
+
+## Price
+
+- Product: automated move of a simple site
+- Price: $99 USD
+- Billing: one time
+- Not included: your domain registration, which stays with your registrar
+- Hosting after the move: Eject does not bill for it. A static host can be $0 a year
+- Custom migrations have no public price
+
+## What you get
+
+- The site files. You own the code.
+- An editing guide so an AI tool can change the site
+- A preview before any DNS change
+
+## Scope
+
+In: simple marketing, portfolio, and landing sites, about 10 pages, on Webflow, Framer, Wix, or Squarespace.
+
+Out: stores, member areas, and large CMS sites.
+
+Eject does not promise that the moved site will look the same.
+
+## Estimate on the home page
+
+Enter a website URL. Eject detects the platform from the public page, then shows a range of published plan prices for that platform. The range is the low and high of checked public prices, not a guess at your invoice. If the platform is unknown, or Eject has no checked price list for it, the page says so and shows the general range of published simple-site plans on Webflow, Framer, Wix, and Squarespace.
+
+Estimated yearly savings is that same range. The $99 fee is one time, so it is not subtracted from the yearly range. Static hosting can be $0. The domain bill does not change.
+
+Price lists were checked on 2026-10-10 from the vendors' own pages.
+
+## FAQ
+
+### What do I pay?
+
+The move is $99 once. After that you can use a free ChatGPT account or any AI tool to manage the website. Eject does not charge a monthly hosting fee. You still pay your domain registrar.
+
+### Do I own the code?
+
+Yes. The files are yours.
+
+### Which sites can move?
+
+Simple marketing, portfolio, and landing sites on Webflow, Framer, Wix, or Squarespace, about 10 pages. Stores, member areas, and large CMS sites are out.
+
+### Will it look the same?
+
+We do not promise a visual match.
+
+### What is the refund policy?
+
+For the $99 automated move, you pay first, we build a preview, and if you don't approve the preview before any DNS change, you get a full refund. The policy is at https://ejectfrom.com/refunds.
+
+### Where are the sample sites?
+
+Sample sites are at https://ejectfrom.com/samples. They are moved template pages, not customer logos.
+
+## Links
+
+- [Home](https://ejectfrom.com/)
+- [Samples](https://ejectfrom.com/samples)
+- [Refunds](https://ejectfrom.com/refunds)
+- [Pricing](https://ejectfrom.com/pricing)
+- [How it works](https://ejectfrom.com/how-it-works)
+- [Privacy](https://ejectfrom.com/privacy)
+- [Terms](https://ejectfrom.com/terms)
+- [Disclaimers](https://ejectfrom.com/disclaimers)
+- [Contact](https://ejectfrom.com/contact)

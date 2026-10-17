@@ -10,12 +10,18 @@ export const faqItems = [
   { q: "Refund?", a: `${AUTOMATED_REFUND_PROMISE} You can also email us within 14 days of delivery.` },
 ];
 
-export function Faq() {
+export function Faq({
+  items = faqItems,
+  showBlog = true,
+}: {
+  items?: readonly { q: string; a: string }[];
+  showBlog?: boolean;
+}) {
   return (
     <section className="mx-auto max-w-content min-w-0 px-4 py-10 sm:px-6 md:py-16">
       <h2 className="mb-3 text-base font-medium text-ink-muted">FAQ</h2>
       <div className="max-w-xl border-b border-line">
-        {faqItems.map((item) => (
+        {items.map((item) => (
           <details key={item.q} className="border-t border-line py-3">
             <summary className="flex min-h-11 cursor-pointer list-none items-center text-base font-medium [&::-webkit-details-marker]:hidden">
               {item.q}
@@ -24,11 +30,13 @@ export function Faq() {
           </details>
         ))}
       </div>
-      <p className="mt-4">
-        <Link href="/blog" className="inline-flex min-h-11 items-center text-base text-accent underline-offset-2 hover:underline">
-          More on the blog
-        </Link>
-      </p>
+      {showBlog ? (
+        <p className="mt-4">
+          <Link href="/blog" className="inline-flex min-h-11 items-center text-base text-accent underline-offset-2 hover:underline">
+            More on the blog
+          </Link>
+        </p>
+      ) : null}
     </section>
   );
 }

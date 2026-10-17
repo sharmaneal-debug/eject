@@ -25,12 +25,15 @@ export function pageMetadata(opts: {
   index?: boolean;
   canonical?: string;
   type?: "website" | "article";
+  image?: string;
+  /** Skip the layout title template. Use when the title already includes the brand. */
+  absoluteTitle?: boolean;
 }): Metadata {
   const url = new URL(opts.path, siteConfig.url).toString();
-  const image = ogImagePath(opts.title, opts.description);
+  const image = opts.image ?? ogImagePath(opts.title, opts.description);
   const images = [{ url: image, width: 1200, height: 630, alt: opts.title }];
   return {
-    title: opts.title,
+    title: opts.absoluteTitle ? { absolute: opts.title } : opts.title,
     description: opts.description,
     alternates: { canonical: opts.canonical ?? opts.path },
     openGraph: {
